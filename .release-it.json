@@ -32,6 +32,13 @@
           { "type": "test", "section": "✅ Tests", "hidden": false },
           { "type": "ci", "section": "🔧 Continuous Integration", "hidden": false }
         ]
+      },
+      "infile": "CHANGELOG.md",
+      "context": {
+        "version": "${version}"
+      },
+      "gitRawCommitsOpts": {
+        "from": "HEAD~1"
       }
     }
   }
