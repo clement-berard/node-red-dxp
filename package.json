@@ -33,12 +33,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/clement-berard/node-red-contrib-js-philips-tv-control.git"
+    "url": "https://github.com/clement-berard/node-red-dxp.git"
   },
   "bugs": {
-    "url": "https://github.com/clement-berard/node-red-contrib-js-philips-tv-control/issues"
+    "url": "https://github.com/clement-berard/node-red-dxp/issues"
   },
-  "homepage": "https://github.com/clement-berard/node-red-contrib-js-philips-tv-control",
+  "homepage": "https://github.com/clement-berard/node-red-dxp",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/html-minifier-terser": "7.0.2",
