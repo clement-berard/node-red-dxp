@@ -4,6 +4,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "node-red-dxp",
   description: "Build nodes effortless",
+  base: process.env.CI ? '/philtv-js/' : '/',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
