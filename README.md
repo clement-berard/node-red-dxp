@@ -1,5 +1,7 @@
-<h1 style="text-align: center">Node-Red</h1>
-<h2 style="text-align: center">Developer eXPerience</h2>
+<div align="center">
+  <h1>Node-Red</h1>
+  <p>Developer eXPerience</p>
+</div>
 
 ## License
 
