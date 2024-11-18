@@ -1,7 +1,7 @@
 <div align="center">
 
-**<span style="font-size: 2em;">Node-Red</span>**  
-*Developer eXPerience*
+<strong style="font-size: 28px;">Node-Red</strong>  
+<em style="font-size: 20px;">Developer eXPerience</em>
 
 </div>
 
