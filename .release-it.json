@@ -2,9 +2,6 @@
   "hooks": {
     "before:init": "pnpm build"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "git": {
     "requireBranch": "main",
     "commitMessage": "chore(release): ${version}",

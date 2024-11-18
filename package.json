@@ -1,6 +1,6 @@
 {
   "name": "@keload/node-red-dxp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "type": "module",
   "scripts": {
@@ -11,6 +11,9 @@
     "lint:check": "pnpm biome check",
     "release": "pnpm release-it",
     "release:test": "pnpm release-it --dry-run"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "bin": {
     "node-red-dxp": "./dist/cli/index.cjs"
