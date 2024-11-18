@@ -2,6 +2,7 @@ import * as process from 'node:process';
 
 import { Command } from 'commander';
 import { consola } from 'consola';
+import packageJson from '../../package.json';
 import { buildAllPackage } from '../builder';
 import { registerChecksCommands } from './commands/checks';
 import { registerInfoCommands } from './commands/info';
@@ -10,7 +11,7 @@ import { runWatcher } from './watcher';
 
 const program = new Command();
 
-program.name('cli').description('Une CLI exemple').version('1.0.0');
+program.name('node-red-dxp').description('node-red-dxp CLI').version(packageJson.version);
 
 program
   .command('build')
@@ -24,7 +25,7 @@ program
 program
   .command('watch')
   .description('watch project')
-  .option('--name <name>', 'Nom de la personne à saluer')
+  .option('--minify <minify>', '[WIP] Minify the output', false)
   .action((options) => {
     runWatcher();
   });

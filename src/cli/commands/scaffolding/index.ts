@@ -3,7 +3,8 @@ import { consola } from 'consola';
 import { dash } from 'radash';
 
 export function registerScaffoldingCommands(parentCommand: Command) {
-  const scaffolding = new Command('create-node').description('Commandes pour les scaffolding').action(async () => {
+  const scaffolding = new Command('create-node').description('[WIP] Create a new node').action(async () => {
+    consola.warn('Command in construction - not working yet');
     const userChoice = await consola.prompt('Enter node name:', {
       type: 'text',
     });
