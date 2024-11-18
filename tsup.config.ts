@@ -6,9 +6,6 @@ const externals = [
   'esbuild',
   'glob',
   'del',
-  'postcss',
-  'cssnano',
-  'postcss-discard-duplicates',
   'sass',
   'html-minifier-terser',
   'chokidar',
@@ -35,6 +32,7 @@ export default defineConfig([
     target: 'es6',
     noExternal: ['merge-anything'],
     external: externals,
+    onSuccess: 'cp -r src/editor/assets dist/editor',
   },
   {
     entry: {

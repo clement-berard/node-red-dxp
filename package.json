@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "build": "tsup && cp -r src/editor/assets dist/editor",
+    "build": "tsup",
     "watch": "tsup --watch",
     "format": "pnpm biome format",
     "lint": "pnpm biome lint",

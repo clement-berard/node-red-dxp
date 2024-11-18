@@ -1,7 +1,7 @@
 // @ts-ignore
 import { merge } from 'merge-anything';
 import type { EditorNodeDef, EditorNodeInstance, EditorNodeProperties } from 'node-red';
-import { EditorDomHelper } from './types';
+import type { EditorDomHelper } from './types';
 export type * from './types';
 
 const defaultNodeDef: Partial<EditorNodeDef> = {};
