@@ -1,16 +1,12 @@
-import process from 'node:process';
 import { Command } from 'commander';
-// import { renderNodeValidation } from '../../node-dir';
-const srcDir = `${process.cwd()}/src`;
-// const nodesDir = `${srcDir}/nodes`;
 export function registerChecksCommands(parentCommand: Command) {
-  const checks = new Command('checks').description('Commandes pour les vérifications');
+  const checks = new Command('checks').description('[WIP] Commands to check the some stuff');
 
   checks
     .command('nodes-structure')
-    .description('Vérifie la structure des dossiers nodes')
+    .description('[WIP] Verify the structure of the nodes')
     .action(() => {
-      // renderNodeValidation(nodesDir);
+      console.log('In construction');
     });
 
   parentCommand.addCommand(checks);

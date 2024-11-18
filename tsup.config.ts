@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsup';
 
-const minifyFlag = false;
+const minifyFlag = true;
 
 const externals = [
   'esbuild',
@@ -11,6 +11,7 @@ const externals = [
   'chokidar',
   'consola',
   'nodemon',
+  'prettyjson',
   'browser-sync',
 ];
 
