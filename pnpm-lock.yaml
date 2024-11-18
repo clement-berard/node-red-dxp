@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@release-it/conventional-changelog':
-        specifier: 9.0.3
-        version: 9.0.3(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.0.0)(release-it@17.10.0(typescript@5.6.3))
       '@types/html-minifier-terser':
         specifier: 7.0.2
         version: 7.0.2
@@ -75,6 +72,9 @@ importers:
       '@biomejs/biome':
         specifier: 1.9.4
         version: 1.9.4
+      '@release-it/conventional-changelog':
+        specifier: 9.0.3
+        version: 9.0.3(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.0.0)(release-it@17.10.0(typescript@5.6.3))
       release-it:
         specifier: 17.10.0
         version: 17.10.0(typescript@5.6.3)
