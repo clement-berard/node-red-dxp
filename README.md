@@ -1,8 +1,13 @@
+<br/>
 <div align="center">
-
-<strong style="font-size: 28px;">Node-Red</strong>  
-<em style="font-size: 20px;">Developer eXPerience</em>
-
+<h3 align="center">Node-Red</h3>
+<p align="center">
+Developer eXPerience
+<br/>
+<br/>
+<a href="https://github.com/ShaanCoding/makeread.me/wiki"><strong>Explore the docs »</strong></a>
+<br/>
+<br/>
 </div>
 
 ## License
