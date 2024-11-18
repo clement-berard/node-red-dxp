@@ -46,13 +46,13 @@
   "homepage": "https://github.com/clement-berard/node-red-dxp",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@release-it/conventional-changelog": "9.0.3",
     "release-it": "17.10.0",
     "tsup": "8.3.5",
     "tsx": "4.19.2",
     "typescript": "5.6.3"
   },
   "dependencies": {
-    "@release-it/conventional-changelog": "9.0.3",
     "@types/html-minifier-terser": "7.0.2",
     "@types/jquery": "3.5.32",
     "@types/jqueryui": "1.12.23",
