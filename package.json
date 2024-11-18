@@ -8,7 +8,9 @@
     "watch": "tsup --watch",
     "format": "pnpm biome format",
     "lint": "pnpm biome lint",
-    "lint:check": "pnpm biome check"
+    "lint:check": "pnpm biome check",
+    "release": "pnpm release-it",
+    "release:test": "pnpm release-it --dry-run"
   },
   "bin": {
     "node-red-dxp": "./dist/cli/index.cjs"
@@ -41,6 +43,7 @@
   "homepage": "https://github.com/clement-berard/node-red-dxp",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@release-it/conventional-changelog": "9.0.3",
     "@types/html-minifier-terser": "7.0.2",
     "@types/jquery": "3.5.32",
     "@types/jqueryui": "1.12.23",
@@ -58,6 +61,7 @@
     "merge-anything": "6.0.2",
     "nodemon": "3.1.7",
     "prettyjson": "1.2.5",
+    "release-it": "17.10.0",
     "sass": "1.81.0",
     "tsup": "8.3.5",
     "tsx": "4.19.2",
