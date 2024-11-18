@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "before:init": "pnpm build"
+  },
+  "git": {
+    "requireBranch": "main",
+    "commitMessage": "chore(release): ${version}",
+    "tagName": "v${version}",
+    "requireCleanWorkingDir": false,
+    "push": false
+  },
+  "github": {
+    "release": true,
+    "tokenRef": "GITHUB_TOKEN"
+  },
+  "npm": {
+    "publish": true,
+    "tokenRef": "NPM_TOKEN"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "conventionalcommits",
+        "types": [
+          { "type": "feat", "section": "✨ Features", "hidden": false },
+          { "type": "fix", "section": "🐛 Fixes", "hidden": false },
+          { "type": "chore", "section": "📦 Chores", "hidden": false },
+          { "type": "docs", "section": "📝 Documentation", "hidden": false },
+          { "type": "style", "section": "💅 Styling", "hidden": false },
+          { "type": "refactor", "section": "🔨 Refactors", "hidden": false },
+          { "type": "perf", "section": "⚡ Performance Improvements", "hidden": false },
+          { "type": "test", "section": "✅ Tests", "hidden": false },
+          { "type": "ci", "section": "🔧 Continuous Integration", "hidden": false }
+        ]
+      }
+    }
+  }
+}
