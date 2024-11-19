@@ -3,7 +3,6 @@ import { handleAllDoc } from './doc';
 import { buildNodeEditor } from './esbuild';
 import { getNodesHtml } from './html';
 import { getAllCompiledStyles } from './styles';
-import { cleanSpaces } from './utils';
 
 export async function buildFinalDistIndexContent(params?: WriteFinalDistIndexContentParams) {
   const { minify = false } = params || {};
@@ -16,12 +15,14 @@ export async function buildFinalDistIndexContent(params?: WriteFinalDistIndexCon
   const css = getAllCompiledStyles();
   const docs = handleAllDoc();
 
-  return `${html.allWrappedHtml}
-<style>${css}</style>
-<script type="application/javascript">
-${js.trim()}
-</script>
-${docs}`;
+  const wrappedJs = `<script type="application/javascript">${js.trim()}</script>`;
+  const wrappedCss = `<style>${css}</style>`;
+
+  return `
+${html.allWrappedHtml}
+${wrappedCss}
+${wrappedJs}
+${docs}`.trim();
 }
 
 type WriteFinalDistIndexContentParams = {

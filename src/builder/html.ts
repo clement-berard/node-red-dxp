@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { minify } from 'html-minifier-terser';
 import type { ListNode, ListNodesFull } from '../current-instance';
 import { extractCSSClasses } from './styles';
+import { cleanSpaces } from './utils';
 
 export async function minifyHtml(content: string) {
   return minify(content, {
@@ -15,20 +16,23 @@ export async function minifyHtml(content: string) {
   });
 }
 
-function wrapHtml(nodeName: string, nodeIdentifier: string, pkgNameSlug: string, html: string) {
+function wrapHtml(nodeName: string, html: string) {
   return `
     <script type="text/html" data-template-name="${nodeName}">
-        <div class="${pkgNameSlug}">
-            <div class="${nodeIdentifier}">${html}</div>
-        </div>
+        ${html}
     </script>
 `;
 }
 
 async function processNodeHtml(node: ListNode, packageNameSlug: string, minify = false) {
   const htmlContent = readFileSync(node.editor.htmlPath, 'utf8');
-  const html = minify ? await minifyHtml(htmlContent) : htmlContent;
-  const wrappedHtml = wrapHtml(node.name, node.nodeIdentifier, packageNameSlug, html);
+  const htmlContentWithAdditionalDiv = `
+  <div class="${packageNameSlug}">
+    <div class="${node.nodeIdentifier}">${htmlContent}</div>
+  </div>
+  `;
+  const html = minify ? await minifyHtml(htmlContentWithAdditionalDiv) : htmlContentWithAdditionalDiv;
+  const wrappedHtml = wrapHtml(node.name, html);
 
   return {
     nodeName: node.name,
@@ -60,7 +64,7 @@ export async function getNodesHtml(params: GetNodesHtmlParams) {
     html: allHtml,
     cssClasses,
     allWrappedHtml: res
-      .map((node) => node.wrappedHtml)
+      .map((node) => (minify ? cleanSpaces(node.wrappedHtml) : node.wrappedHtml))
       .join('')
       .trim(),
   };

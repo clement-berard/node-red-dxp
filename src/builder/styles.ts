@@ -38,7 +38,7 @@ export function getNodesStyles() {
 
 export function getSrcStyles() {
   const srcStyles = currentInstance.getResolvedSrcPathsScss();
-  const toAdd = globSync(`${path.resolve(__dirname, '..')}/editor/**/*.scss`);
+  const toAdd = globSync(`${path.resolve(__dirname, '..')}/${currentInstance.config.nodes.editor.dirName}/**/*.scss`);
   const srcStylesCompiled = buildStyles([...srcStyles, ...toAdd]);
   return Object.values(srcStylesCompiled).join('');
 }
