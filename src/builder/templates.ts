@@ -1,4 +1,5 @@
-import * as fs from 'node:fs';
+import * as fsPromise from 'node:fs/promises';
+
 import * as path from 'node:path';
 import { currentInstance } from '../current-instance';
 
@@ -37,10 +38,18 @@ ${nodeFoldersDefinition.map((node) => `// @ts-ignore\nwindow.RED.nodes.registerT
 `.trim();
 }
 
-export function writeControllerIndex() {
-  fs.writeFileSync(`${currentInstance.cacheDirFiles.controllerIndex}`, getControllerIndex());
+export async function writeControllerIndex(): Promise<void> {
+  try {
+    await fsPromise.writeFile(`${currentInstance.cacheDirFiles.controllerIndex}`, getControllerIndex());
+  } catch (error) {
+    console.error('Error writing controller index:', error);
+  }
 }
 
-export function writeEditorIndex() {
-  fs.writeFileSync(`${currentInstance.cacheDirFiles.editorIndex}`, getEditorIndex());
+export async function writeEditorIndex(): Promise<void> {
+  try {
+    await fsPromise.writeFile(`${currentInstance.cacheDirFiles.editorIndex}`, getEditorIndex());
+  } catch (error) {
+    console.error('Error writing editor index:', error);
+  }
 }

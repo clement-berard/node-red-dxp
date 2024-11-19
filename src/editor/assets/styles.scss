@@ -180,3 +180,6 @@ $percentage-scale: (
 @include generate-dimension-classes(width, w);
 @include generate-dimension-classes(height, h);
 
+.hidden {
+    display: none;
+}

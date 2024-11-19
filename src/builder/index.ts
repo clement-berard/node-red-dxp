@@ -1,10 +1,11 @@
 import * as fs from 'node:fs';
+import * as fsPromise from 'node:fs/promises';
 import path from 'node:path';
-import del from 'del';
 import esbuild from 'esbuild';
 import { currentInstance } from '../current-instance';
 import { writeFinalDistIndexContent } from './final-index';
 import { writeControllerIndex, writeEditorIndex } from './templates';
+import { cleanPaths } from './utils';
 export { currentInstance } from '../current-instance';
 export * from './templates';
 export * from './styles';
@@ -53,15 +54,16 @@ export async function buildNodeEditor(minify = false) {
   return '';
 }
 
-export function cleanDist() {
-  del.sync([currentInstance.pathDist]);
-}
-export function writeCacheConfigFile() {
-  fs.writeFileSync(
-    `${currentInstance.pathLibCacheDir}/config.json`,
-    JSON.stringify(currentInstance.config, null, 2),
-    'utf-8',
-  );
+export async function writeCacheConfigFile(): Promise<void> {
+  try {
+    await fsPromise.writeFile(
+      `${currentInstance.pathLibCacheDir}/config.json`,
+      JSON.stringify(currentInstance.config, null, 2),
+      'utf-8',
+    );
+  } catch (error) {
+    console.error('Error writing cache config file:', error);
+  }
 }
 
 function ensureDirectoryExists(dirPath: string): void {
@@ -73,10 +75,9 @@ function ensureDirectoryExists(dirPath: string): void {
 
 export async function buildAllPackage(minify = false) {
   ensureDirectoryExists(currentInstance.pathLibCacheDir);
-  cleanDist();
-  writeCacheConfigFile();
-  writeControllerIndex();
-  writeEditorIndex();
-  await buildNodeController(minify);
-  await writeFinalDistIndexContent(minify);
+  await cleanPaths([currentInstance.pathDist]);
+
+  await Promise.all([writeCacheConfigFile(), writeControllerIndex(), writeEditorIndex()]);
+
+  await Promise.all([buildNodeController(minify), writeFinalDistIndexContent(minify)]);
 }

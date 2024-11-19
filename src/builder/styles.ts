@@ -29,8 +29,6 @@ export function getNodesStyles() {
       const mergedCompiledStyles = Object.values(nodeStyles).join('');
       return {
         name: node.name,
-        styles: buildStyles(node.editor.scssFiles),
-        mergedCompiledStyles,
         scssFinal: `#${node.nodeIdentifier}{${mergedCompiledStyles}}`,
         hasStyles: !!node.editor.scssFiles.length,
       };
