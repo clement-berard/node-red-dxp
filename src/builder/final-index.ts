@@ -1,4 +1,4 @@
-import type { ListNodesFull } from '../current-instance';
+import { type ListNodesFull, currentInstance } from '../current-instance';
 import { handleAllDoc } from './doc';
 import { buildNodeEditor } from './esbuild';
 import { getNodesHtml } from './html';
@@ -7,12 +7,16 @@ import { cleanSpaces } from './utils';
 
 export async function buildFinalDistIndexContent(params?: WriteFinalDistIndexContentParams) {
   const { minify = false } = params || {};
-  const html = await getNodesHtml();
+  const html = await getNodesHtml({
+    minify,
+    nodes: params.nodes,
+    packageNameSlug: currentInstance.packageNameSlug,
+  });
   const js = await buildNodeEditor(minify);
   const css = getAllCompiledStyles();
   const docs = handleAllDoc();
 
-  return `${minify ? cleanSpaces(html) : html}
+  return `${html.allWrappedHtml}
 <style>${css}</style>
 <script type="application/javascript">
 ${js.trim()}

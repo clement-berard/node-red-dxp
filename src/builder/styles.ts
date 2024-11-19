@@ -53,3 +53,22 @@ export function getAllCompiledStyles() {
 
   return `.${currentInstance.packageNameSlug}{${srcStyles}${nodesStyles.map((node) => node.scssFinal).join('')}}`;
 }
+
+export function extractCSSClasses(htmlString: string): string[] {
+  const classRegex = /class=["']([^"']+)["']/g;
+  const classes: Set<string> = new Set();
+
+  let match: RegExpExecArray | null = classRegex.exec(htmlString);
+
+  while (match !== null) {
+    const classList = match[1].split(/\s+/);
+
+    for (const cls of classList) {
+      classes.add(cls);
+    }
+
+    match = classRegex.exec(htmlString);
+  }
+
+  return Array.from(classes);
+}
