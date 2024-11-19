@@ -50,6 +50,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@release-it/conventional-changelog": "9.0.3",
+    "@types/handlebars": "4.1.0",
     "release-it": "17.10.0",
     "tsup": "8.3.5",
     "tsx": "4.19.2",

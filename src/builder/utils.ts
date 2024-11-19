@@ -15,7 +15,6 @@ export async function cleanPaths(paths: string[]): Promise<void> {
 
       if (stats?.isDirectory()) {
         await fsPromise.rm(resolvedPath, { recursive: true, force: true });
-        console.log(`Successfully cleaned: ${resolvedPath}`);
       } else {
         console.log(`Path does not exist or is not a directory: ${resolvedPath}`);
       }
