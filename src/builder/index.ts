@@ -1,58 +1,17 @@
-import * as fs from 'node:fs';
 import * as fsPromise from 'node:fs/promises';
-import path from 'node:path';
-import esbuild from 'esbuild';
-import { currentInstance } from '../current-instance';
-import { writeFinalDistIndexContent } from './final-index';
-import { writeControllerIndex, writeEditorIndex } from './templates';
-import { cleanPaths } from './utils';
-export { currentInstance } from '../current-instance';
+import { getCurrentInstance } from '../current-instance';
+import { buildNodeController } from './esbuild';
+import { buildFinalDistIndexContent } from './final-index';
+import { getControllerIndexContent, getEditorIndexContent } from './templates';
+import { cleanPaths, ensureDirectoryExists, writeFile } from './utils';
+
+export const currentInstance = getCurrentInstance();
+
 export * from './templates';
 export * from './styles';
 export * from './html';
 export * from './final-index';
 export * from './doc';
-
-export async function buildNodeController(minify = false) {
-  return esbuild.build({
-    entryPoints: [currentInstance.cacheDirFiles.controllerIndex],
-    outfile: `${currentInstance.pathDist}/index.js`,
-    bundle: true,
-    minify,
-    minifyWhitespace: minify,
-    minifyIdentifiers: minify,
-    minifySyntax: minify,
-    platform: 'node',
-    format: 'cjs',
-    target: 'es2018',
-    loader: { '.ts': 'ts' },
-    packages: 'external',
-  });
-}
-
-export async function buildNodeEditor(minify = false) {
-  const result = await esbuild.build({
-    entryPoints: [currentInstance.cacheDirFiles.editorIndex],
-    bundle: true,
-    platform: 'browser',
-    format: 'iife',
-    target: 'es6',
-    sourcemap: false,
-    minify: minify,
-    minifyWhitespace: minify,
-    minifySyntax: minify,
-    minifyIdentifiers: minify,
-    legalComments: 'none',
-
-    write: false,
-    loader: { '.ts': 'ts' },
-  });
-
-  if (result.outputFiles && result.outputFiles.length > 0) {
-    return result.outputFiles[0].text;
-  }
-  return '';
-}
 
 export async function writeCacheConfigFile(): Promise<void> {
   try {
@@ -66,18 +25,38 @@ export async function writeCacheConfigFile(): Promise<void> {
   }
 }
 
-function ensureDirectoryExists(dirPath: string): void {
-  const fullPath = path.resolve(dirPath);
-  if (!fs.existsSync(fullPath)) {
-    fs.mkdirSync(fullPath, { recursive: true });
-  }
-}
+type BuildAllPackageParams = {
+  minify?: boolean;
+};
 
-export async function buildAllPackage(minify = false) {
+export async function buildAllPackage(params?: BuildAllPackageParams): Promise<void> {
+  const { minify = false } = params || {};
+
+  const nodeFoldersDefinition = currentInstance.getListNodesFull();
+
   ensureDirectoryExists(currentInstance.pathLibCacheDir);
   await cleanPaths([currentInstance.pathDist]);
 
-  await Promise.all([writeCacheConfigFile(), writeControllerIndex(), writeEditorIndex()]);
+  const controllerTask = getControllerIndexContent(nodeFoldersDefinition).then((content) => {
+    writeFile(`${currentInstance.cacheDirFiles.controllerIndex}`, content).then(() => {
+      buildNodeController(minify);
+    });
+  });
 
-  await Promise.all([buildNodeController(minify), writeFinalDistIndexContent(minify)]);
+  const editorTask = getEditorIndexContent(nodeFoldersDefinition).then((content) => {
+    writeFile(`${currentInstance.cacheDirFiles.editorIndex}`, content).then(() => {
+      buildFinalDistIndexContent({
+        minify,
+        nodes: nodeFoldersDefinition,
+      }).then((contentFinalIndexHtml) => {
+        writeFile(`${currentInstance.pathDist}/index.html`, contentFinalIndexHtml);
+      });
+    });
+  });
+
+  await Promise.all([
+    controllerTask,
+    editorTask,
+    writeFile(`${currentInstance.pathLibCacheDir}/config.json`, JSON.stringify(currentInstance.config, null, 2)),
+  ]);
 }

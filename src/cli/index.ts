@@ -18,7 +18,9 @@ program
   .description('Build project')
   .action(async (options) => {
     consola.start('Building...');
-    await buildAllPackage(true);
+    await buildAllPackage({
+      minify: true,
+    });
     consola.ready('Build completed');
   });
 

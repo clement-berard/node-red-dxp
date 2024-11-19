@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import fsPromise from 'node:fs/promises';
 import path from 'node:path';
 
@@ -21,5 +22,20 @@ export async function cleanPaths(paths: string[]): Promise<void> {
     } catch (error) {
       console.error(`Error cleaning path (${dirPath}): ${error}`);
     }
+  }
+}
+
+export function ensureDirectoryExists(dirPath: string): void {
+  const fullPath = path.resolve(dirPath);
+  if (!fs.existsSync(fullPath)) {
+    fs.mkdirSync(fullPath, { recursive: true });
+  }
+}
+
+export async function writeFile(path: string, content: string): Promise<void> {
+  try {
+    await fsPromise.writeFile(path, content);
+  } catch (error) {
+    console.error('Error writing controller index:', error);
   }
 }

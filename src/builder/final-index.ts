@@ -1,10 +1,12 @@
-import * as fs from 'node:fs';
+import type { ListNodesFull } from '../current-instance';
+import { handleAllDoc } from './doc';
+import { buildNodeEditor } from './esbuild';
 import { getNodesHtml } from './html';
-import { buildNodeEditor, currentInstance, handleAllDoc } from './index';
 import { getAllCompiledStyles } from './styles';
 import { cleanSpaces } from './utils';
 
-export async function buildFinalDistIndexContent(minify = true) {
+export async function buildFinalDistIndexContent(params?: WriteFinalDistIndexContentParams) {
+  const { minify = false } = params || {};
   const html = await getNodesHtml();
   const js = await buildNodeEditor(minify);
   const css = getAllCompiledStyles();
@@ -18,7 +20,7 @@ ${js.trim()}
 ${docs}`;
 }
 
-export async function writeFinalDistIndexContent(minify = false) {
-  const content = await buildFinalDistIndexContent(minify);
-  fs.writeFileSync(`${currentInstance.pathDist}/index.html`, content);
-}
+type WriteFinalDistIndexContentParams = {
+  minify?: boolean;
+  nodes: ListNodesFull;
+};
