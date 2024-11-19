@@ -4,6 +4,7 @@ import type { EditorNodeDef, EditorNodeInstance, EditorNodeProperties } from 'no
 import type { EditorDomHelper } from './types';
 import { resolveSelector } from './utils';
 export type * from './types';
+export * from './utils';
 export * from './dom';
 
 const defaultNodeDef: Partial<EditorNodeDef> = {};

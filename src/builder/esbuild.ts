@@ -1,3 +1,4 @@
+import path from 'node:path';
 import esbuild from 'esbuild';
 import { currentInstance } from '../current-instance';
 
@@ -31,7 +32,7 @@ export async function buildNodeEditor(minify = false) {
     minifySyntax: minify,
     minifyIdentifiers: minify,
     legalComments: 'none',
-
+    inject: [path.resolve(__dirname, '..', './editor/global-solid.ts')],
     write: false,
     loader: { '.ts': 'ts' },
   });
