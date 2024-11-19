@@ -6,7 +6,7 @@
     "requireBranch": "main",
     "commitMessage": "chore(release): ${version}",
     "tagName": "v${version}",
-    "requireCleanWorkingDir": false,
+    "requireCleanWorkingDir": true,
     "push": false
   },
   "github": {
@@ -24,7 +24,7 @@
         "types": [
           { "type": "feat", "section": "✨ Features", "hidden": false },
           { "type": "fix", "section": "🐛 Fixes", "hidden": false },
-          { "type": "chore", "section": "📦 Chores", "hidden": false },
+          { "type": "chore", "section": "📦 Chores", "hidden": true },
           { "type": "docs", "section": "📝 Documentation", "hidden": false },
           { "type": "style", "section": "💅 Styling", "hidden": false },
           { "type": "refactor", "section": "🔨 Refactors", "hidden": false },
@@ -32,9 +32,6 @@
           { "type": "test", "section": "✅ Tests", "hidden": false },
           { "type": "ci", "section": "🔧 Continuous Integration", "hidden": false }
         ]
-      },
-      "gitRawCommitsOpts": {
-        "from": "HEAD~1"
       }
     }
   }
