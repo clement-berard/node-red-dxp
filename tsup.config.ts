@@ -5,12 +5,17 @@ const minifyFlag = true;
 const externals = [
   'esbuild',
   'glob',
-  'del',
   'sass',
   'html-minifier-terser',
   'chokidar',
   'consola',
   'nodemon',
+  'tailwindcss',
+  'postcss',
+  'cssnano',
+  '@fullhuman/postcss-purgecss',
+  'autoprefixer',
+  'solid-js',
   'prettyjson',
   'browser-sync',
 ];

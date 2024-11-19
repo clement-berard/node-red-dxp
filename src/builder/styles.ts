@@ -1,10 +1,28 @@
+import fs from 'node:fs';
 import path from 'node:path';
+import purgeCss from '@fullhuman/postcss-purgecss';
+import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
 import { globSync } from 'glob';
+import postcss from 'postcss';
 import * as sass from 'sass';
-import { currentInstance } from '../current-instance';
+import tailwindcss from 'tailwindcss';
+import { type ListNodesFull, currentInstance } from '../current-instance';
+
+async function processCSS(cssString: string, htmlString: string): Promise<string> {
+  const result = await postcss([
+    purgeCss({
+      content: [{ raw: htmlString, extension: 'html' }], // Analyse directe du HTML
+    }),
+    autoprefixer,
+    cssnano({ preset: 'default' }),
+  ]).process(cssString, { from: undefined });
+
+  return result.css;
+}
 
 function compileScss(filePath: string): string {
-  const result = sass.compile(filePath, { style: 'compressed' });
+  const result = sass.compile(filePath, { style: 'expanded' });
   return result.css;
 }
 
@@ -17,41 +35,70 @@ function buildStyles(files: string[]): Record<string, string> {
   return styles;
 }
 
-export function getNodesStyles() {
-  const nodes = currentInstance.getListNodesFull();
+export function getNodesStyles(nodes: ListNodesFull) {
   const hasStyles = nodes.some((node) => node.editor.scssFiles.length);
   if (!hasStyles) {
     return [];
   }
   return nodes
+    .filter((node) => node.editor.scssFiles.length)
     .map((node) => {
       const nodeStyles = buildStyles(node.editor.scssFiles);
       const mergedCompiledStyles = Object.values(nodeStyles).join('');
       return {
         name: node.name,
-        styles: buildStyles(node.editor.scssFiles),
         mergedCompiledStyles,
-        scssFinal: `#${node.nodeIdentifier}{${mergedCompiledStyles}}`,
-        hasStyles: !!node.editor.scssFiles.length,
+        scssFinal: `
+        #${node.nodeIdentifier}{
+          ${mergedCompiledStyles}
+        }`,
       };
-    })
-    .filter((node) => node.hasStyles);
+    });
+}
+
+export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwindConfig: any = {}) {
+  const defaultConfig = {
+    content: [{ raw: htmlString }],
+    theme: {},
+  };
+
+  const finalConfig = { ...defaultConfig, ...tailwindConfig };
+
+  const tailwindScssFilePath = globSync(
+    `${path.resolve(__dirname, '..')}/${currentInstance.config.nodes.editor.dirName}/assets/tailwind.scss`,
+  )[0];
+
+  const scssString = tailwindScssFilePath.length ? fs.readFileSync(tailwindScssFilePath, 'utf8') : '';
+
+  const result = await postcss([tailwindcss(finalConfig), require('autoprefixer')]).process(scssString, {
+    from: undefined,
+  });
+
+  return result.css;
 }
 
 export function getSrcStyles() {
   const srcStyles = currentInstance.getResolvedSrcPathsScss();
-  const toAdd = globSync(`${path.resolve(__dirname, '..')}/editor/**/*.scss`);
-  const srcStylesCompiled = buildStyles([...srcStyles, ...toAdd]);
+  const srcStylesCompiled = buildStyles([...srcStyles]);
   return Object.values(srcStylesCompiled).join('');
 }
 
-export function getAllCompiledStyles() {
+type GetAllCompiledStylesParams = {
+  rawHtml: string;
+  minify?: boolean;
+  nodes: ListNodesFull;
+};
+
+export async function getAllCompiledStyles(params: GetAllCompiledStylesParams) {
+  const { rawHtml, minify = false, nodes } = params || {};
   const srcStyles = getSrcStyles();
-  const nodesStyles = getNodesStyles();
+  const nodesStyles = getNodesStyles(nodes);
+  const twCss = await generateCSSFromHTMLWithTailwind(rawHtml);
 
-  if (!srcStyles && !nodesStyles.length) {
-    return '';
-  }
+  const getSrcWrapper = (content: string) => `.${currentInstance.packageNameSlug}{${content}}`;
+  const allNodesStyles = nodesStyles.map((node) => node.scssFinal).join('\n');
 
-  return `.${currentInstance.packageNameSlug}{${srcStyles}${nodesStyles.map((node) => node.scssFinal).join('')}}`;
+  const result = getSrcWrapper(`${twCss}${srcStyles}${allNodesStyles}`);
+
+  return minify ? processCSS(result, rawHtml) : result;
 }

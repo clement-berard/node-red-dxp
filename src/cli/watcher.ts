@@ -49,7 +49,9 @@ export function runWatcher() {
   watcher
     .on('ready', async () => {
       consola.info('Initial scan complete. Ready for changes');
-      await buildAllPackage(false);
+      await buildAllPackage({
+        minify: false,
+      });
       consola.success('Initial Build completed');
       if (hasNodeRedWatcher) {
         runNodemonAndBrowserSync();
@@ -59,7 +61,9 @@ export function runWatcher() {
     })
     .on('change', async (path: string) => {
       consola.info(`File ${path.replace(currentInstance.currentDir, '')} has been changed`);
-      await buildAllPackage(false);
+      await buildAllPackage({
+        minify: false,
+      });
       consola.success('Build completed');
       if (hasNodeRedWatcher) {
         restartNodemonAndBrowserSync();

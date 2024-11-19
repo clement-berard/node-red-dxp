@@ -1,24 +1,35 @@
-import * as fs from 'node:fs';
+import { type ListNodesFull, currentInstance } from '../current-instance';
+import { handleAllDoc } from './doc';
+import { buildNodeEditor } from './esbuild';
 import { getNodesHtml } from './html';
-import { buildNodeEditor, currentInstance, handleAllDoc } from './index';
 import { getAllCompiledStyles } from './styles';
-import { cleanSpaces } from './utils';
 
-export async function buildFinalDistIndexContent(minify = true) {
-  const html = await getNodesHtml();
+export async function buildFinalDistIndexContent(params?: WriteFinalDistIndexContentParams) {
+  const { minify = false } = params || {};
+  const html = await getNodesHtml({
+    minify,
+    nodes: params.nodes,
+    packageNameSlug: currentInstance.packageNameSlug,
+  });
   const js = await buildNodeEditor(minify);
-  const css = getAllCompiledStyles();
+  const css = await getAllCompiledStyles({
+    rawHtml: html.html,
+    minify,
+    nodes: params.nodes,
+  });
   const docs = handleAllDoc();
 
-  return `${minify ? cleanSpaces(html) : html}
-<style>${css}</style>
-<script type="application/javascript">
-${js.trim()}
-</script>
-${docs}`;
+  const wrappedJs = `<script type="application/javascript">${js.trim()}</script>`;
+  const wrappedCss = `<style>${css}</style>`;
+
+  return `
+${html.allWrappedHtml}
+${wrappedCss}
+${wrappedJs}
+${docs}`.trim();
 }
 
-export async function writeFinalDistIndexContent(minify = false) {
-  const content = await buildFinalDistIndexContent(minify);
-  fs.writeFileSync(`${currentInstance.pathDist}/index.html`, content);
-}
+type WriteFinalDistIndexContentParams = {
+  minify?: boolean;
+  nodes: ListNodesFull;
+};

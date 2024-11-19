@@ -1,0 +1,22 @@
+@tailwind utilities; @tailwind components; @tailwind base;
+
+@layer components {
+  .alert {
+    @apply p-4 mb-4 text-sm rounded-lg;
+  }
+  .alert-info {
+    @apply text-blue-800 bg-blue-50;
+  }
+  .alert-danger {
+    @apply text-red-800 bg-red-50;
+  }
+  .alert-success {
+    @apply text-green-800 bg-green-50;
+  }
+  .alert-warning {
+    @apply text-yellow-800 bg-yellow-50;
+  }
+  .alert-dark {
+    @apply text-gray-800 bg-gray-50;
+  }
+}

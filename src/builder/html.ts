@@ -1,11 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { minify } from 'html-minifier-terser';
-import { currentInstance } from '../current-instance';
+import type { ListNode, ListNodesFull } from '../current-instance';
+import { cleanSpaces } from './utils';
 
-export async function getNodeHtml(filePath: string) {
-  const htmlContent = readFileSync(filePath, 'utf8');
-
-  return minify(htmlContent, {
+export async function minifyHtml(content: string) {
+  return minify(content, {
     collapseWhitespace: true,
     removeComments: true,
     removeRedundantAttributes: false,
@@ -16,25 +15,53 @@ export async function getNodeHtml(filePath: string) {
   });
 }
 
-function wrapHtml(nodeName: string, nodeIdentifier: string, pkgNameSlug: string, html: string) {
+function wrapHtml(nodeName: string, html: string) {
   return `
     <script type="text/html" data-template-name="${nodeName}">
-        <div class="${pkgNameSlug}">
-            <div class="${nodeIdentifier}">${html}</div>
-        </div>
+        ${html}
     </script>
 `;
 }
 
-export async function getNodesHtml() {
-  const nodes = currentInstance.getListNodesFull();
+async function processNodeHtml(node: ListNode, packageNameSlug: string, minify = false) {
+  const htmlContent = readFileSync(node.editor.htmlPath, 'utf8');
+  const htmlContentWithAdditionalDiv = `
+  <div class="${packageNameSlug}">
+    <div class="${node.nodeIdentifier}">${htmlContent}</div>
+  </div>
+  `;
+  const html = minify ? await minifyHtml(htmlContentWithAdditionalDiv) : htmlContentWithAdditionalDiv;
+  const wrappedHtml = wrapHtml(node.name, html);
 
-  const result = [];
+  return {
+    nodeName: node.name,
+    nodeIdentifier: node.nodeIdentifier,
+    html,
+    wrappedHtml,
+  };
+}
 
-  for (const node of nodes) {
-    const html = await getNodeHtml(node.editor.htmlPath);
-    result.push(wrapHtml(node.name, node.nodeIdentifier, currentInstance.packageNameSlug, html));
-  }
+type GetNodesHtmlParams = {
+  nodes: ListNodesFull;
+  minify?: boolean;
+  packageNameSlug: string;
+};
 
-  return result.join('').trim();
+export async function getNodesHtml(params: GetNodesHtmlParams) {
+  const { nodes, minify = false } = params;
+
+  const res = await Promise.all(nodes.map((node) => processNodeHtml(node, params.packageNameSlug, minify)));
+
+  const allHtml = res
+    .map((node) => node.html)
+    .join('')
+    .trim();
+
+  return {
+    html: allHtml,
+    allWrappedHtml: res
+      .map((node) => (minify ? cleanSpaces(node.wrappedHtml) : node.wrappedHtml))
+      .join('')
+      .trim(),
+  };
 }

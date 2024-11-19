@@ -94,3 +94,6 @@ export function getCurrentInstance() {
 }
 
 export const currentInstance = getCurrentInstance();
+
+export type ListNodesFull = ReturnType<typeof currentInstance.getListNodesFull>;
+export type ListNode = ListNodesFull[number];

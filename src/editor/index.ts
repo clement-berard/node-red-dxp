@@ -2,7 +2,9 @@
 import { merge } from 'merge-anything';
 import type { EditorNodeDef, EditorNodeInstance, EditorNodeProperties } from 'node-red';
 import type { EditorDomHelper } from './types';
+import { resolveSelector } from './utils';
 export type * from './types';
+export * from './dom';
 
 const defaultNodeDef: Partial<EditorNodeDef> = {};
 
@@ -12,25 +14,6 @@ export function createEditorNode<
   TInstProps extends TProps = TProps,
 >(props: Partial<EditorNodeDef<TProps, TCreds, TInstProps>>): EditorNodeDef<TProps, TCreds, TInstProps> {
   return merge(defaultNodeDef, props) as EditorNodeDef<TProps, TCreds, TInstProps>;
-}
-
-function resolveSelector(inSelector: string) {
-  if (inSelector.startsWith('$$')) {
-    return `#node-config-input-${inSelector.replace('$$', '')}`;
-  }
-
-  if (inSelector.startsWith('$')) {
-    return `#node-input-${inSelector.replace('$', '')}`;
-  }
-
-  return inSelector;
-}
-
-function isNodeInput(selector: string) {
-  const isShortcut = selector.startsWith('$$') || selector.startsWith('$');
-  const isFullSelector = selector.startsWith('#node-config-input') || selector.startsWith('#node-input');
-
-  return isShortcut || isFullSelector;
 }
 
 function resolveInputKey(selector: string) {
