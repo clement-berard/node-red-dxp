@@ -12,7 +12,11 @@ export async function buildFinalDistIndexContent(params?: WriteFinalDistIndexCon
     packageNameSlug: currentInstance.packageNameSlug,
   });
   const js = await buildNodeEditor(minify);
-  const css = getAllCompiledStyles();
+  const css = await getAllCompiledStyles({
+    rawHtml: html.html,
+    minify,
+    nodes: params.nodes,
+  });
   const docs = handleAllDoc();
 
   const wrappedJs = `<script type="application/javascript">${js.trim()}</script>`;

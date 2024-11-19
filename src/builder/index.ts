@@ -48,8 +48,22 @@ export async function buildAllPackage(params?: BuildAllPackageParams): Promise<v
       buildFinalDistIndexContent({
         minify,
         nodes: nodeFoldersDefinition,
-      }).then((contentFinalIndexHtml) => {
-        writeFile(`${currentInstance.pathDist}/index.html`, contentFinalIndexHtml);
+      }).then(async (contentFinalIndexHtml) => {
+        // const extractor = new CSSExtractor({
+        //   ...options,
+        //   sources: [`${currentInstance.pathDist}`],
+        //   include: ['**/*.{html}'],
+        // });
+        //
+        // extractor.init();
+        // await extractor.prepare();
+        // const resolvedVirtualModuleId = extractor.;
+        // console.log('extractor', resolvedVirtualModuleId);
+        // await extractCSSFromHTML(contentFinalIndexHtml, `${currentInstance.pathDist}/index.css}`, {
+        //   verbose: 1,
+        // });
+
+        await writeFile(`${currentInstance.pathDist}/index.html`, contentFinalIndexHtml);
       });
     });
   });

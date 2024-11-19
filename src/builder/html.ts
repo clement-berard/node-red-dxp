@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { minify } from 'html-minifier-terser';
 import type { ListNode, ListNodesFull } from '../current-instance';
-import { extractCSSClasses } from './styles';
 import { cleanSpaces } from './utils';
 
 export async function minifyHtml(content: string) {
@@ -58,11 +57,8 @@ export async function getNodesHtml(params: GetNodesHtmlParams) {
     .join('')
     .trim();
 
-  const cssClasses = extractCSSClasses(allHtml);
-
   return {
     html: allHtml,
-    cssClasses,
     allWrappedHtml: res
       .map((node) => (minify ? cleanSpaces(node.wrappedHtml) : node.wrappedHtml))
       .join('')
