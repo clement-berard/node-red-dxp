@@ -1,7 +1,7 @@
 import { performance } from 'node:perf_hooks';
 import * as process from 'node:process';
 import { Command } from 'commander';
-import { consola } from 'consola';
+import ora from 'ora';
 import packageJson from '../../package.json';
 import { Builder } from '../builder';
 import { currentContext } from '../current-context';
@@ -18,8 +18,10 @@ program
   .command('build')
   .description('Build project')
   .action(async (options) => {
+    const nodesCount = currentContext.listNodesFull.length;
     const start = performance.now();
-    consola.start(`Building ${currentContext.listNodesFull.length} node(s)...`);
+    const spinner = ora(`Building ${nodesCount} node(s)...`).start();
+
     const builder = new Builder({
       minify: true,
     });
@@ -27,7 +29,7 @@ program
     const end = performance.now();
     const elapsed = end - start;
     const elapsedSeconds = elapsed > 1000 ? `${(elapsed / 1000).toFixed(2)}s` : `${elapsed.toFixed(2)}ms`;
-    consola.ready(`Build completed in ${elapsedSeconds}`);
+    spinner.succeed(`Build completed in ${elapsedSeconds} for ${nodesCount} nodes(s)`);
   });
 
 program
