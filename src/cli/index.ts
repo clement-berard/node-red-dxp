@@ -3,7 +3,8 @@ import * as process from 'node:process';
 import { Command } from 'commander';
 import { consola } from 'consola';
 import packageJson from '../../package.json';
-import { Builder } from '../builder/Builder.class';
+import { Builder } from '../builder';
+import { currentContext } from '../current-context';
 import { registerChecksCommands } from './commands/checks';
 import { registerInfoCommands } from './commands/info';
 import { registerScaffoldingCommands } from './commands/scaffolding';
@@ -18,7 +19,7 @@ program
   .description('Build project')
   .action(async (options) => {
     const start = performance.now();
-    consola.start('Building...');
+    consola.start(`Building ${currentContext.listNodesFull.length} node(s)...`);
     const builder = new Builder({
       minify: true,
     });
@@ -32,9 +33,11 @@ program
 program
   .command('watch')
   .description('watch project')
-  .option('--minify <minify>', '[WIP] Minify the output', false)
+  .option('--minify', 'Minify the output', false)
   .action((options) => {
-    runWatcher();
+    runWatcher({
+      minify: options.minify,
+    });
   });
 
 registerChecksCommands(program);
