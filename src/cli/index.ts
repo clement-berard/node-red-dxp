@@ -1,5 +1,5 @@
+import { performance } from 'node:perf_hooks';
 import * as process from 'node:process';
-
 import { Command } from 'commander';
 import { consola } from 'consola';
 import packageJson from '../../package.json';
@@ -17,11 +17,15 @@ program
   .command('build')
   .description('Build project')
   .action(async (options) => {
+    const start = performance.now();
     consola.start('Building...');
     await buildAllPackage({
       minify: true,
     });
-    consola.ready('Build completed');
+    const end = performance.now();
+    const elapsed = end - start;
+    const elapsedSeconds = elapsed > 1000 ? `${(elapsed / 1000).toFixed(2)}s` : `${elapsed.toFixed(2)}ms`;
+    consola.ready(`Build completed in ${elapsedSeconds}`);
   });
 
 program

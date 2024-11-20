@@ -37,7 +37,7 @@ export default defineConfig([
     target: 'es6',
     noExternal: ['merge-anything'],
     external: externals,
-    onSuccess: 'cp -r src/editor/assets dist/editor && cp -r src/editor/global-solid.ts dist/editor',
+    onSuccess: '. build.sh',
   },
   {
     entry: {
