@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
-import { Context } from '../../Context';
+import { currentContext } from '../../current-context';
 import { computeNodeName } from '../../utils/common-utils';
 import { writeFile } from '../../utils/node-utils';
 
@@ -31,16 +31,14 @@ export class CreateNodeScaffolding {
   readonly newNodeDistPath: string;
   readonly newNodeEditorDistPath: string;
   readonly scaffoldedDistHbs: string;
-  readonly context: Context;
 
   constructor(innerNodeName: string) {
     const { pascalName, dashName } = computeNodeName(innerNodeName);
     this.nodePascalName = pascalName;
     this.nodeDashName = dashName;
-    this.context = new Context({ withInit: false });
-    this.newNodeDistPath = `${this.context.current.pathSrcNodesDir}/${dashName}`;
-    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${this.context.current.config.nodes.editor.dirName}`;
-    this.scaffoldedDistHbs = `${this.context.current.currentPackagedDistPath}/scaffolding/create-node/hbs`;
+    this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
+    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${currentContext.config.nodes.editor.dirName}`;
+    this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
   }
 
   distFolderExist() {
@@ -64,6 +62,11 @@ export class CreateNodeScaffolding {
           nodePascalName: this.nodePascalName,
           nodeName: this.nodeDashName,
         },
+      },
+      {
+        finalPath: `${this.newNodeDistPath}/doc.md`,
+        templatePath: `${this.scaffoldedDistHbs}/doc.md.hbs`,
+        templateData: {},
       },
       {
         finalPath: `${this.newNodeEditorDistPath}/index.ts`,
