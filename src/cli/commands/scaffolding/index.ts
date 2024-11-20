@@ -5,7 +5,7 @@ import { CreateNodeScaffolding } from '../../../scaffolding/create-node';
 import { createFolderIfNotExists } from '../../../utils/node-utils';
 
 export function registerScaffoldingCommands(parentCommand: Command) {
-  const scaffolding = new Command('create-node').description('Create a new node').action(async () => {
+  const scaffolding = new Command('create-node').description('Create new node').action(async () => {
     const userChoice = await consola.prompt('Enter node name:', {
       type: 'text',
     });
