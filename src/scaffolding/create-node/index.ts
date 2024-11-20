@@ -2,9 +2,9 @@ import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
-import { BaseInstanceClass } from '../BaseInstance.class';
-import { computeNodeName } from '../utils/common-utils';
-import { writeFile } from '../utils/node-utils';
+import { BaseInstanceClass } from '../../BaseInstance.class';
+import { computeNodeName } from '../../utils/common-utils';
+import { writeFile } from '../../utils/node-utils';
 
 async function loadTemplate(filePath: string): Promise<string> {
   try {
