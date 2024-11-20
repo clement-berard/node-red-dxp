@@ -1,0 +1,26 @@
+import { type NodeEditorProps, createEditorNode, domHelper } from '@keload/node-red-dxp/editor';
+import type { Node{{nodePascalName}}Props } from '../types';
+
+const {{nodePascalName}} = createEditorNode<NodeEditorProps<Node{{nodePascalName}}Props>>({
+    category: 'my_cat',
+    color: '#a6bbcf',
+    defaults: {
+        name: { value: '', required: true },
+        age: { value: '' },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: 'font-awesome/fa-tower-broadcast',
+    label: function () {
+    return this.name || '{{nodePascalName}}';
+    },
+    oneditprepare: function () {
+    const { watchInput } = domHelper<Node{{nodePascalName}}Props>(this);
+        // $age == #node-input-age in DOM
+        watchInput('$age', ([ageValue]) => {
+            console.log('ageValue', ageValue);
+        });
+    },
+});
+
+export default {{nodePascalName}};
