@@ -3,9 +3,10 @@ import path from 'node:path';
 import { Command } from 'commander';
 import { consola } from 'consola';
 import Handlebars from 'handlebars';
-import { dash, pascal } from 'radash';
 import { currentInstance, getCurrentInstance } from '../../../current-instance';
 import { renderTemplate } from '../../../scaffolding';
+import { computeNodeName } from '../../../utils/common-utils';
+import { createFolderIfNotExists, distributionPackagePath, writeFile } from '../../../utils/node-utils';
 
 export function registerScaffoldingCommands(parentCommand: Command) {
   const scaffolding = new Command('create-node').description('[WIP] Create a new node').action(async () => {
@@ -20,27 +21,70 @@ export function registerScaffoldingCommands(parentCommand: Command) {
     // const userIsOk = await consola.prompt(`This name is OK for you '${nodeName}'?`, {
     //   type: 'confirm',
     // });
-    // const response = 'set item';
-    // const nodeName = dash(response);
-    // const nodePascalName = pascal(response);
-    //
-    // const scaffoldedDistHbs = `${path.resolve(__dirname, '..')}/scaffolding/create-node/hbs`;
-    // const scaffoldedDistHbsNodeController = `${scaffoldedDistHbs}/controller.ts.hbs`;
-    //
-    // const newNodePath = `${currentInstance.pathSrcNodesDir}/${nodeName}`;
-    // const controllerPath = `${newNodePath}/index.ts`;
-    //
-    // console.log('scaffoldedDistHbsNodeController', scaffoldedDistHbsNodeController);
-    //
+    const response = 'je suis un node nouveau';
+    const { pascalName: nodePascalName, dashName: nodeName } = computeNodeName(response);
+
+    const newNodePath = `${currentInstance.pathSrcNodesDir}/${nodeName}`;
+
+    const folderAlreadyExists = fs.existsSync(newNodePath);
+
+    if (folderAlreadyExists) {
+      consola.error(`Node ${nodeName} already exists`);
+      consola.info(`In ${newNodePath}`);
+      return;
+    }
+
+    // all good here we go
+
+    const scaffoldedDistHbs = `${distributionPackagePath}/scaffolding/create-node/hbs`;
+    const newNodeEditorPath = `${newNodePath}/editor`;
+
+    // createFolderIfNotExists(newNodeEditorPath);
+
+    const toSend = [
+      {
+        finalPath: `${newNodePath}/index.ts`,
+        templatePath: `${scaffoldedDistHbs}/controller.ts.hbs`,
+        templateData: {
+          nodePascalName,
+          nodeName,
+        },
+      },
+      {
+        finalPath: `${newNodePath}/types.ts`,
+        templatePath: `${scaffoldedDistHbs}/types.ts.hbs`,
+        templateData: {
+          nodePascalName,
+          nodeName,
+        },
+      },
+      {
+        finalPath: `${newNodeEditorPath}/index.ts`,
+        templatePath: `${scaffoldedDistHbs}/editor/index.ts.hbs`,
+        templateData: {
+          nodePascalName,
+          nodeName,
+        },
+      },
+      {
+        finalPath: `${newNodeEditorPath}/styles.scss`,
+        templatePath: `${scaffoldedDistHbs}/editor/styles.scss.hbs`,
+        templateData: {},
+      },
+      {
+        finalPath: `${newNodeEditorPath}/index.html`,
+        templatePath: `${scaffoldedDistHbs}/editor/index.html.hbs`,
+        templateData: {},
+      },
+    ];
+
+    console.log('toSend', toSend);
+
     // const tt = await renderTemplate(scaffoldedDistHbsNodeController, {
     //   nodePascalName,
     // });
-    // if (!fs.existsSync(newNodePath)) {
-    //   fs.mkdirSync(newNodePath, { recursive: true });
-    // }
-    // fs.writeFileSync(controllerPath, tt, 'utf-8');
-    // const template = handlebars.compile('Hello, {{name}}!');
-
+    // await writeFile(controllerPath, tt);
+    //
     // console.log('controllerPath', tt);
   });
 

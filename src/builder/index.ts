@@ -1,8 +1,8 @@
 import { getCurrentInstance } from '../current-instance';
+import { cleanPaths, createFolderIfNotExists, writeFile } from '../utils/node-utils';
 import { buildNodeController } from './esbuild';
 import { buildFinalDistIndexContent } from './final-index';
 import { getControllerIndexContent, getEditorIndexContent } from './templates';
-import { cleanPaths, ensureDirectoryExists, writeFile } from './utils';
 
 export const currentInstance = getCurrentInstance();
 
@@ -21,7 +21,7 @@ export async function buildAllPackage(params?: BuildAllPackageParams): Promise<v
 
   const nodeFoldersDefinition = currentInstance.getListNodesFull();
 
-  ensureDirectoryExists(currentInstance.pathLibCacheDir);
+  createFolderIfNotExists(currentInstance.pathLibCacheDir);
   await cleanPaths([currentInstance.pathDist]);
 
   const controllerTask = getControllerIndexContent(nodeFoldersDefinition).then((content) => {

@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import path from 'node:path';
 import purgeCss from '@fullhuman/postcss-purgecss';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
@@ -8,6 +7,7 @@ import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
 import { type ListNodesFull, currentInstance } from '../current-instance';
+import { distributionPackagePath } from '../utils/node-utils';
 
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([
@@ -65,7 +65,7 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
   const finalConfig = { ...defaultConfig, ...tailwindConfig };
 
   const tailwindScssFilePath = globSync(
-    `${path.resolve(__dirname, '..')}/${currentInstance.config.nodes.editor.dirName}/assets/tailwind.scss`,
+    `${distributionPackagePath}/${currentInstance.config.nodes.editor.dirName}/assets/tailwind.scss`,
   )[0];
 
   const scssString = tailwindScssFilePath.length ? fs.readFileSync(tailwindScssFilePath, 'utf8') : '';
