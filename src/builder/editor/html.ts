@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { minify } from 'html-minifier-terser';
-import type { ListNode, ListNodesFull } from '../current-instance';
-import { cleanSpaces } from '../utils/common-utils';
+import type { ListNode, ListNodesFull } from '../../current-context';
+import { cleanSpaces } from '../../utils/common-utils';
 
 export async function minifyHtml(content: string) {
   return minify(content, {

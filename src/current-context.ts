@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { globSync } from 'glob';
 import { merge } from 'merge-anything';
@@ -30,6 +31,7 @@ const pathSrcDir = `${currentDir}/${currentConfig.srcDir}`;
 const additionalResourcesDir = `${currentDir}/resources`;
 const pathSrcNodesDir = `${pathSrcDir}/${currentConfig.nodesDirName}`;
 const pathLibCacheDir = `${currentDir}/${currentConfig.libCacheDir}`;
+const currentPackagedDistPath = `${path.resolve(__dirname, '..')}`;
 
 export function listNodeFolders() {
   const rawNodes = globSync(`${pathSrcNodesDir}/*`, { withFileTypes: true });
@@ -51,7 +53,7 @@ export function listNodeFolders() {
       dashName,
       relativeEditorPath,
       relativePath,
-      nodeIdentifier: `${currentInstance.packageNameSlug}-${dashName}`,
+      nodeIdentifier: `${currentContext.packageNameSlug}-${dashName}`,
       fullControllerPath: `${fullPath}/${currentConfig.nodes.controllerName}.ts`,
       editor: {
         tsPath: `${fullEditorPath}/${currentConfig.nodes.editor.tsName}.ts`,
@@ -66,13 +68,14 @@ export function listNodeFolders() {
   });
 }
 
-export function getCurrentInstance() {
+export function getCurrentContext() {
   return {
     currentDir,
     pathSrcDir,
     pathSrcNodesDir,
     additionalResourcesDir,
     pathDist: `${currentDir}/${currentConfig.builder.outputDir}`,
+    currentPackagedDistPath,
     cacheDirFiles: {
       controllerIndex: `${pathLibCacheDir}/controller-index.ts`,
       editorIndex: `${pathLibCacheDir}/editor-index.ts`,
@@ -93,7 +96,9 @@ export function getCurrentInstance() {
   };
 }
 
-export const currentInstance = getCurrentInstance();
+export const currentContext = getCurrentContext();
 
-export type ListNodesFull = ReturnType<typeof currentInstance.getListNodesFull>;
+export type CurrentContext = ReturnType<typeof getCurrentContext>;
+export type CurrentConfig = CurrentContext['config'];
+export type ListNodesFull = ReturnType<typeof currentContext.getListNodesFull>;
 export type ListNode = ListNodesFull[number];

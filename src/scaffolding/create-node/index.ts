@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
-import { BaseInstanceClass } from '../../BaseInstance.class';
+import { Context } from '../../Context';
 import { computeNodeName } from '../../utils/common-utils';
 import { writeFile } from '../../utils/node-utils';
 
@@ -25,23 +25,22 @@ export async function renderTemplate(templateFilePath: string, data: object): Pr
   }
 }
 
-export class CreateNodeScaffolding extends BaseInstanceClass {
-  private innerNodeName: string;
+export class CreateNodeScaffolding {
   readonly nodePascalName: string;
   readonly nodeDashName: string;
   readonly newNodeDistPath: string;
   readonly newNodeEditorDistPath: string;
   readonly scaffoldedDistHbs: string;
+  readonly context: Context;
 
   constructor(innerNodeName: string) {
-    super();
-    this.innerNodeName = innerNodeName;
     const { pascalName, dashName } = computeNodeName(innerNodeName);
     this.nodePascalName = pascalName;
     this.nodeDashName = dashName;
-    this.newNodeDistPath = `${this.currentInstance.pathSrcNodesDir}/${dashName}`;
-    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${this.currentConfig.nodes.editor.dirName}`;
-    this.scaffoldedDistHbs = `${this.currentPackagedDistPath}/scaffolding/create-node/hbs`;
+    this.context = new Context({ withInit: false });
+    this.newNodeDistPath = `${this.context.current.pathSrcNodesDir}/${dashName}`;
+    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${this.context.current.config.nodes.editor.dirName}`;
+    this.scaffoldedDistHbs = `${this.context.current.currentPackagedDistPath}/scaffolding/create-node/hbs`;
   }
 
   distFolderExist() {
