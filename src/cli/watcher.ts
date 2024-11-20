@@ -2,15 +2,16 @@ import browserSync, { type BrowserSyncInstance } from 'browser-sync';
 import chokidar from 'chokidar';
 import { consola } from 'consola';
 import nodemon, { type Nodemon } from 'nodemon';
-import { buildAllPackage, currentInstance } from '../builder';
+import { Context } from '../Context';
+import { Builder } from '../builder';
 
 let nodemonInstance: Nodemon;
 let browserSyncInstance: BrowserSyncInstance;
 
-function runNodemonAndBrowserSync() {
+function runNodemonAndBrowserSync(currentContext: Context) {
   // @ts-ignore
   nodemonInstance = nodemon({
-    exec: `node-red -u ${currentInstance.config.watcher.nodeRed.path}`,
+    exec: `node-red -u ${currentContext.current.config.watcher.nodeRed.path}`,
     ignore: ['**/*'],
     ext: 'js,html',
     verbose: true,
@@ -22,7 +23,7 @@ function runNodemonAndBrowserSync() {
       browserSyncInstance.init({
         ui: false,
         proxy: {
-          target: currentInstance.config.watcher.nodeRed.url,
+          target: currentContext.current.config.watcher.nodeRed.url,
           ws: true,
         },
         ghostMode: false,
@@ -41,29 +42,26 @@ function restartNodemonAndBrowserSync() {
   browserSyncInstance.reload();
 }
 
-const hasNodeRedWatcher = currentInstance.config.watcher.nodeRed.enabled && currentInstance.config.watcher.nodeRed.path;
-
 export function runWatcher() {
-  const watcher = chokidar.watch(currentInstance.pathSrcDir, {});
-
+  const currentContext = new Context();
+  const hasNodeRedWatcher =
+    currentContext.current.config.watcher.nodeRed.enabled && currentContext.current.config.watcher.nodeRed.path;
+  const watcher = chokidar.watch(currentContext.current.pathSrcDir, {});
+  const builder = new Builder({ minify: false, context: currentContext });
   watcher
     .on('ready', async () => {
       consola.info('Initial scan complete. Ready for changes');
-      await buildAllPackage({
-        minify: false,
-      });
+      await builder.buildAll();
       consola.success('Initial Build completed');
       if (hasNodeRedWatcher) {
-        runNodemonAndBrowserSync();
+        runNodemonAndBrowserSync(currentContext);
       } else {
         consola.warn('Node-Red watcher is disabled. Please enable it in the config file');
       }
     })
     .on('change', async (path: string) => {
-      consola.info(`File ${path.replace(currentInstance.currentDir, '')} has been changed`);
-      await buildAllPackage({
-        minify: false,
-      });
+      consola.info(`File ${path.replace(currentContext.current.currentDir, '')} has been changed`);
+      await builder.buildAll();
       consola.success('Build completed');
       if (hasNodeRedWatcher) {
         restartNodemonAndBrowserSync();

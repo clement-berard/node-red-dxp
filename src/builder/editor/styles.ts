@@ -6,8 +6,8 @@ import { globSync } from 'glob';
 import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
-import { type ListNodesFull, currentInstance } from '../current-instance';
-import { distributionPackagePath } from '../utils/node-utils';
+import { type ListNodesFull, currentContext } from '../../current-context';
+import { distributionPackagePath } from '../../utils/node-utils';
 
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([
@@ -65,7 +65,7 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
   const finalConfig = { ...defaultConfig, ...tailwindConfig };
 
   const tailwindScssFilePath = globSync(
-    `${distributionPackagePath}/${currentInstance.config.nodes.editor.dirName}/assets/tailwind.scss`,
+    `${distributionPackagePath}/${currentContext.config.nodes.editor.dirName}/assets/tailwind.scss`,
   )[0];
 
   const scssString = tailwindScssFilePath.length ? fs.readFileSync(tailwindScssFilePath, 'utf8') : '';
@@ -78,7 +78,7 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
 }
 
 export function getSrcStyles() {
-  const srcStyles = currentInstance.getResolvedSrcPathsScss();
+  const srcStyles = currentContext.getResolvedSrcPathsScss();
   const srcStylesCompiled = buildStyles([...srcStyles]);
   return Object.values(srcStylesCompiled).join('');
 }
@@ -95,7 +95,7 @@ export async function getAllCompiledStyles(params: GetAllCompiledStylesParams) {
   const nodesStyles = getNodesStyles(nodes);
   const twCss = await generateCSSFromHTMLWithTailwind(rawHtml);
 
-  const getSrcWrapper = (content: string) => `.${currentInstance.packageNameSlug}{${content}}`;
+  const getSrcWrapper = (content: string) => `.${currentContext.packageNameSlug}{${content}}`;
   const allNodesStyles = nodesStyles.map((node) => node.scssFinal).join('\n');
 
   const result = getSrcWrapper(`${twCss}${srcStyles}${allNodesStyles}`);
