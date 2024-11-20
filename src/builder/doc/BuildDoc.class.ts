@@ -1,22 +1,12 @@
 import fs from 'node:fs';
-import type { Context } from '../../Context';
-
-type BuildDocParams = {
-  context: Context;
-};
+import { currentContext } from '../../current-context';
 
 export class BuildDoc {
-  private context: Context;
-
-  constructor(params: BuildDocParams) {
-    this.context = params.context;
-  }
-
   // TODO need to refactor
   getAllDocContent() {
     const result = [];
 
-    for (const node of this.context.listNodesFull) {
+    for (const node of currentContext.listNodesFull) {
       const fileMd = node.doc.mdFiles[0];
       if (fileMd) {
         const htmlMd = fs.readFileSync(node.doc.mdFiles[0], 'utf-8');

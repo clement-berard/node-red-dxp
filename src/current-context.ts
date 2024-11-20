@@ -8,9 +8,9 @@ import { type Config, defaultConfig } from './default-config';
 
 const CONFIG_FILE_NAME = 'node-red-dx';
 
-export const cleanPkgName = (pkgName: string) => pkgName.replace('@', '').replace('/', '-');
+const cleanPkgName = (pkgName: string) => pkgName.replace('@', '').replace('/', '-');
 
-export function getConfig() {
+function getConfig() {
   const explorerSync = cosmiconfigSync(CONFIG_FILE_NAME);
 
   try {
@@ -24,7 +24,6 @@ export function getConfig() {
 }
 
 const currentConfig = getConfig();
-
 const currentDir = process.cwd();
 const jsonPackage = JSON.parse(readFileSync(`${currentDir}/package.json`, 'utf-8'));
 const pathSrcDir = `${currentDir}/${currentConfig.srcDir}`;
@@ -32,8 +31,9 @@ const additionalResourcesDir = `${currentDir}/resources`;
 const pathSrcNodesDir = `${pathSrcDir}/${currentConfig.nodesDirName}`;
 const pathLibCacheDir = `${currentDir}/${currentConfig.libCacheDir}`;
 const currentPackagedDistPath = `${path.resolve(__dirname, '..')}`;
+const packageNameSlug = cleanPkgName(jsonPackage.name);
 
-export function listNodeFolders() {
+function listNodeFolders() {
   const rawNodes = globSync(`${pathSrcNodesDir}/*`, { withFileTypes: true });
 
   return rawNodes.map((entry) => {
@@ -53,7 +53,7 @@ export function listNodeFolders() {
       dashName,
       relativeEditorPath,
       relativePath,
-      nodeIdentifier: `${currentContext.packageNameSlug}-${dashName}`,
+      nodeIdentifier: `${packageNameSlug}-${dashName}`,
       fullControllerPath: `${fullPath}/${currentConfig.nodes.controllerName}.ts`,
       editor: {
         tsPath: `${fullEditorPath}/${currentConfig.nodes.editor.tsName}.ts`,
@@ -68,7 +68,7 @@ export function listNodeFolders() {
   });
 }
 
-export function getCurrentContext() {
+function getCurrentContext() {
   return {
     currentDir,
     pathSrcDir,
@@ -82,23 +82,16 @@ export function getCurrentContext() {
     },
     pathLibCacheDir,
     packageName: jsonPackage.name,
-    packageNameSlug: cleanPkgName(jsonPackage.name),
+    packageNameSlug,
     config: currentConfig,
-    getResolvedSrcPathsScss: () => {
-      return globSync(`${pathSrcDir}/**/*.scss`, { ignore: `${pathSrcNodesDir}/**/*.scss` });
-    },
-    getResolvedNodesPaths: () => {
-      return globSync(`${pathSrcNodesDir}/*`);
-    },
-    getListNodesFull: () => {
-      return listNodeFolders();
-    },
+    resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: `${pathSrcNodesDir}/**/*.scss` }),
+    resolvedNodesPaths: globSync(`${pathSrcNodesDir}/*`),
+    listNodesFull: listNodeFolders(),
   };
 }
 
 export const currentContext = getCurrentContext();
 
 export type CurrentContext = ReturnType<typeof getCurrentContext>;
-export type CurrentConfig = CurrentContext['config'];
-export type ListNodesFull = ReturnType<typeof currentContext.getListNodesFull>;
+export type ListNodesFull = typeof currentContext.listNodesFull;
 export type ListNode = ListNodesFull[number];

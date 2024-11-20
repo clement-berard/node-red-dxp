@@ -78,7 +78,7 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
 }
 
 export function getSrcStyles() {
-  const srcStyles = currentContext.getResolvedSrcPathsScss();
+  const srcStyles = currentContext.resolvedSrcPathsScss;
   const srcStylesCompiled = buildStyles([...srcStyles]);
   return Object.values(srcStylesCompiled).join('');
 }
