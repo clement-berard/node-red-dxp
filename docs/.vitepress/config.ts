@@ -13,11 +13,28 @@ export default defineConfig({
     ],
 
     sidebar: [
+      { text: 'Get started', link: '/cli-build.md' },
+      { text: 'Usage', link: '/cli-watch.md' },
+      { text: 'Why?', link: '/cli-watch.md' },
+      {
+        text: 'CLI',
+        items: [
+          { text: 'build', link: '/cli-build.md' },
+          { text: 'watch', link: '/cli-watch.md' },
+          { text: 'create-node', link: '/cli-watch.md' },
+        ]
+      },
       {
         text: 'Features',
         items: [
           { text: 'i18n', link: '/i18n.md' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Documentation', link: '/documentation.md' },
+        ]
+      },
+      {
+        text: 'Editor',
+        items: [
+          { text: 'DOM Helper', link: '/editor-dom-helper.md' },
         ]
       }
     ],
