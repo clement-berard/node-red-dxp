@@ -26,10 +26,6 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./builder": {
-      "import": "./dist/builder/index.js",
-      "require": "./dist/builder/index.cjs"
-    },
     "./editor": {
       "import": "./dist/editor/index.js",
       "require": "./dist/editor/index.cjs"
@@ -77,6 +73,7 @@
     "html-minifier-terser": "7.2.0",
     "merge-anything": "6.0.2",
     "nodemon": "3.1.7",
+    "ora": "8.1.1",
     "postcss": "^8.4.49",
     "prettyjson": "1.2.5",
     "radash": "12.1.0",

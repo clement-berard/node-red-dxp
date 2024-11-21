@@ -42,10 +42,14 @@ function restartNodemonAndBrowserSync() {
   browserSyncInstance.reload();
 }
 
-export function runWatcher() {
+type RunWatcherParams = {
+  minify?: boolean;
+};
+
+export function runWatcher(params?: RunWatcherParams) {
   const hasNodeRedWatcher = currentContext.config.watcher.nodeRed.enabled && currentContext.config.watcher.nodeRed.path;
   const watcher = chokidar.watch(currentContext.pathSrcDir, {});
-  const builder = new Builder({ minify: false });
+  const builder = new Builder({ minify: params?.minify ?? false });
   watcher
     .on('ready', async () => {
       consola.info('Initial scan complete. Ready for changes');
