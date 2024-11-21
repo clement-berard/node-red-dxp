@@ -53,6 +53,7 @@ function listNodeFolders() {
       dashName,
       relativeEditorPath,
       relativePath,
+      resolvedLocalesPaths: globSync(`${fullPath}/${currentConfig.nodes.localesDirName}/*.json`),
       nodeIdentifier: `${packageNameSlug}-${dashName}`,
       fullControllerPath: `${fullPath}/${currentConfig.nodes.controllerName}.ts`,
       editor: {
@@ -69,6 +70,8 @@ function listNodeFolders() {
 }
 
 function getCurrentContext() {
+  const listNodesFull = listNodeFolders();
+  const listNodesFullNames = listNodesFull.map((node) => node.name);
   return {
     currentDir,
     pathSrcDir,
@@ -86,7 +89,9 @@ function getCurrentContext() {
     config: currentConfig,
     resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: `${pathSrcNodesDir}/**/*.scss` }),
     resolvedNodesPaths: globSync(`${pathSrcNodesDir}/*`),
-    listNodesFull: listNodeFolders(),
+    resolvedSrcLocalesPaths: globSync(`${pathSrcDir}/locales/*.json`),
+    listNodesFull: listNodesFull,
+    listNodesFullNames,
   };
 }
 

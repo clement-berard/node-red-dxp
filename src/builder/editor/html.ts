@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { minify } from 'html-minifier-terser';
 import type { ListNode, ListNodesFull } from '../../current-context';
 import { cleanSpaces } from '../../utils/common-utils';
+import { updateI18nAttributes } from './i18n';
 
 export async function minifyHtml(content: string) {
   return minify(content, {
@@ -30,7 +31,8 @@ async function processNodeHtml(node: ListNode, packageNameSlug: string, minify =
     <div class="${node.nodeIdentifier}">${htmlContent}</div>
   </div>
   `;
-  const html = minify ? await minifyHtml(htmlContentWithAdditionalDiv) : htmlContentWithAdditionalDiv;
+  let html = minify ? await minifyHtml(htmlContentWithAdditionalDiv) : htmlContentWithAdditionalDiv;
+  html = updateI18nAttributes(node.name, html);
   const wrappedHtml = wrapHtml(node.name, html);
 
   return {
