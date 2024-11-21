@@ -13,7 +13,8 @@
     "release:test": "pnpm release-it --dry-run",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "test:unit": "vitest"
   },
   "publishConfig": {
     "access": "public"
@@ -51,7 +52,8 @@
     "tsup": "8.3.5",
     "tsx": "4.19.2",
     "typescript": "5.6.3",
-    "vitepress": "1.5.0"
+    "vitepress": "1.5.0",
+    "vitest": "2.1.5"
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^6.0.0",

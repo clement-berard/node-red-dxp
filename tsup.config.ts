@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsup';
 
-const minifyFlag = true;
+const minifyFlag = false;
 
 const externals = [
   'esbuild',

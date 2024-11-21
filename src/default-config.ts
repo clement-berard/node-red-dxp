@@ -4,6 +4,7 @@ export type Config = {
   nodesDirName: string;
   nodes: {
     controllerName: string;
+    localesDirName: string;
     editor: {
       dirName: string;
       htmlName: string;
@@ -28,6 +29,7 @@ export const defaultConfig: Partial<Config> = {
   nodesDirName: 'nodes',
   nodes: {
     controllerName: 'controller',
+    localesDirName: 'locales',
     editor: {
       dirName: 'editor',
       htmlName: 'index',
