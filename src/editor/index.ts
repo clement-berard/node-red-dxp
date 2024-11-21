@@ -41,9 +41,9 @@ export function domHelper<TProps>(vm: EditorNodeInstance) {
     $(realSelector)
       .empty()
       .append(
-        realOptions.map((opt) =>
-          $('<option>', { value: opt.value, text: opt.text, selected: opt.value === selectedValue }),
-        ),
+        realOptions.map((opt) => {
+          return $('<option>', { value: opt.value, text: opt.text, selected: opt.value === selectedValue });
+        }),
       );
   };
 

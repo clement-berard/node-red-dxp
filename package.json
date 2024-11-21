@@ -26,10 +26,6 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./builder": {
-      "import": "./dist/builder/index.js",
-      "require": "./dist/builder/index.cjs"
-    },
     "./editor": {
       "import": "./dist/editor/index.js",
       "require": "./dist/editor/index.cjs"

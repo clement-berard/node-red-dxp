@@ -48,7 +48,7 @@ export class CreateNodeScaffolding {
   prepareStructure() {
     return [
       {
-        finalPath: `${this.newNodeDistPath}/index.ts`,
+        finalPath: `${this.newNodeDistPath}/${currentContext.config.nodes.controllerName}.ts`,
         templatePath: `${this.scaffoldedDistHbs}/controller.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,
@@ -69,7 +69,7 @@ export class CreateNodeScaffolding {
         templateData: {},
       },
       {
-        finalPath: `${this.newNodeEditorDistPath}/index.ts`,
+        finalPath: `${this.newNodeEditorDistPath}/${currentContext.config.nodes.editor.tsName}.ts`,
         templatePath: `${this.scaffoldedDistHbs}/editor/index.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,
@@ -84,7 +84,7 @@ export class CreateNodeScaffolding {
         },
       },
       {
-        finalPath: `${this.newNodeEditorDistPath}/index.html`,
+        finalPath: `${this.newNodeEditorDistPath}/${currentContext.config.nodes.editor.htmlName}.html`,
         templatePath: `${this.scaffoldedDistHbs}/editor/index.html.hbs`,
         templateData: {},
       },

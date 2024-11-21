@@ -7,7 +7,7 @@ export type NodeEditorProps<T> = EditorNodeProperties & T;
 
 export namespace EditorDomHelper {
   export type InitSelectParams = {
-    selected?: string;
+    selected?: string | number | unknown;
     emptyValue?: string;
   };
 }

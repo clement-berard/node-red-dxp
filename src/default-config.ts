@@ -27,7 +27,7 @@ export const defaultConfig: Partial<Config> = {
   srcDir: 'src',
   nodesDirName: 'nodes',
   nodes: {
-    controllerName: 'index',
+    controllerName: 'controller',
     editor: {
       dirName: 'editor',
       htmlName: 'index',
