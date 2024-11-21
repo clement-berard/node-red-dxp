@@ -1,6 +1,6 @@
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
-import { writeFile } from '../../utils/node-utils';
+import { writeFile } from '../../tools/node-utils';
 
 type BuilderControllerParams = {
   minify?: boolean;

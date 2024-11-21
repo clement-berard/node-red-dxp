@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { consola } from 'consola';
 import { dash } from 'radash';
 import { CreateNodeScaffolding } from '../../../scaffolding/create-node';
-import { createFolderIfNotExists } from '../../../utils/node-utils';
+import { createFolderIfNotExists } from '../../../tools/node-utils';
 
 export function registerScaffoldingCommands(parentCommand: Command) {
   const scaffolding = new Command('create-node').description('Create new node').action(async () => {

@@ -3,8 +3,8 @@ import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
 import { currentContext } from '../../current-context';
-import { computeNodeName } from '../../utils/common-utils';
-import { writeFile } from '../../utils/node-utils';
+import { computeNodeName } from '../../tools/common-utils';
+import { writeFile } from '../../tools/node-utils';
 
 async function loadTemplate(filePath: string): Promise<string> {
   try {

@@ -1,5 +1,5 @@
 import { currentContext } from '../current-context';
-import { cleanPaths, createFolderIfNotExists, writeFile } from '../utils/node-utils';
+import { cleanPaths, createFolderIfNotExists, writeFile } from '../tools/node-utils';
 import { BuilderController } from './controller/BuilderController.class';
 import { BuilderEditor } from './editor/BuilderEditor.class';
 import { LocalesBuilder } from './locales/LocalesBuilder.class';
