@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
-import { globSync } from 'glob';
+import { type Entry, globSync } from 'fast-glob';
 import { merge } from 'merge-anything';
 import { dash, pascal } from 'radash';
 import { type Config, defaultConfig } from './default-config';
@@ -33,11 +33,11 @@ const pathLibCacheDir = `${currentDir}/${currentConfig.libCacheDir}`;
 const currentPackagedDistPath = `${path.resolve(__dirname, '..')}`;
 const packageNameSlug = cleanPkgName(jsonPackage.name);
 
-function listNodeFolders() {
-  const rawNodes = globSync(`${pathSrcNodesDir}/*`, { withFileTypes: true });
+function listNodeFolders(rawNodes: Entry[] = []) {
+  // const rawNodes = globSync(`${pathSrcNodesDir}/**/*`, { onlyDirectories: true, deep: 1, objectMode: true });
 
   return rawNodes.map((entry) => {
-    const fullPath = entry.fullpath();
+    const fullPath = entry.path;
     const fullEditorPath = `${fullPath}/${currentConfig.nodes.editor.dirName}`;
     const relativePath = fullPath.replace(currentDir, '').slice(1);
     const relativeEditorPath = `${relativePath}/${currentConfig.nodes.editor.dirName}`;
@@ -45,6 +45,7 @@ function listNodeFolders() {
     const mdxFiles = globSync(`${fullPath}/doc.mdx`);
     const mdFiles = globSync(`${fullPath}/doc.md`);
     const dashName = dash(entry.name);
+
     return {
       fullEditorPath,
       fullPath,
@@ -70,8 +71,10 @@ function listNodeFolders() {
 }
 
 function getCurrentContext() {
-  const listNodesFull = listNodeFolders();
+  const resolvedNodesPaths = globSync(`${pathSrcNodesDir}/**/*`, { onlyDirectories: true, deep: 1, objectMode: true });
+  const listNodesFull = listNodeFolders(resolvedNodesPaths);
   const listNodesFullNames = listNodesFull.map((node) => node.name);
+
   return {
     currentDir,
     pathSrcDir,
@@ -87,8 +90,8 @@ function getCurrentContext() {
     packageName: jsonPackage.name,
     packageNameSlug,
     config: currentConfig,
-    resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: `${pathSrcNodesDir}/**/*.scss` }),
-    resolvedNodesPaths: globSync(`${pathSrcNodesDir}/*`),
+    resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: [`${pathSrcNodesDir}/**/*.scss`] }),
+    resolvedNodesPaths: resolvedNodesPaths.map((entry) => entry.path),
     resolvedSrcLocalesPaths: globSync(`${pathSrcDir}/locales/*.json`),
     listNodesFull: listNodesFull,
     listNodesFullNames,

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import purgeCss from '@fullhuman/postcss-purgecss';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
-import { globSync } from 'glob';
+import { globSync } from 'fast-glob';
 import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
