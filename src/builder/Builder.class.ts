@@ -42,6 +42,7 @@ export class Builder {
     return Promise.all([
       this.builderController.getControllerTask(),
       this.builderEditor.getEditorTask(),
+      // TODO: optimize this part locales
       this.localesBuilder.exportAll(),
     ]);
   }

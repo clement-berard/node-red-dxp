@@ -24,6 +24,7 @@ export default defineConfig([
     entry: {
       'editor/index': 'src/editor/index.ts',
       index: 'src/index.ts',
+      utils: 'src/utils/index.ts',
     },
     clean: true,
     bundle: true,
