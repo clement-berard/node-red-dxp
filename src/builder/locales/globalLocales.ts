@@ -1,7 +1,5 @@
 import fsPromise from 'node:fs/promises';
-import { group } from 'radash';
 import { currentContext } from '../../current-context';
-import { writeFile } from '../../tools/node-utils';
 
 async function getWithContent(path: string) {
   const codeLang = path.split('/').pop().split('.').shift();
@@ -13,31 +11,35 @@ async function getWithContent(path: string) {
   };
 }
 
-export async function someNew() {
+export async function getGlobalLocales() {
   const nodesList = currentContext.listNodesFullNames;
   const srcLocales = currentContext.resolvedSrcLocalesPaths;
   const srcLocalesWithContent = await Promise.all(srcLocales.map(getWithContent));
-  const srcLocales2 = nodesList.flatMap((nodeName) =>
-    srcLocalesWithContent.map(({ codeLang, content }) => ({
-      codeLang,
-      content: `"${nodeName}":${content}`,
-    })),
-  );
 
-  const grouped = group(srcLocales2, (l) => l.codeLang);
+  const grouped = {} as any;
+
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  nodesList.forEach((nodeName) => {
+    for (const { codeLang, content } of srcLocalesWithContent) {
+      if (!grouped[codeLang]) {
+        grouped[codeLang] = [];
+      }
+
+      grouped[codeLang].push(`"${nodeName}":${content}`);
+    }
+  });
 
   let allContent = '';
 
   for (const [lang, locales] of Object.entries(grouped)) {
     const content = locales
-      .map((l) => l.content)
+      // @ts-ignore
+      .map((innerContent: string) => innerContent)
       .join(',')
       .slice(0, -1);
-    console.log('content', content);
+
     allContent += `"${lang}":{${content}},`;
   }
 
-  console.log('toto2', allContent);
-
-  await writeFile('toto.json', `{${allContent.slice(0, -1)}}`);
+  return `{${allContent.slice(0, -1)}}`;
 }

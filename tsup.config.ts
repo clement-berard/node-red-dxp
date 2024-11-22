@@ -5,6 +5,7 @@ const minifyFlag = false;
 const externals = [
   'esbuild',
   'glob',
+  'fast-glob',
   'sass',
   'html-minifier-terser',
   'chokidar',
