@@ -7,7 +7,7 @@ import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
 import { type ListNodesFull, currentContext } from '../../current-context';
-import { distributionPackagePath } from '../../utils/node-utils';
+import { distributionPackagePath } from '../../tools/node-utils';
 
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([

@@ -13,13 +13,13 @@ import { runWatcher } from './watcher';
 const program = new Command();
 
 program.name('node-red-dxp').description('node-red-dxp CLI').version(packageJson.version);
-
 program
   .command('build')
   .description('Build project')
   .action(async (options) => {
     const nodesCount = currentContext.listNodesFull.length;
     const start = performance.now();
+    console.log('node-red-dxp', packageJson.version);
     const spinner = ora(`Building ${nodesCount} node(s)...`).start();
 
     const builder = new Builder({
