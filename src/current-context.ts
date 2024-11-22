@@ -34,8 +34,6 @@ const currentPackagedDistPath = `${path.resolve(__dirname, '..')}`;
 const packageNameSlug = cleanPkgName(jsonPackage.name);
 
 function listNodeFolders(rawNodes: Entry[] = []) {
-  // const rawNodes = globSync(`${pathSrcNodesDir}/**/*`, { onlyDirectories: true, deep: 1, objectMode: true });
-
   return rawNodes.map((entry) => {
     const fullPath = entry.path;
     const fullEditorPath = `${fullPath}/${currentConfig.nodes.editor.dirName}`;
