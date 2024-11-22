@@ -20,7 +20,7 @@ program
   .action(async (options) => {
     const nodesCount = currentContext.listNodesFull.length;
     const start = performance.now();
-    console.log('node-red-dxp', packageJson.version);
+    console.log('node-red-dxp builder');
     const spinner = ora(`Building ${nodesCount} node(s)...`).start();
 
     const builder = new Builder({

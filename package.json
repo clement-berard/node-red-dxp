@@ -31,6 +31,10 @@
       "import": "./dist/editor/index.js",
       "require": "./dist/editor/index.cjs"
     },
+    "./builder": {
+      "import": "./dist/builder/index.js",
+      "require": "./dist/builder/index.cjs"
+    },
     "./utils": {
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
