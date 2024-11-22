@@ -1,6 +1,7 @@
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
 import { writeFile } from '../../tools/node-utils';
+import { addCredentialsExportPlugin } from './esbuild';
 
 type BuilderControllerParams = {
   minify?: boolean;
@@ -16,13 +17,19 @@ export class BuilderController {
   async getControllerIndexContent() {
     return `
 import type { NodeAPI } from 'node-red';
-${currentContext.listNodesFull.map((node) => `import ${node.pascalName} from '${node.fullControllerPath}';`).join('\n')}
+${currentContext.listNodesFull.map((node) => `import ${node.pascalName}, {credentials as cred${node.pascalName}} from '${node.fullControllerPath}';`).join('\n')}
 
 
 export default async (RED: NodeAPI): Promise<void> => {
     global.RED = RED;
 
-    ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nglobal.RED.nodes.registerType('${node.name}', ${node.pascalName});`).join('\n')}
+    ${currentContext.listNodesFull
+      .map(
+        (node) => `// @ts-ignore\nglobal.RED.nodes.registerType('${node.name}', ${node.pascalName}, {
+        credentials: cred${node.pascalName}
+    });`,
+      )
+      .join('\n')}
 };
 `.trim();
   }
@@ -41,6 +48,7 @@ export default async (RED: NodeAPI): Promise<void> => {
       target: 'es2018',
       loader: { '.ts': 'ts' },
       packages: 'external',
+      plugins: [addCredentialsExportPlugin],
     });
   }
 

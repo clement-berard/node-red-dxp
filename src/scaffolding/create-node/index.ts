@@ -48,7 +48,7 @@ export class CreateNodeScaffolding {
   prepareStructure() {
     return [
       {
-        finalPath: `${this.newNodeDistPath}/${currentContext.config.nodes.controllerName}.ts`,
+        finalPath: `${this.newNodeDistPath}/controller.ts`,
         templatePath: `${this.scaffoldedDistHbs}/controller.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,

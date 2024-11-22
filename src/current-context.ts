@@ -55,7 +55,7 @@ function listNodeFolders() {
       relativePath,
       resolvedLocalesPaths: globSync(`${fullPath}/${currentConfig.nodes.localesDirName}/*.json`),
       nodeIdentifier: `${packageNameSlug}-${dashName}`,
-      fullControllerPath: `${fullPath}/${currentConfig.nodes.controllerName}.ts`,
+      fullControllerPath: `${fullPath}/controller.ts`,
       editor: {
         tsPath: `${fullEditorPath}/${currentConfig.nodes.editor.tsName}.ts`,
         htmlPath: `${fullEditorPath}/${currentConfig.nodes.editor.htmlName}.html`,
