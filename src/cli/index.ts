@@ -16,6 +16,7 @@ program.name('node-red-dxp').description('node-red-dxp CLI').version(packageJson
 program
   .command('build')
   .description('Build project')
+  .option('--no-minify', 'No minify the output', true)
   .action(async (options) => {
     const nodesCount = currentContext.listNodesFull.length;
     const start = performance.now();
@@ -23,7 +24,7 @@ program
     const spinner = ora(`Building ${nodesCount} node(s)...`).start();
 
     const builder = new Builder({
-      minify: true,
+      minify: options.minify,
     });
     await builder.buildAll();
     const end = performance.now();
