@@ -31,6 +31,10 @@
       "import": "./dist/editor/index.js",
       "require": "./dist/editor/index.cjs"
     },
+    "./builder": {
+      "import": "./dist/builder/index.js",
+      "require": "./dist/builder/index.cjs"
+    },
     "./utils": {
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
@@ -51,7 +55,6 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@release-it/conventional-changelog": "9.0.3",
-    "@types/handlebars": "4.1.0",
     "release-it": "17.10.0",
     "tsup": "8.3.5",
     "tsx": "4.19.2",
@@ -74,6 +77,7 @@
     "cosmiconfig": "9.0.0",
     "cssnano": "^7.0.6",
     "esbuild": "0.24.0",
+    "fast-glob": "^3.3.2",
     "glob": "11.0.0",
     "handlebars": "4.7.8",
     "html-minifier-terser": "7.2.0",
