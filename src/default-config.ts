@@ -24,9 +24,9 @@ export const fixedConfig = {
   libCacheDir: '.node-red-dxp',
   srcDir: 'src',
   nodesDirName: 'nodes',
+  localesDirName: 'locales',
   nodes: {
     controllerName: 'controller',
-    localesDirName: 'locales',
     editor: {
       dirName: 'editor',
       htmlName: 'index',

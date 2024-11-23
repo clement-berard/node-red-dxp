@@ -2,6 +2,7 @@ import fsPromise from 'node:fs/promises';
 import { sep } from 'node:path';
 import { globSync } from 'fast-glob';
 import { currentContext } from '../../current-context';
+import { fixedConfig } from '../../default-config';
 
 async function processNode(path: string) {
   const cleanPath = path.replace(`${currentContext.pathSrcNodesDir}${sep}`, '');
@@ -18,7 +19,7 @@ async function processNode(path: string) {
 }
 
 export async function getScopedNodesLocales() {
-  const toto = globSync(`${currentContext.pathSrcNodesDir}/**/locales/*.json`);
+  const toto = globSync(`${currentContext.pathSrcNodesDir}/**/${fixedConfig.localesDirName}/*.json`);
   const res = await Promise.all(toto.map(processNode));
 
   const grouped = {} as any;

@@ -89,7 +89,7 @@ function getCurrentContext() {
     config: currentConfig,
     resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: [`${pathSrcNodesDir}/**/*.scss`] }),
     resolvedNodesPaths: resolvedNodesPaths.map((entry) => entry.path),
-    resolvedSrcLocalesPaths: globSync(`${pathSrcDir}/locales/*.json`),
+    resolvedSrcLocalesPaths: globSync(`${pathSrcDir}/${fixedConfig.localesDirName}/*.json`),
     listNodesFull: listNodesFull,
     listNodesFullNames,
   };
