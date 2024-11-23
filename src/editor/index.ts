@@ -1,4 +1,3 @@
-// @ts-ignore
 import { merge } from 'merge-anything';
 import type { EditorNodeDef, EditorNodeInstance, EditorNodeProperties } from 'node-red';
 import type { EditorDomHelper } from './types';
@@ -6,6 +5,7 @@ import { resolveSelector } from './utils';
 export type * from './types';
 export * from './utils';
 export * from './dom';
+export * from './editor-dom-helper';
 
 const defaultNodeDef: Partial<EditorNodeDef> = {};
 
@@ -22,72 +22,46 @@ function resolveInputKey(selector: string) {
   return realSelector.split('-input-')[1];
 }
 
-export function domHelper<TProps>(vm: EditorNodeInstance) {
-  function getVmInputKey(key: string) {
-    return vm[key];
+export function initSelect(
+  selector: string,
+  options: Record<string, string>[],
+  params?: EditorDomHelper.InitSelectParams,
+) {
+  const realSelector = resolveSelector(selector);
+  let realOptions = options;
+  if (params?.emptyValue) {
+    realOptions = [{ value: '', text: params.emptyValue }, ...options];
   }
+  $(realSelector)
+    .empty()
+    .append(
+      realOptions.map((opt) => {
+        return $('<option>', { value: opt.value, text: opt.text, selected: opt.value === params?.selected });
+      }),
+    );
+}
 
-  const initSelect = (
-    selector: string,
-    options: Record<string, string>[],
-    params?: EditorDomHelper.InitSelectParams,
-  ) => {
-    const selectedValue = params?.selected || getVmInputKey(resolveInputKey(selector));
-    const realSelector = resolveSelector(selector);
-    let realOptions = options;
-    if (params?.emptyValue) {
-      realOptions = [{ value: '', text: params.emptyValue }, ...options];
-    }
-    $(realSelector)
-      .empty()
-      .append(
-        realOptions.map((opt) => {
-          return $('<option>', { value: opt.value, text: opt.text, selected: opt.value === selectedValue });
-        }),
-      );
-  };
+export function watchInput<T = any>(selectors: string | string[], callback: (values: T[]) => void) {
+  const selectorsArray = Array.isArray(selectors) ? selectors : [selectors];
+  const realSelectors = selectorsArray.map(resolveSelector).join(', ');
 
-  const getInputValue = (key: Exclude<keyof TProps, 'inputs'>) => {
-    const keyStr = key as string;
-    return $(`#node-input-${keyStr}`).val();
-  };
+  $(realSelectors).on('input', () => {
+    const values = $(realSelectors)
+      .map(function () {
+        return $(this).val() as T;
+      })
+      .get();
 
-  function setText(selector: string, text: string) {
-    const realSelector = resolveSelector(selector);
-    $(realSelector).text(text);
-  }
+    callback(values);
+  });
+}
 
-  function jqSelector(selector: string) {
-    const realSelector = resolveSelector(selector);
-    return $(realSelector);
-  }
+export function setInputValue(selector: string, val: string) {
+  const realSelector = resolveSelector(selector);
+  $(realSelector).val(val);
+}
 
-  function setInputValue(selector: string, val: string) {
-    const realSelector = resolveSelector(selector);
-    $(realSelector).val(val);
-  }
-
-  function watchInput<T = any>(selectors: string | string[], callback: (values: T[]) => void) {
-    const selectorsArray = Array.isArray(selectors) ? selectors : [selectors];
-    const realSelectors = selectorsArray.map(resolveSelector).join(', ');
-
-    $(realSelectors).on('input', () => {
-      const values = $(realSelectors)
-        .map(function () {
-          return $(this).val() as T;
-        })
-        .get();
-
-      callback(values);
-    });
-  }
-
-  return {
-    getInputValue,
-    watchInput,
-    setText,
-    setInputValue,
-    jqSelector,
-    initSelect,
-  };
+export function setText(selector: string, text: string) {
+  const realSelector = resolveSelector(selector);
+  $(realSelector).text(text);
 }

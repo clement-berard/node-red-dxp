@@ -28,7 +28,6 @@ export function createReactiveField<T extends HTMLInputElement | HTMLSelectEleme
   formElement.addEventListener('input', updateSignal);
 
   onCleanup(() => {
-    console.log('JE CLEAN');
     formElement.removeEventListener('input', updateSignal);
   });
 
@@ -39,4 +38,17 @@ export function createReactiveField<T extends HTMLInputElement | HTMLSelectEleme
   setFieldValue(formElement.value || defaultValue);
 
   return [fieldValue, setFieldValue];
+}
+
+/**
+ * Adds a specified class to all elements that match the given selector.
+ *
+ * @param {string} selectors - A string containing one or more CSS selectors to match the elements.
+ * @param {string} className - The class name to add to the matched elements.
+ */
+export function applyElementsClass(selectors: string, className: string) {
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  document.querySelectorAll(selectors).forEach((div) => {
+    div.classList.add(className);
+  });
 }

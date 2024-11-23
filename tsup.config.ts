@@ -1,15 +1,15 @@
 import { defineConfig } from 'tsup';
 
-const minifyFlag = true;
+const minifyFlag = false;
 
-const noExternals = ['merge-anything'];
+const noExternals = ['merge-anything', 'is-what'];
 
 export default defineConfig([
   {
     entry: {
       'editor/index': 'src/editor/index.ts',
       index: 'src/index.ts',
-      utils: 'src/utils/index.ts',
+      'utils/index': 'src/utils/index.ts',
     },
     clean: true,
     bundle: true,

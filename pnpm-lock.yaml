@@ -62,6 +62,9 @@ importers:
       is-ip:
         specifier: ^5.0.1
         version: 5.0.1
+      is-what:
+        specifier: ^5.0.2
+        version: 5.0.2
       merge-anything:
         specifier: 6.0.2
         version: 6.0.2
