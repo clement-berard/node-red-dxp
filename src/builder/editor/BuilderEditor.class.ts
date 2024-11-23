@@ -1,5 +1,6 @@
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
+import { fixedConfig } from '../../fixed-config';
 import { writeFile } from '../../tools/node-utils';
 import { BuildDoc } from '../doc/BuildDoc.class';
 import { getNodesHtml } from './html';
@@ -82,7 +83,7 @@ ${docs}`.trim();
       writeFile(`${currentContext.cacheDirFiles.editorIndex}`, content).then(() => {
         this.prepareEditorIndex().then(async (contentFinalIndexHtml) => {
           await writeFile(
-            `${currentContext.pathDist}/${currentContext.config.nodes.editor.htmlName}.html`,
+            `${currentContext.pathDist}/${fixedConfig.nodes.editor.htmlName}.html`,
             contentFinalIndexHtml,
           );
         });

@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import { consola } from 'consola';
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
 import { writeFile } from '../../tools/node-utils';
@@ -44,11 +43,6 @@ export default async (RED: NodeAPI): Promise<void> => {
     const toIncludeInBundle = currentContext.config.builder.esbuildControllerOptions.includeInBundle;
     const targetPackageDependencies = Object.keys(parsedPackageJson.dependencies || {});
     const realExternals = targetPackageDependencies.filter((item) => !toIncludeInBundle.includes(item));
-    const realInternals = targetPackageDependencies.filter((item) => toIncludeInBundle.includes(item));
-
-    if (toIncludeInBundle.length) {
-      consola.info(`Packages include in controller bundle: ${realInternals.join(', ')}`);
-    }
 
     return esbuild.build({
       entryPoints: [currentContext.cacheDirFiles.controllerIndex],

@@ -3,6 +3,7 @@ import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
 import { currentContext } from '../../current-context';
+import { fixedConfig } from '../../fixed-config';
 import { computeNodeName } from '../../tools/common-utils';
 import { writeFile } from '../../tools/node-utils';
 
@@ -37,7 +38,7 @@ export class CreateNodeScaffolding {
     this.nodePascalName = pascalName;
     this.nodeDashName = dashName;
     this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
-    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${currentContext.config.nodes.editor.dirName}`;
+    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`;
     this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
   }
 
@@ -69,7 +70,7 @@ export class CreateNodeScaffolding {
         templateData: {},
       },
       {
-        finalPath: `${this.newNodeEditorDistPath}/${currentContext.config.nodes.editor.tsName}.ts`,
+        finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.tsName}.ts`,
         templatePath: `${this.scaffoldedDistHbs}/editor/index.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,
@@ -84,7 +85,7 @@ export class CreateNodeScaffolding {
         },
       },
       {
-        finalPath: `${this.newNodeEditorDistPath}/${currentContext.config.nodes.editor.htmlName}.html`,
+        finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.htmlName}.html`,
         templatePath: `${this.scaffoldedDistHbs}/editor/index.html.hbs`,
         templateData: {},
       },
