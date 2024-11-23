@@ -1,12 +1,6 @@
 export type Config = {
-  libCacheDir: string;
-  srcDir: string;
-  nodesDirName: string;
   nodes: {
-    controllerName: string;
-    localesDirName: string;
     editor: {
-      dirName: string;
       htmlName: string;
       tsName: string;
     };
@@ -26,8 +20,8 @@ export type Config = {
   };
 };
 
-export const defaultConfig: Partial<Config> = {
-  libCacheDir: '.node-red-dx',
+export const fixedConfig = {
+  libCacheDir: '.node-red-dxp',
   srcDir: 'src',
   nodesDirName: 'nodes',
   nodes: {
@@ -35,6 +29,15 @@ export const defaultConfig: Partial<Config> = {
     localesDirName: 'locales',
     editor: {
       dirName: 'editor',
+      htmlName: 'index',
+      tsName: 'index',
+    },
+  },
+};
+
+export const defaultConfig: Partial<Config> = {
+  nodes: {
+    editor: {
       htmlName: 'index',
       tsName: 'index',
     },

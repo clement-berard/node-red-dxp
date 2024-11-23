@@ -4,7 +4,7 @@ import { cosmiconfigSync } from 'cosmiconfig';
 import { type Entry, globSync } from 'fast-glob';
 import { merge } from 'merge-anything';
 import { dash, pascal } from 'radash';
-import { type Config, defaultConfig } from './default-config';
+import { type Config, defaultConfig, fixedConfig } from './default-config';
 
 const CONFIG_FILE_NAME = 'node-red-dx';
 
@@ -26,19 +26,19 @@ function getConfig() {
 const currentConfig = getConfig();
 const currentDir = process.cwd();
 const jsonPackage = JSON.parse(readFileSync(`${currentDir}/package.json`, 'utf-8'));
-const pathSrcDir = `${currentDir}/${currentConfig.srcDir}`;
+const pathSrcDir = `${currentDir}/${fixedConfig.srcDir}`;
 const additionalResourcesDir = `${currentDir}/resources`;
-const pathSrcNodesDir = `${pathSrcDir}/${currentConfig.nodesDirName}`;
-const pathLibCacheDir = `${currentDir}/${currentConfig.libCacheDir}`;
+const pathSrcNodesDir = `${pathSrcDir}/${fixedConfig.nodesDirName}`;
+const pathLibCacheDir = `${currentDir}/${fixedConfig.libCacheDir}`;
 const currentPackagedDistPath = `${path.resolve(__dirname, '..')}`;
 const packageNameSlug = cleanPkgName(jsonPackage.name);
 
 function listNodeFolders(rawNodes: Entry[] = []) {
   return rawNodes.map((entry) => {
     const fullPath = entry.path;
-    const fullEditorPath = `${fullPath}/${currentConfig.nodes.editor.dirName}`;
+    const fullEditorPath = `${fullPath}/${fixedConfig.nodes.editor.dirName}`;
     const relativePath = fullPath.replace(currentDir, '').slice(1);
-    const relativeEditorPath = `${relativePath}/${currentConfig.nodes.editor.dirName}`;
+    const relativeEditorPath = `${relativePath}/${fixedConfig.nodes.editor.dirName}`;
     const scssFiles = globSync(`${fullEditorPath}/**/*.scss`);
     const mdxFiles = globSync(`${fullPath}/doc.mdx`);
     const mdFiles = globSync(`${fullPath}/doc.md`);
@@ -52,9 +52,8 @@ function listNodeFolders(rawNodes: Entry[] = []) {
       dashName,
       relativeEditorPath,
       relativePath,
-      resolvedLocalesPaths: globSync(`${fullPath}/${currentConfig.nodes.localesDirName}/*.json`),
       nodeIdentifier: `${packageNameSlug}-${dashName}`,
-      fullControllerPath: `${fullPath}/controller.ts`,
+      fullControllerPath: `${fullPath}/${fixedConfig.nodes.controllerName}.ts`,
       editor: {
         tsPath: `${fullEditorPath}/${currentConfig.nodes.editor.tsName}.ts`,
         htmlPath: `${fullEditorPath}/${currentConfig.nodes.editor.htmlName}.html`,

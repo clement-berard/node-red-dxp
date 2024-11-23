@@ -7,6 +7,7 @@ import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
 import { type ListNodesFull, currentContext } from '../../current-context';
+import { fixedConfig } from '../../default-config';
 import { distributionPackagePath } from '../../tools/node-utils';
 
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
@@ -65,7 +66,7 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
   const finalConfig = { ...defaultConfig, ...tailwindConfig };
 
   const tailwindScssFilePath = globSync(
-    `${distributionPackagePath}/${currentContext.config.nodes.editor.dirName}/assets/tailwind.scss`,
+    `${distributionPackagePath}/${fixedConfig.nodes.editor.dirName}/assets/tailwind.scss`,
   )[0];
 
   const scssString = tailwindScssFilePath.length ? fs.readFileSync(tailwindScssFilePath, 'utf8') : '';

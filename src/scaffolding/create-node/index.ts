@@ -3,6 +3,7 @@ import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
 import { currentContext } from '../../current-context';
+import { fixedConfig } from '../../default-config';
 import { computeNodeName } from '../../tools/common-utils';
 import { writeFile } from '../../tools/node-utils';
 
@@ -37,7 +38,7 @@ export class CreateNodeScaffolding {
     this.nodePascalName = pascalName;
     this.nodeDashName = dashName;
     this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
-    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${currentContext.config.nodes.editor.dirName}`;
+    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`;
     this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
   }
 
