@@ -21,7 +21,11 @@ export function registerScaffoldingCommands(parentCommand: Command) {
       return;
     }
 
-    const createNewNodeInstance = new CreateNodeScaffolding(nodeName);
+    const isConfigNode = await consola.prompt('Is this a config node?', {
+      type: 'confirm',
+    });
+
+    const createNewNodeInstance = new CreateNodeScaffolding(nodeName, isConfigNode);
 
     if (createNewNodeInstance.distFolderExist()) {
       consola.error(`Node ${createNewNodeInstance.nodeDashName} already exists`);
