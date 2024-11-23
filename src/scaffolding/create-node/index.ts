@@ -70,7 +70,7 @@ export class CreateNodeScaffolding {
         templateData: {},
       },
       {
-        finalPath: `${this.newNodeEditorDistPath}/${currentContext.config.nodes.editor.tsName}.ts`,
+        finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.tsName}.ts`,
         templatePath: `${this.scaffoldedDistHbs}/editor/index.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,

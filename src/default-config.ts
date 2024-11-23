@@ -1,9 +1,4 @@
 export type Config = {
-  nodes: {
-    editor: {
-      tsName: string;
-    };
-  };
   builder: {
     outputDir: string;
     esbuildControllerOptions?: {
@@ -35,11 +30,6 @@ export const fixedConfig = {
 };
 
 export const defaultConfig: Partial<Config> = {
-  nodes: {
-    editor: {
-      tsName: 'index',
-    },
-  },
   builder: {
     outputDir: 'dist',
     esbuildControllerOptions: {
