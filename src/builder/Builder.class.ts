@@ -23,7 +23,7 @@ export class Builder {
     });
   }
 
-  prepare() {
+  async prepare() {
     // Create cache dir
     createFolderIfNotExists(currentContext.pathLibCacheDir);
     // Clean dist folder and write config file
@@ -32,7 +32,9 @@ export class Builder {
       writeFile(`${currentContext.pathLibCacheDir}/config.json`, JSON.stringify(currentContext.config, null, 2)),
     ];
 
-    return Promise.all(runs);
+    return Promise.all(runs).then(() => {
+      createFolderIfNotExists(currentContext.pathDist);
+    });
   }
 
   async buildAll() {

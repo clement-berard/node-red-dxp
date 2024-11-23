@@ -19,4 +19,11 @@
   .alert-dark {
     @apply text-gray-800 bg-gray-50;
   }
+
+  div.form-row {
+    select {
+      @apply w-[70%];
+    }
+  }
 }
+

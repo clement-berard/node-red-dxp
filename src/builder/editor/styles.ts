@@ -58,7 +58,7 @@ export function getNodesStyles(nodes: ListNodesFull) {
 
 export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwindConfig: any = {}) {
   const defaultConfig = {
-    content: [{ raw: htmlString }],
+    content: [{ raw: htmlString }, { raw: 'hidden block !hidden !block' }],
     theme: {},
   };
 
