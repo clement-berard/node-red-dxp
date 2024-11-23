@@ -13,6 +13,9 @@ export type Config = {
   };
   builder: {
     outputDir: string;
+    esbuildControllerOptions?: {
+      includeInBundle?: string[];
+    };
   };
   watcher: {
     nodeRed: {
@@ -38,6 +41,9 @@ export const defaultConfig: Partial<Config> = {
   },
   builder: {
     outputDir: 'dist',
+    esbuildControllerOptions: {
+      includeInBundle: [],
+    },
   },
   watcher: {
     nodeRed: {

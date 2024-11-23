@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import { consola } from 'consola';
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
 import { writeFile } from '../../tools/node-utils';
@@ -6,6 +8,8 @@ import { addCredentialsExportPlugin } from './esbuild';
 type BuilderControllerParams = {
   minify?: boolean;
 };
+
+const targetPackageJsonFile = `${currentContext.currentDir}/package.json`;
 
 export class BuilderController {
   private params: BuilderControllerParams;
@@ -35,6 +39,17 @@ export default async (RED: NodeAPI): Promise<void> => {
   }
 
   buildScript() {
+    const packageJson = fs.readFileSync(targetPackageJsonFile, 'utf8');
+    const parsedPackageJson = JSON.parse(packageJson);
+    const toIncludeInBundle = currentContext.config.builder.esbuildControllerOptions.includeInBundle;
+    const targetPackageDependencies = Object.keys(parsedPackageJson.dependencies || {});
+    const realExternals = targetPackageDependencies.filter((item) => !toIncludeInBundle.includes(item));
+    const realInternals = targetPackageDependencies.filter((item) => toIncludeInBundle.includes(item));
+
+    if (toIncludeInBundle.length) {
+      consola.info(`Packages include in controller bundle: ${realInternals.join(', ')}`);
+    }
+
     return esbuild.build({
       entryPoints: [currentContext.cacheDirFiles.controllerIndex],
       outfile: `${currentContext.pathDist}/index.js`,
@@ -47,8 +62,9 @@ export default async (RED: NodeAPI): Promise<void> => {
       format: 'cjs',
       target: 'es2018',
       loader: { '.ts': 'ts' },
-      packages: 'external',
+      packages: 'bundle',
       plugins: [addCredentialsExportPlugin],
+      external: realExternals,
     });
   }
 

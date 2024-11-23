@@ -38,7 +38,7 @@ export default defineConfig([
     sourcemap: !minifyFlag,
     format: ['esm', 'cjs'],
     target: 'es6',
-    noExternal: ['merge-anything'],
+    noExternal: ['merge-anything', 'radash', 'is-ip'],
     external: externals,
     onSuccess: '. build.sh',
   },
