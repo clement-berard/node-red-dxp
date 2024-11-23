@@ -31,6 +31,10 @@
       "import": "./dist/editor/index.js",
       "require": "./dist/editor/index.cjs"
     },
+    "./editor/dom-helper": {
+      "import": "./dist/editor/dom-helper/index.js",
+      "require": "./dist/editor/dom-helper/index.cjs"
+    },
     "./builder": {
       "import": "./dist/builder/index.js",
       "require": "./dist/builder/index.cjs"

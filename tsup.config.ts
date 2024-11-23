@@ -1,6 +1,6 @@
 import { defineConfig } from 'tsup';
 
-const minifyFlag = false;
+const minifyFlag = true;
 
 const noExternals = ['merge-anything', 'is-what'];
 
@@ -10,6 +10,7 @@ export default defineConfig([
       'editor/index': 'src/editor/index.ts',
       index: 'src/index.ts',
       'utils/index': 'src/utils/index.ts',
+      'editor/dom-helper/index': 'src/editor/dom.ts',
     },
     clean: true,
     bundle: true,
