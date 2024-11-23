@@ -32,14 +32,16 @@ export class CreateNodeScaffolding {
   readonly newNodeDistPath: string;
   readonly newNodeEditorDistPath: string;
   readonly scaffoldedDistHbs: string;
+  private isConfigNode: boolean;
 
-  constructor(innerNodeName: string) {
+  constructor(innerNodeName: string, isConfigNode = false) {
     const { pascalName, dashName } = computeNodeName(innerNodeName);
     this.nodePascalName = pascalName;
     this.nodeDashName = dashName;
     this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
     this.newNodeEditorDistPath = `${this.newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`;
     this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
+    this.isConfigNode = isConfigNode;
   }
 
   distFolderExist() {
@@ -50,7 +52,7 @@ export class CreateNodeScaffolding {
     return [
       {
         finalPath: `${this.newNodeDistPath}/controller.ts`,
-        templatePath: `${this.scaffoldedDistHbs}/controller.ts.hbs`,
+        templatePath: `${this.scaffoldedDistHbs}/controller${this.isConfigNode ? '-config' : ''}.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,
           nodeName: this.nodeDashName,
@@ -71,7 +73,7 @@ export class CreateNodeScaffolding {
       },
       {
         finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.tsName}.ts`,
-        templatePath: `${this.scaffoldedDistHbs}/editor/index.ts.hbs`,
+        templatePath: `${this.scaffoldedDistHbs}/editor/index${this.isConfigNode ? '-config' : ''}.ts.hbs`,
         templateData: {
           nodePascalName: this.nodePascalName,
           nodeName: this.nodeDashName,
@@ -86,7 +88,7 @@ export class CreateNodeScaffolding {
       },
       {
         finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.htmlName}.html`,
-        templatePath: `${this.scaffoldedDistHbs}/editor/index.html.hbs`,
+        templatePath: `${this.scaffoldedDistHbs}/editor/index${this.isConfigNode ? '-config' : ''}.html.hbs`,
         templateData: {},
       },
     ];

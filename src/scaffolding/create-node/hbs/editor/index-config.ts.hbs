@@ -2,12 +2,21 @@ import { type NodeEditorProps, createEditorNode } from '@keload/node-red-dxp/edi
 import { watchInput } from '@keload/node-red-dxp/editor/dom-helper';
 import type { Node{{nodePascalName}}Props } from '../types';
 
-const {{nodePascalName}} = createEditorNode<NodeEditorProps<Node{{nodePascalName}}Props>>({
+interface NodeCredentials {
+    user: string;
+    password: string;
+}
+
+const {{nodePascalName}} = createEditorNode<NodeEditorProps<Node{{nodePascalName}}Props>, NodeCredentials>({
     category: 'my_cat',
     color: '#a6bbcf',
     defaults: {
         name: { value: '', required: true },
         age: { value: '' },
+    },
+    credentials: {
+        user: { type: 'text' },
+        password: { type: 'password' },
     },
     inputs: 1,
     outputs: 1,

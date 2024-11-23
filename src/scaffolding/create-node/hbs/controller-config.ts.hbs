@@ -1,0 +1,17 @@
+import type { NodeControllerConfig, NodeControllerInst } from '@keload/node-red-dxp/editor';
+import type { Node{{nodePascalName}}Props } from './types';
+
+export const credentials = {
+    user: { type: 'text' },
+    password: { type: 'password' },
+};
+
+export default function (this: NodeControllerInst<Node{{nodePascalName}}Props>, config: NodeControllerConfig<Node{{nodePascalName}}Props>) {
+    RED.nodes.createNode(this, config);
+
+    this.on('input', async (msg) => {
+        this.send({
+            payload: 'foo',
+        });
+    });
+}
