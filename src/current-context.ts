@@ -7,7 +7,7 @@ import { dash, pascal } from 'radash';
 import { type Config, defaultConfig } from './default-config';
 import { fixedConfig } from './fixed-config';
 
-const CONFIG_FILE_NAME = 'node-red-dx';
+const CONFIG_FILE_NAME = 'node-red-dxp';
 
 const cleanPkgName = (pkgName: string) => pkgName.replace('@', '').replace('/', '-');
 
