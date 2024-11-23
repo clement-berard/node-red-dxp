@@ -1,6 +1,6 @@
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
-import { fixedConfig } from '../../default-config';
+import { fixedConfig } from '../../fixed-config';
 import { writeFile } from '../../tools/node-utils';
 import { BuildDoc } from '../doc/BuildDoc.class';
 import { getNodesHtml } from './html';

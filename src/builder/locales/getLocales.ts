@@ -1,6 +1,6 @@
 import { merge } from 'merge-anything';
 import { currentContext } from '../../current-context';
-import { fixedConfig } from '../../default-config';
+import { fixedConfig } from '../../fixed-config';
 import { createFolderIfNotExists, writeFile } from '../../tools/node-utils';
 import { getGlobalLocales } from './globalLocales';
 import { getScopedNodesLocales } from './scopedNodeLocales';

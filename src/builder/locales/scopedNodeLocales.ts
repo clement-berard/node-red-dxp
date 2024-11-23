@@ -2,7 +2,8 @@ import fsPromise from 'node:fs/promises';
 import { sep } from 'node:path';
 import { globSync } from 'fast-glob';
 import { currentContext } from '../../current-context';
-import { fixedConfig } from '../../default-config';
+
+import { fixedConfig } from '../../fixed-config';
 
 async function processNode(path: string) {
   const cleanPath = path.replace(`${currentContext.pathSrcNodesDir}${sep}`, '');

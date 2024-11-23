@@ -3,7 +3,7 @@ import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
 import { currentContext } from '../../current-context';
-import { fixedConfig } from '../../default-config';
+import { fixedConfig } from '../../fixed-config';
 import { computeNodeName } from '../../tools/common-utils';
 import { writeFile } from '../../tools/node-utils';
 
