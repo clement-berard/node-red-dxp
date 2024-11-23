@@ -1,24 +1,8 @@
 import { defineConfig } from 'tsup';
 
-const minifyFlag = false;
+const minifyFlag = true;
 
-const externals = [
-  'esbuild',
-  'glob',
-  'fast-glob',
-  'sass',
-  'html-minifier-terser',
-  'chokidar',
-  'consola',
-  'nodemon',
-  'tailwindcss',
-  'postcss',
-  'cssnano',
-  '@fullhuman/postcss-purgecss',
-  'autoprefixer',
-  'prettyjson',
-  'browser-sync',
-];
+const noExternals = ['merge-anything'];
 
 export default defineConfig([
   {
@@ -38,28 +22,28 @@ export default defineConfig([
     sourcemap: !minifyFlag,
     format: ['esm', 'cjs'],
     target: 'es6',
-    noExternal: ['merge-anything', 'radash', 'is-ip'],
-    external: externals,
+    noExternal: [...noExternals, 'radash', 'is-ip'],
+    platform: 'browser',
     onSuccess: '. build.sh',
   },
-  {
-    entry: {
-      'builder/index': 'src/builder/index.ts',
-    },
-    clean: true,
-    bundle: true,
-    dts: true,
-    minify: minifyFlag,
-    minifyWhitespace: minifyFlag,
-    minifyIdentifiers: minifyFlag,
-    minifySyntax: minifyFlag,
-    sourcemap: !minifyFlag,
-    treeshake: true,
-    format: ['esm', 'cjs'],
-    target: 'es6',
-    noExternal: ['merge-anything'],
-    external: externals,
-  },
+  // {
+  //   entry: {
+  //     'builder/index': 'src/builder/index.ts',
+  //   },
+  //   clean: true,
+  //   bundle: true,
+  //   dts: true,
+  //   minify: minifyFlag,
+  //   minifyWhitespace: minifyFlag,
+  //   minifyIdentifiers: minifyFlag,
+  //   minifySyntax: minifyFlag,
+  //   sourcemap: !minifyFlag,
+  //   treeshake: true,
+  //   format: ['esm', 'cjs'],
+  //   target: 'es6',
+  //   noExternal: [...nodeExternals],
+  //   external: externals,
+  // },
   {
     entry: {
       'cli/index': 'src/cli/index.ts',
@@ -78,7 +62,23 @@ export default defineConfig([
     treeshake: true,
     format: ['cjs'],
     target: 'node16',
-    noExternal: ['merge-anything', 'ora'],
-    external: externals,
+    platform: 'node',
+    noExternal: [...noExternals, 'ora'],
+    external: [
+      'esbuild',
+      'fast-glob',
+      'sass',
+      'html-minifier-terser',
+      'chokidar',
+      'consola',
+      'nodemon',
+      'tailwindcss',
+      'postcss',
+      'cssnano',
+      '@fullhuman/postcss-purgecss',
+      'autoprefixer',
+      'prettyjson',
+      'browser-sync',
+    ],
   },
 ]);
