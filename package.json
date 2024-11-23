@@ -31,13 +31,17 @@
       "import": "./dist/editor/index.js",
       "require": "./dist/editor/index.cjs"
     },
+    "./editor/dom-helper": {
+      "import": "./dist/editor/dom-helper/index.js",
+      "require": "./dist/editor/dom-helper/index.cjs"
+    },
     "./builder": {
       "import": "./dist/builder/index.js",
       "require": "./dist/builder/index.cjs"
     },
     "./utils": {
-      "import": "./dist/utils.js",
-      "require": "./dist/utils.cjs"
+      "import": "./dist/utils/index.js",
+      "require": "./dist/utils/index.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -81,6 +85,7 @@
     "handlebars": "4.7.8",
     "html-minifier-terser": "7.2.0",
     "is-ip": "^5.0.1",
+    "is-what": "^5.0.2",
     "merge-anything": "6.0.2",
     "nodemon": "3.1.7",
     "ora": "8.1.1",
