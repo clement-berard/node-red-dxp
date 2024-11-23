@@ -85,7 +85,7 @@ export class CreateNodeScaffolding {
         },
       },
       {
-        finalPath: `${this.newNodeEditorDistPath}/${currentContext.config.nodes.editor.htmlName}.html`,
+        finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.htmlName}.html`,
         templatePath: `${this.scaffoldedDistHbs}/editor/index.html.hbs`,
         templateData: {},
       },

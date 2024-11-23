@@ -55,8 +55,8 @@ function listNodeFolders(rawNodes: Entry[] = []) {
       nodeIdentifier: `${packageNameSlug}-${dashName}`,
       fullControllerPath: `${fullPath}/${fixedConfig.nodes.controllerName}.ts`,
       editor: {
-        tsPath: `${fullEditorPath}/${currentConfig.nodes.editor.tsName}.ts`,
-        htmlPath: `${fullEditorPath}/${currentConfig.nodes.editor.htmlName}.html`,
+        tsPath: `${fullEditorPath}/${fixedConfig.nodes.editor.tsName}.ts`,
+        htmlPath: `${fullEditorPath}/${fixedConfig.nodes.editor.htmlName}.html`,
         scssFiles,
       },
       doc: {

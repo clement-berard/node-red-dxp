@@ -1,7 +1,6 @@
 export type Config = {
   nodes: {
     editor: {
-      htmlName: string;
       tsName: string;
     };
   };
@@ -38,7 +37,6 @@ export const fixedConfig = {
 export const defaultConfig: Partial<Config> = {
   nodes: {
     editor: {
-      htmlName: 'index',
       tsName: 'index',
     },
   },
