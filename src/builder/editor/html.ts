@@ -28,7 +28,7 @@ async function processNodeHtml(node: ListNode, packageNameSlug: string, minify =
   const htmlContent = readFileSync(node.editor.htmlPath, 'utf8');
   const htmlContentWithAdditionalDiv = `
   <div class="${packageNameSlug}">
-    <div class="${node.nodeIdentifier}">${htmlContent}</div>
+    <div id="${node.nodeIdentifier}">${htmlContent}</div>
   </div>
   `;
   let html = minify ? await minifyHtml(htmlContentWithAdditionalDiv) : htmlContentWithAdditionalDiv;

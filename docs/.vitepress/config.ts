@@ -35,6 +35,7 @@ export default defineConfig({
         text: 'Editor',
         items: [
           { text: 'DOM Helper', link: '/editor-dom-helper.md' },
+          { text: 'Template', link: '/editor/template.md' },
         ]
       }
     ],
