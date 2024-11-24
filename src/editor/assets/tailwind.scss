@@ -24,6 +24,9 @@
     select {
       @apply w-[70%];
     }
+    input[type="checkbox"] {
+      @apply !w-auto !mt-0;
+    }
   }
 }
 
