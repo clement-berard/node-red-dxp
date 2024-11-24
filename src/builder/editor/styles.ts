@@ -10,10 +10,13 @@ import { type ListNodesFull, currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { distributionPackagePath } from '../../tools/node-utils';
 
+const forcedInclude = ['hidden', 'block', '!hidden', '!block'];
+
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([
     purgeCss({
-      content: [{ raw: htmlString, extension: 'html' }], // Analyse directe du HTML
+      content: [{ raw: htmlString, extension: 'html' }],
+      safelist: [/^!/, /^\\!/, /^\\:/, ...forcedInclude],
     }),
     autoprefixer,
     cssnano({ preset: 'default' }),
@@ -59,7 +62,7 @@ export function getNodesStyles(nodes: ListNodesFull) {
 
 export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwindConfig: any = {}) {
   const defaultConfig = {
-    content: [{ raw: htmlString }, { raw: 'hidden block !hidden !block' }],
+    content: [{ raw: htmlString }, { raw: forcedInclude.join(' ') }],
     theme: {},
   };
 
