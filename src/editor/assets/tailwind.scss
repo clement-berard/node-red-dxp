@@ -4,18 +4,23 @@
   .alert {
     @apply p-4 mb-4 text-sm rounded-lg;
   }
+
   .alert-info {
     @apply text-blue-800 bg-blue-50;
   }
+
   .alert-danger {
     @apply text-red-800 bg-red-50;
   }
+
   .alert-success {
     @apply text-green-800 bg-green-50;
   }
+
   .alert-warning {
     @apply text-yellow-800 bg-yellow-50;
   }
+
   .alert-dark {
     @apply text-gray-800 bg-gray-50;
   }
@@ -24,9 +29,58 @@
     select {
       @apply w-[70%];
     }
+
     input[type="checkbox"] {
       @apply !w-auto !mt-0;
     }
   }
+
+  .dx-form-row {
+    @apply mb-2;
+    div.main {
+      @apply flex gap-4 items-center;
+      div:first-child {
+        @apply w-[100px] flex items-center justify-start;
+
+        i {
+          @apply mr-2;
+        }
+
+        label {
+          @apply truncate;
+        }
+      }
+
+      input, select {
+        @apply flex-1;
+      }
+
+      input[type="checkbox"] {
+        @apply !w-auto !mt-0 flex-shrink-0 flex-grow-0;
+      }
+    }
+
+    .hint {
+      @apply text-sm text-gray-500 mt-1;
+      margin-left: calc(100px + 1rem);
+      &.hint-info {
+        @apply text-blue-800;
+      }
+
+      &.hint-danger {
+        @apply text-red-800;
+      }
+
+      &.hint-success {
+        @apply text-green-800;
+      }
+
+      &.hint-warning {
+        @apply text-yellow-800;
+      }
+    }
+
+  }
+
 }
 
