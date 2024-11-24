@@ -41,7 +41,10 @@ ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nwindow.RED.nodes.re
       minifySyntax: this.params.minify,
       minifyIdentifiers: this.params.minify,
       legalComments: 'none',
-      inject: [`${currentContext.currentPackagedDistPath}/editor/global-solid.ts`],
+      inject: [
+        `${currentContext.currentPackagedDistPath}/editor/global-solid.ts`,
+        `${currentContext.currentPackagedDistPath}/editor/dxpFormRow.ts`,
+      ],
       write: false,
       loader: { '.ts': 'ts' },
     });
