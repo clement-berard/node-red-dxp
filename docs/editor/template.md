@@ -6,14 +6,14 @@ Some classes are available to help you to create a beautiful template.
 
 ## Available Classes
 
-### `.dx-form-row`
+### `.dxp-form-row`
 
 Help you to create a row in the form. But something more beautiful.
 
 #### Examples
 
 ```html
-<div class="dx-form-row">
+<div class="dxp-form-row">
     <div class="main">
         <div>
             <i class="fa fa-tag"></i>
@@ -25,7 +25,7 @@ Help you to create a row in the form. But something more beautiful.
 ```
 
 ```html
-<div class="dx-form-row">
+<div class="dxp-form-row">
     <div class="main">
         <div>
             <i class="fa fa-bolt"></i>
