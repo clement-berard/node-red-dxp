@@ -23,8 +23,8 @@ features:
     details: Provides utility functions for building custom node editors and hassle-free configuration for common Node-RED workflows.
 ---
 
-::: warning
-Documentation is still a work in progress.
+::: warning Under construction 🚧
+Documentation is still a work in progress. But the package is fully functional and ready to use.
 :::
 
 ## 🚀 Why Choose node-red-dxp?
@@ -33,7 +33,7 @@ Documentation is still a work in progress.
 - **All-in-One Toolkit**: No need to juggle multiple tools—**node-red-dxp** handles everything from JavaScript bundling to CSS and Markdown processing.
 - **Developer-Centric**: Designed with developer experience (DX) at its core, making custom node creation as seamless as possible.
 
-## 💪 They use node-red-dxp
+## 💪 Who’s Building with Node-RED DXP?
 
 - [node-red-contrib-js-philips-tv-control](https://www.npmjs.com/package/@keload/node-red-contrib-js-philips-tv-control)
 - [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav) 🏗️
