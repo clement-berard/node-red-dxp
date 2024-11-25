@@ -9,32 +9,31 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      // { text: 'Examples', link: '/markdown-examples' }
     ],
 
     sidebar: [
-      { text: 'Get started', link: '/cli-build.md' },
-      { text: 'Usage', link: '/cli-watch.md' },
-      { text: 'Why?', link: '/cli-watch.md' },
+      { text: 'Get started', link: '/get-started.md' },
+      { text: 'Config file', link: '/config-file.md' },
       {
         text: 'CLI',
         items: [
-          { text: 'build', link: '/cli-build.md' },
-          { text: 'watch', link: '/cli-watch.md' },
-          { text: 'create-node', link: '/cli-watch.md' },
+          { text: 'build', link: '/cli/build.md' },
+          { text: 'watch', link: '/cli/watch.md' },
+          { text: 'create-node', link: '/cli/create-node.md' },
         ]
       },
       {
         text: 'Features',
         items: [
           { text: 'i18n', link: '/i18n.md' },
-          { text: 'Documentation', link: '/documentation.md' },
+          { text: 'Node Documentation', link: '/documentation.md' },
         ]
       },
       {
         text: 'Editor',
         items: [
-          { text: 'DOM Helper', link: '/editor-dom-helper.md' },
+          { text: 'DOM Helper', link: '/editor/dom-helper.md' },
           { text: 'Template', link: '/editor/template.md' },
         ]
       }
