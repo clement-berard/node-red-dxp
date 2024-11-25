@@ -149,3 +149,8 @@ export function setText(selector: string, text: string) {
   const realSelector = resolveSelector(selector);
   $(realSelector).text(text);
 }
+
+export function jqSelector(selector: string) {
+  const realSelector = resolveSelector(selector);
+  return $(realSelector);
+}

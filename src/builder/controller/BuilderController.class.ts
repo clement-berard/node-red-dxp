@@ -21,6 +21,7 @@ export class BuilderController {
     return `
 import type { NodeAPI } from 'node-red';
 ${currentContext.listNodesFull.map((node) => `import ${node.pascalName}, {credentials as cred${node.pascalName}} from '${node.fullControllerPath}';`).join('\n')}
+${currentContext.redServerPath.map((path) => `import RedServer from '${path}';`).join('\n')}
 
 
 export default async (RED: NodeAPI): Promise<void> => {
@@ -33,6 +34,8 @@ export default async (RED: NodeAPI): Promise<void> => {
     });`,
       )
       .join('\n')}
+    
+    ${currentContext.redServerPath.length > 0 ? 'RedServer();' : ''}
 };
 `.trim();
   }
