@@ -23,8 +23,8 @@ features:
     details: Provides utility functions for building custom node editors and hassle-free configuration for common Node-RED workflows.
 ---
 
-::: warning
-Documentation is still a work in progress.
+::: warning Under construction 🚧
+Documentation is still a work in progress. But the package is fully functional and ready to use.
 :::
 
 ## 🚀 Why Choose node-red-dxp?
