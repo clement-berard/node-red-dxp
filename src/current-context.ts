@@ -91,6 +91,7 @@ function getCurrentContext() {
     resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: [`${pathSrcNodesDir}/**/*.scss`] }),
     resolvedNodesPaths: resolvedNodesPaths.map((entry) => entry.path),
     resolvedSrcLocalesPaths: globSync(`${pathSrcDir}/${fixedConfig.localesDirName}/*.json`),
+    redServerPath: globSync(`${pathSrcDir}/red-server.ts`),
     listNodesFull: listNodesFull,
     listNodesFullNames,
   };
