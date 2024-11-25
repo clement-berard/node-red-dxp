@@ -1,5 +1,9 @@
 # Node-Red Developer eXPerience (node-red-dxp)
 
+Effortless Node Creation for Node-RED, really fast and easy.
+
+Build faster with modern tools and seamless workflows 🚀
+
 Welcome to **node-red-dxp**, a comprehensive library designed to simplify and accelerate the development of custom nodes for Node-RED. 🚀
 
 With **node-red-dxp**, you get everything you need to build, style, and document your nodes—all in one package!
