@@ -1,0 +1,28 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../../src/editor/dom.ts"],
+  "out": "../../docs",
+  "exclude": [
+    "**/node_modules/**",
+    "dist",
+    "tests",
+    "**/*.spec.ts"
+  ],
+  "validation": false,
+  "excludeExternals": true,
+  "externalPattern": "**/node_modules/**",
+  "skipErrorChecking": true,
+  "plugin": ["typedoc-plugin-markdown"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "cleanOutputDir": false,
+  "disableSources": true,
+  "mergeReadme": true,
+  "outputFileStrategy": "modules",
+  "hideBreadcrumbs": true,
+  "hidePageHeader": true,
+  "hidePageTitle": true,
+  "entryFileName": "./editor/dom-helper.md",
+  "readme": "../../docs/editor/dom-helper-header.md"
+}

@@ -21,3 +21,4 @@ pnpm-debug.log*
 dist
 docs/.vitepress/cache
 docs/.vitepress/dist
+/docs/editor/dom-helper.md

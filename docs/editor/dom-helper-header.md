@@ -1,12 +1,7 @@
----
-outline: [2, 3]
----
-
 # DOM Helper
 
-::: info
-This documentation is automatically generated from the source code.
-:::
+The DOM Helper offers utility functions to simplify Node-RED editor DOM manipulation, reducing development effort.
+Optimized for tree-shaking, it ensures a lightweight and efficient final bundle. 🚀
 
 ## Usage
 
@@ -17,3 +12,7 @@ import { initSelect, watchInput } from '@keload/node-red-dxp/editor/dom-helper';
 ```
 
 And you benefit from tree-shaking in the final bundle 🚀
+
+::: info
+This documentation is automatically generated from the source code.
+:::
