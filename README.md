@@ -10,8 +10,6 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 
 [Explore the docs »](https://clement-berard.github.io/node-red-dxp/)
 
----
-
 ## ✨ Key Features
 
 - **⚡ Powerful and fast Builder**:
@@ -19,16 +17,17 @@ With **node-red-dxp**, you get everything you need to build, style, and document
     - Supports SCSS styles for polished, modern editor UIs.
     - Automatically render Markdown documentation into Node-RED compatible HTML.
 
+
 - **🎨 Effortless Styling**:
     - Built-in support for **Tailwind CSS**.
     - Includes clean, minimal CSS styles tailored for Node-RED.
     - Fully customizable SCSS for editor components.
 
+
 - **🛠️ Development Helpers**:
     - Utility functions to streamline building custom node editors.
     - Hassle-free configuration for common Node-RED workflows.
 
----
 
 ## 🚀 Why Choose node-red-dxp?
 
@@ -36,7 +35,6 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 - **All-in-One Toolkit**: No need to juggle multiple tools—**node-red-dxp** handles everything from JavaScript bundling to CSS and Markdown processing.
 - **Developer-Centric**: Designed with developer experience (DX) at its core, making custom node creation as seamless as possible.
 
----
 ## License
 
 MIT

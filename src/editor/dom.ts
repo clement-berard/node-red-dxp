@@ -21,10 +21,30 @@ export function isNodeInput(selector: string) {
 }
 
 /**
- * Resolves a given selector to a specific format based on its prefix.
+ * Resolves a selector string into a specific format based on predefined rules.
  *
- * @param inSelector - The input selector string to resolve.
- * @returns The resolved selector string.
+ * The function supports two shortcuts:
+ * - `$`: Indicates a node input selector, resolved to `#node-input-{name}`.
+ * - `$$`: Indicates a node config input selector, resolved to `#node-config-input-{name}`.
+ *
+ * If no shortcuts are detected, the function returns the input selector unchanged.
+ *
+ * @param inSelector - A string representing the selector.
+ *                     May contain shortcuts `$` or `$$`.
+ *
+ * @returns The resolved selector as a string.
+ *
+ * @example
+ * // Resolving a plain selector
+ * resolveSelector('#my-element'); // Returns '#my-element'
+ *
+ * @example
+ * // Resolving a `$` shortcut
+ * resolveSelector('$node-name'); // Returns '#node-input-node-name'
+ *
+ * @example
+ * // Resolving a `$$` shortcut
+ * resolveSelector('$$config-name'); // Returns '#node-config-input-config-name'
  */
 export function resolveSelector(inSelector: string) {
   const computed = isNodeInput(inSelector);
@@ -150,6 +170,30 @@ export function setText(selector: string, text: string) {
   $(realSelector).text(text);
 }
 
+/**
+ * Resolves a given selector string into a jQuery object based on predefined rules.
+ *
+ * @param selector - A string representing the selector.
+ *                   It can include special shortcuts such as `$` or `$$`.
+ *
+ * @returns A jQuery object corresponding to the resolved selector.
+ *
+ * @example
+ * // Resolving a simple selector
+ * jqSelector('#my-element'); // Returns a jQuery object for #my-element
+ *
+ * @example
+ * // Using `$` shortcut for node input
+ * jqSelector('$node-name');
+ * // Resolves to: #node-input-node-name
+ * // Returns a jQuery object for the resolved selector
+ *
+ * @example
+ * // Using `$$` shortcut for node config input
+ * jqSelector('$$config-name');
+ * // Resolves to: #node-config-input-config-name
+ * // Returns a jQuery object for the resolved selector
+ */
 export function jqSelector(selector: string) {
   const realSelector = resolveSelector(selector);
   return $(realSelector);

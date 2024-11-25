@@ -38,6 +38,9 @@ export default defineConfig({
         ]
       }
     ],
+    outline: {
+      level: [2, 3], // Inclure h2 et h3 dans la Table of Contents
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/clement-berard/node-red-dxp' }
