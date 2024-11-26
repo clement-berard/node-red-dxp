@@ -28,6 +28,8 @@ All styles in this file are globally available and can be used in any HTML file 
 If you want to use custom styles, you can include them in the `src/styles.scss` file.
 While it's not mandatory, this is the dedicated location for personal styles in your project.
 
+All other `.scss` files are not included, but you can import them in the `src/styles.scss` file.
+
 ## Node's scope
 
 ::: info
@@ -35,6 +37,8 @@ All styles in this section are scoped to the node they are defined in and can on
 :::
 
 If you want to use custom styles, you can include them in the `src/nodes/<node-name>/editor/styles.scss` file.
+
+All other `.scss` files are not included, but you can import them in the `src/nodes/<node-name>/editor/styles.scss` file.
 
 ## Example
 
