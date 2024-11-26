@@ -15,7 +15,9 @@ const program = new Command();
 program.name('node-red-dxp').description('node-red-dxp CLI').version(packageJson.version);
 program
   .command('build')
-  .description('Build project')
+  .description(
+    'The build script compiles all nodes into a production-ready, optimized format at lightning speed, with the output defaulting to the dist directory.',
+  )
   .option('--no-minify', 'No minify the output', true)
   .action(async (options) => {
     const nodesCount = currentContext.listNodesFull.length;
