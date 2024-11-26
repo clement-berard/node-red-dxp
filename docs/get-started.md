@@ -1,5 +1,11 @@
 # Get started
 
+<div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem">
+<img src="./images/esbuild-logo.svg" alt="alt text" width="10%"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="alt text" width="10%"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="alt text" width="10%"/>
+</div>
+
 ::: warning Under construction 🚧
 Documentation is still a work in progress. But the package is fully functional and ready to use.
 :::

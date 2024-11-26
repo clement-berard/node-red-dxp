@@ -5,11 +5,13 @@ export default defineConfig({
   title: "node-red-dxp",
   description: "Build nodes effortless",
   base: process.env.CI ? '/node-red-dxp/' : '/',
+  head: [
+    ['link', { rel: 'icon', href: '/favicon.ico' }]
+  ],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      // { text: 'Examples', link: '/markdown-examples' }
     ],
 
     sidebar: [
@@ -33,8 +35,9 @@ export default defineConfig({
       {
         text: 'Editor',
         items: [
-          { text: 'DOM Helper', link: '/editor/dom-helper.md' },
+          { text: 'DOM Helper ', link: '/editor/dom-helper.md' },
           { text: 'Template', link: '/editor/template.md' },
+          { text: 'Styling nodes', link: '/editor/styles.md' },
         ]
       }
     ],

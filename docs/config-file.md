@@ -1,12 +1,13 @@
 # Configuration file
 
-::: warning Under construction 🚧
-Documentation is still a work in progress. But the package is fully functional and ready to use.
-:::
-
 You can add a configuration file to your project to specify the settings for the project. 
 
 The configuration file is a JSON file named `.node-red-dxprc.json` and should be placed in the root of the project.
+
+::: tip
+You can also use another format like `.node-red-dxprc.js` or `.node-red-dxprc.yaml`.
+Behind the scenes, the package uses [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig) to load the configuration file.
+:::
 
 Here is the type of available values: 
 
