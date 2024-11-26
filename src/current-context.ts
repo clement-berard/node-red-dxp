@@ -40,7 +40,7 @@ function listNodeFolders(rawNodes: Entry[] = []) {
     const fullEditorPath = `${fullPath}/${fixedConfig.nodes.editor.dirName}`;
     const relativePath = fullPath.replace(currentDir, '').slice(1);
     const relativeEditorPath = `${relativePath}/${fixedConfig.nodes.editor.dirName}`;
-    const scssFiles = globSync(`${fullEditorPath}/**/*.scss`);
+    const scssFiles = globSync(`${fullEditorPath}/${fixedConfig.nodes.editor.stylesName}.scss`);
     const mdxFiles = globSync(`${fullPath}/doc.mdx`);
     const mdFiles = globSync(`${fullPath}/doc.md`);
     const dashName = dash(entry.name);
@@ -88,7 +88,9 @@ function getCurrentContext() {
     packageName: jsonPackage.name,
     packageNameSlug,
     config: currentConfig,
-    resolvedSrcPathsScss: globSync(`${pathSrcDir}/**/*.scss`, { ignore: [`${pathSrcNodesDir}/**/*.scss`] }),
+    resolvedSrcPathsScss: globSync(`${pathSrcDir}/${fixedConfig.globalStylesName}.scss`, {
+      ignore: [`${pathSrcNodesDir}/**/*.scss`],
+    }),
     resolvedNodesPaths: resolvedNodesPaths.map((entry) => entry.path),
     resolvedSrcLocalesPaths: globSync(`${pathSrcDir}/${fixedConfig.localesDirName}/*.json`),
     redServerPath: globSync(`${pathSrcDir}/red-server.ts`),
