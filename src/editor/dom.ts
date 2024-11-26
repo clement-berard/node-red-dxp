@@ -73,17 +73,13 @@ export function resolveSelector(inSelector: string) {
  * // Remove a class from multiple elements
  * handleAddRemoveClassesOnSelectors('remove', ['#element1', '.element2'], ['hidden']);
  */
-export function handleAddRemoveClassesOnSelectors(
-  action: 'add' | 'remove',
-  selectors: string[],
-  classesToRemove: string[],
-) {
+export function handleAddRemoveClassesOnSelectors(action: 'add' | 'remove', selectors: string[], classes: string[]) {
   // biome-ignore lint/complexity/noForEach: <explanation>
   selectors.forEach((selector) => {
     const targetElement = document.querySelector(selector);
     if (targetElement) {
       // biome-ignore lint/complexity/noForEach: <explanation>
-      classesToRemove.forEach((cls) => targetElement.classList[action](cls));
+      classes.forEach((cls) => targetElement.classList[action](cls));
     }
   });
 }
