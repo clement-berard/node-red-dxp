@@ -2,7 +2,7 @@ import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { writeFile } from '../../tools/node-utils';
-import { BuildDoc } from '../doc/BuildDoc.class';
+import { getMdDocs } from '../doc/BuildDoc.class';
 import { getNodesHtml } from './html';
 import { getAllCompiledStyles } from './styles';
 
@@ -65,8 +65,7 @@ ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nwindow.RED.nodes.re
       nodes: currentContext.listNodesFull,
     });
 
-    const builderDoc = new BuildDoc();
-    const docs = builderDoc.getAllDocContent();
+    const docs = await getMdDocs();
 
     const wrappedJs = `<script type="application/javascript">${js.trim()}</script>`;
     const wrappedCss = `<style>${css}</style>`;

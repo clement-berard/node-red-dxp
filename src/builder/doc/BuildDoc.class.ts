@@ -1,24 +1,27 @@
-import fs from 'node:fs';
+import fsPromise from 'node:fs/promises';
 import { currentContext } from '../../current-context';
 
-export class BuildDoc {
-  // TODO need to refactor
-  getAllDocContent() {
-    const result = [];
+async function processDoc(path: string, nodeName: string) {
+  const content = await fsPromise.readFile(path, 'utf8');
+  return `
+<script type="text/markdown" data-help-name="${nodeName}">
+${content}
+</script>`.trim();
+}
 
-    for (const node of currentContext.listNodesFull) {
-      const fileMd = node.doc.mdFiles[0];
-      if (fileMd) {
-        const htmlMd = fs.readFileSync(node.doc.mdFiles[0], 'utf-8');
-        const inner = `
-<script type="text/markdown" data-help-name="${node.name}">
-${htmlMd}
-</script>
-      `;
-        result.push(inner);
-      }
+export async function getMdDocs() {
+  const allMdFiles = currentContext.listNodesFull.flatMap((node) => {
+    if (node.doc.mdFiles.length === 0) {
+      return [];
     }
 
-    return result.length ? result.join('\n') : '';
-  }
+    return {
+      path: node.doc.mdFiles[0],
+      name: node.name,
+    };
+  });
+
+  const allPromises = await Promise.all(allMdFiles.map((node) => processDoc(node.path, node.name)));
+
+  return allPromises.length ? allPromises.join('\n') : '';
 }
