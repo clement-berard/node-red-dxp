@@ -19,15 +19,6 @@ export async function writeFile(path: string, content: string): Promise<void> {
   }
 }
 
-export async function doesFolderExist(absolutePath: string): Promise<boolean> {
-  try {
-    const stats = await fsPromise.stat(absolutePath);
-    return stats.isDirectory();
-  } catch {
-    return false;
-  }
-}
-
 export async function cleanPaths(paths: string[]): Promise<void> {
   for (const dirPath of paths) {
     try {
