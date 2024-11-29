@@ -30,6 +30,8 @@ export default defineConfig({
         items: [
           { text: 'i18n', link: '/i18n.md' },
           { text: 'Node Documentation', link: '/documentation.md' },
+          { text: 'Server-side', link: '/server-side.md' },
+          { text: 'Resources', link: '/resources.md' },
         ]
       },
       {
