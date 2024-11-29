@@ -41,8 +41,8 @@ function listNodeFolders(rawNodes: Entry[] = []) {
     const relativePath = fullPath.replace(currentDir, '').slice(1);
     const relativeEditorPath = `${relativePath}/${fixedConfig.nodes.editor.dirName}`;
     const scssFiles = globSync(`${fullEditorPath}/${fixedConfig.nodes.editor.stylesName}.scss`);
-    const mdxFiles = globSync(`${fullPath}/doc.mdx`);
-    const mdFiles = globSync(`${fullPath}/doc.md`);
+    const mdxFiles = globSync(`${fullPath}/docs.mdx`);
+    const mdFiles = globSync(`${fullPath}/docs.md`);
     const dashName = dash(entry.name);
 
     return {
