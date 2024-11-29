@@ -2,7 +2,7 @@ import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { writeFile } from '../../tools/node-utils';
-import { handleDocs } from '../doc/getMdxDocs';
+import { handleDocs } from '../doc/getDocs';
 import { getNodesHtml } from './html';
 import { getAllCompiledStyles } from './styles';
 
