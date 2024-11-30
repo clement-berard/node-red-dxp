@@ -10,7 +10,7 @@ import { type ListNodesFull, currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { distributionPackagePath } from '../../tools/node-utils';
 
-const forcedInclude = ['hidden', 'block', '!hidden', '!block'];
+const forcedInclude = ['hidden', 'block', '!hidden', '!block', 'font-bold'];
 
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([
