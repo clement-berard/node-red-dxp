@@ -18,6 +18,9 @@ export type Config = {
     esbuildControllerOptions?: {
       includeInBundle?: string[];
     };
+    tailwind?: {
+      forcedClassesInclusion?: string[];
+    };
   };
   watcher: {
     nodeRed: {
@@ -39,6 +42,14 @@ The directory where the built files will be placed.
 #### `includeInBundle` (string[]) - Default: `[]`
 An array of packages to include in the bundle (not "HTML" part, only server-side). 
 By default, all packages are excluded and resolved as external.
+
+### `tailwind` (object) - Default: `{}`
+
+#### `forcedClassesInclusion` (string[]) - Default: `[]`
+
+An array of classes to include in the Tailwind CSS build. (even if not used in the HTML part)
+
+Useful you need to add dynamic classes in your HTML part.
 
 ## `watcher`
 
