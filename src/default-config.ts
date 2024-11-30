@@ -4,6 +4,9 @@ export type Config = {
     esbuildControllerOptions?: {
       includeInBundle?: string[];
     };
+    tailwind?: {
+      forcedClassesInclusion?: string[];
+    };
   };
   watcher: {
     nodeRed: {
@@ -19,6 +22,9 @@ export const defaultConfig: Partial<Config> = {
     outputDir: 'dist',
     esbuildControllerOptions: {
       includeInBundle: [],
+    },
+    tailwind: {
+      forcedClassesInclusion: [],
     },
   },
   watcher: {
