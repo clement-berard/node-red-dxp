@@ -51,8 +51,23 @@
         }
       }
 
-      input, select {
+      input, select, .red-ui-typedInput-container {
         @apply flex-1;
+      }
+
+      .red-ui-typedInput-container {
+        border: 1px solid;
+
+        .red-ui-typedInput-type-select {
+          @apply bg-gray-50;
+          .red-ui-typedInput-type-label {
+            display: inline !important;
+          }
+
+          .red-ui-typedInput-icon {
+            @apply !ml-[5px];
+          }
+        }
       }
 
       input[type="checkbox"] {
