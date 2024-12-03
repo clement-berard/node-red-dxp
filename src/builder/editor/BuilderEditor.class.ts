@@ -4,6 +4,7 @@ import { fixedConfig } from '../../fixed-config';
 import { writeFile } from '../../tools/node-utils';
 import { handleDocs } from '../doc/getDocs';
 import { getNodesHtml } from './html';
+import { getResources } from './resources';
 import { getAllCompiledStyles } from './styles';
 
 async function getEditorIndexContent() {
@@ -53,9 +54,9 @@ export class BuilderEditor {
   }
 
   async prepareEditorIndex() {
-    const parts = [getBuiltScript(this.params.minify), handleDocs()];
+    const parts = [getBuiltScript(this.params.minify), handleDocs(), getResources()];
 
-    const [js, docs] = await Promise.all(parts);
+    const [js, docs, resources] = (await Promise.all(parts)) as [string, string, string];
 
     const html = await getNodesHtml({
       minify: this.params.minify,
@@ -73,6 +74,7 @@ export class BuilderEditor {
     const wrappedCss = `<style>${css}</style>`;
 
     return `
+${resources}
 ${html.allWrappedHtml}
 ${wrappedCss}
 ${wrappedJs}

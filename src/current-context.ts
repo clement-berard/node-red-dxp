@@ -28,6 +28,7 @@ const currentConfig = getConfig();
 const currentDir = process.cwd();
 const jsonPackage = JSON.parse(readFileSync(`${currentDir}/package.json`, 'utf-8'));
 const pathSrcDir = `${currentDir}/${fixedConfig.srcDir}`;
+const pathResourcesDir = `${currentDir}/resources`;
 const additionalResourcesDir = `${currentDir}/resources`;
 const pathSrcNodesDir = `${pathSrcDir}/${fixedConfig.nodesDirName}`;
 const pathLibCacheDir = `${currentDir}/${fixedConfig.libCacheDir}`;
@@ -77,6 +78,7 @@ function getCurrentContext() {
     currentDir,
     pathSrcDir,
     pathSrcNodesDir,
+    pathResourcesDir,
     additionalResourcesDir,
     pathDist: `${currentDir}/${currentConfig.builder.outputDir}`,
     currentPackagedDistPath,
