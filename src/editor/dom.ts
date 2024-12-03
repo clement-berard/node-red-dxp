@@ -251,3 +251,9 @@ export function jqSelector(selector: string) {
   const realSelector = resolveSelector(selector);
   return $(realSelector);
 }
+
+export function isCheckboxChecked(selector: string) {
+  const realSelector = resolveSelector(selector);
+  const checkbox = document.querySelector(realSelector) as HTMLInputElement;
+  return checkbox.checked;
+}
