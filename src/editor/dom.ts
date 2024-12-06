@@ -257,3 +257,38 @@ export function isCheckboxChecked(selector: string) {
   const checkbox = document.querySelector(realSelector) as HTMLInputElement;
   return checkbox.checked;
 }
+
+export function getFormValues(prefix: string): Record<string, string | boolean> {
+  const values: Record<string, string | boolean> = {};
+
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  document.querySelectorAll(`[id^="node-input-${prefix}-"]`).forEach((element) => {
+    const input = element as HTMLInputElement | HTMLSelectElement;
+    const key = input.id.replace(`node-input-${prefix}-`, '');
+    if (input.type === 'checkbox') {
+      values[key] = input.checked;
+    } else {
+      values[key] = input.value;
+    }
+  });
+
+  return values;
+}
+
+export function setFormValues(prefix: string, values: Record<string, unknown | boolean>): void {
+  if (!values) {
+    return;
+  }
+  // biome-ignore lint/complexity/noForEach: <explanation>
+  Object.entries(values).forEach(([key, value]) => {
+    const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(`#node-input-${prefix}-${key}`);
+
+    if (element) {
+      if (element.type === 'checkbox') {
+        (element as HTMLInputElement).checked = Boolean(value);
+      } else {
+        element.value = String(value);
+      }
+    }
+  });
+}
