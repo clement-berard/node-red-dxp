@@ -10,7 +10,13 @@ Some classes are available to help you to create a beautiful template.
 
 Help you to create a row in the form. But something more beautiful.
 
+::: tip Web Component 💪
+All the code below is available as a Web Component.
+:::
+
 #### Examples
+
+**Raw HTML**
 
 ```html
 <div class="dxp-form-row">
@@ -40,6 +46,18 @@ Help you to create a row in the form. But something more beautiful.
     </div>
     <div class="hint">Some hint information</div>
 </div>
+```
+
+**Web Component**
+
+```html
+<dxp-form-row label="Server" type="text" row-id="webdavServer" icon="tv"></dxp-form-row>
+<dxp-form-row label="Name" type="text" row-id="name" icon="tag"></dxp-form-row>
+<dxp-form-row label="Property" type="text" row-id="entry" icon="ellipsis-h">
+    <div class="hint">
+        If empty, configuration below will be used.
+    </div>
+</dxp-form-row>
 ```
 
 ##### Hints

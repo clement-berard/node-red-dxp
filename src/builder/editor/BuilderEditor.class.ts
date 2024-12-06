@@ -31,7 +31,7 @@ async function getBuiltScript(minify = false) {
     minifySyntax: minify,
     minifyIdentifiers: minify,
     legalComments: 'none',
-    // inject: [`${currentContext.currentPackagedDistPath}/editor/dxpFormRow.ts`],
+    inject: [`${currentContext.currentPackagedDistPath}/editor/dom-include.js`],
     write: false,
     loader: { '.ts': 'ts' },
   });
