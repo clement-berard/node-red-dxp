@@ -23,10 +23,12 @@ const forcedIncludeInternal = [
 
 const allClassesIncluded = [...forcedIncludeInternal, ...forcedIncludeInternal.map((item) => `!${item}`)];
 
+const constantHtml = '<div class="dxp-form-row"><div class="main"></div></div>';
+
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([
     purgeCss({
-      content: [{ raw: htmlString, extension: 'html' }],
+      content: [{ raw: `${htmlString}${constantHtml}`, extension: 'html' }],
       safelist: [/^!/, /^\\!/, /^\\:/, ...allClassesIncluded],
     }),
     autoprefixer,
