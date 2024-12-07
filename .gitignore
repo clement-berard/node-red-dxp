@@ -22,3 +22,4 @@ dist
 docs/.vitepress/cache
 docs/.vitepress/dist
 /docs/editor/dom-helper.md
+/docs/utils-full-stack.md

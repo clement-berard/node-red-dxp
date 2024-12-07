@@ -1,0 +1,26 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["../../src/utils/index.ts"],
+  "out": "../../docs",
+  "exclude": [
+    "dist",
+    "tests",
+    "**/*.spec.ts"
+  ],
+  "validation": false,
+  "excludeExternals": false,
+  "skipErrorChecking": true,
+  "plugin": ["typedoc-plugin-markdown"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "cleanOutputDir": false,
+  "disableSources": true,
+  "mergeReadme": true,
+  "outputFileStrategy": "modules",
+  "hideBreadcrumbs": true,
+  "hidePageHeader": true,
+  "hidePageTitle": true,
+  "entryFileName": "./utils-full-stack.md",
+  "readme": "../../docs/utils-full-stack-header.md"
+}
