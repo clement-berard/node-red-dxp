@@ -35,5 +35,6 @@ Documentation is still a work in progress. But the package is fully functional a
 
 ## 💪 Who’s Building with Node-RED DXP?
 
+- [node-red-contrib-ultimate-toolkit](https://www.npmjs.com/package/@keload/node-red-contrib-ultimate-toolkit)️
 - [node-red-contrib-js-philips-tv-control](https://www.npmjs.com/package/@keload/node-red-contrib-js-philips-tv-control)
 - [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav) 🏗️
