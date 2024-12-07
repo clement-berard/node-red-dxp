@@ -23,12 +23,10 @@ const forcedIncludeInternal = [
 
 const allClassesIncluded = [...forcedIncludeInternal, ...forcedIncludeInternal.map((item) => `!${item}`)];
 
-const constantHtml = '<div class="dxp-form-row"><div class="main"></div></div>';
-
 async function processCSS(cssString: string, htmlString: string): Promise<string> {
   const result = await postcss([
     purgeCss({
-      content: [{ raw: `${htmlString}${constantHtml}`, extension: 'html' }],
+      content: [{ raw: htmlString, extension: 'html' }],
       safelist: [/^!/, /^\\!/, /^\\:/, ...allClassesIncluded],
     }),
     autoprefixer,
@@ -96,6 +94,9 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
 
 export function getSrcStyles() {
   const srcStyles = currentContext.resolvedSrcPathsScss;
+  if (!srcStyles.length) {
+    return '';
+  }
   const srcStylesCompiled = buildStyles([...srcStyles]);
   return Object.values(srcStylesCompiled).join('');
 }
@@ -107,15 +108,19 @@ type GetAllCompiledStylesParams = {
 };
 
 export async function getAllCompiledStyles(params: GetAllCompiledStylesParams) {
+  const getSrcWrapper = (content: string) => `.${currentContext.packageNameSlug}{${content}}`;
   const { rawHtml, minify = false, nodes } = params || {};
   const srcStyles = getSrcStyles();
   const nodesStyles = getNodesStyles(nodes);
   const twCss = await generateCSSFromHTMLWithTailwind(rawHtml);
 
-  const getSrcWrapper = (content: string) => `.${currentContext.packageNameSlug}{${content}}`;
+  const finalTwCss = minify
+    ? await postcss([cssnano({ preset: 'default' })]).process(twCss, { from: undefined })
+    : twCss;
+
   const allNodesStyles = nodesStyles.map((node) => node.scssFinal).join('\n');
-
-  const result = getSrcWrapper(`${twCss}${srcStyles}${allNodesStyles}`);
-
-  return minify ? processCSS(result, rawHtml) : result;
+  const otherCss = minify
+    ? await processCSS(`${srcStyles}${allNodesStyles}`, rawHtml)
+    : `${srcStyles}${allNodesStyles}`;
+  return getSrcWrapper(`${finalTwCss}${otherCss}`);
 }

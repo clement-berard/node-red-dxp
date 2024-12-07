@@ -24,7 +24,7 @@ export default defineConfig([
     sourcemap: !minifyFlag,
     format: ['esm', 'cjs'],
     target: 'es6',
-    noExternal: [...noExternals, 'radash', 'is-ip'],
+    noExternal: [...noExternals, 'radash'],
     platform: 'browser',
     onSuccess: '. build.sh',
   },
