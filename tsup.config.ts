@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 const minifyFlag = true;
 
-const noExternals = ['merge-anything', 'is-what'];
+const noExternals = ['merge-anything'];
 
 export default defineConfig([
   {
