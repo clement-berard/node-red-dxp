@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 const minifyFlag = true;
 
-const noExternals = ['merge-anything', 'is-what'];
+const noExternals = ['merge-anything'];
 
 export default defineConfig([
   {
@@ -24,7 +24,7 @@ export default defineConfig([
     sourcemap: !minifyFlag,
     format: ['esm', 'cjs'],
     target: 'es6',
-    noExternal: [...noExternals, 'radash', 'is-ip'],
+    noExternal: [...noExternals, 'radash'],
     platform: 'browser',
     onSuccess: '. build.sh',
   },

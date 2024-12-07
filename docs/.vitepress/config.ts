@@ -32,6 +32,7 @@ export default defineConfig({
           { text: 'Node Documentation', link: '/documentation.md' },
           { text: 'Server-side', link: '/server-side.md' },
           { text: 'Resources', link: '/resources.md' },
+          { text: 'Utils', link: '/utils-full-stack.md' },
         ]
       },
       {
