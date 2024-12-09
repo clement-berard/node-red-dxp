@@ -1,8 +1,33 @@
-<div class="form-row">
-    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-    <input type="text" id="node-input-name" placeholder="custom name"/>
+<div class="dxp-form-row">
+    <div class="main">
+        <div>
+            <i class="fa fa-tag"></i>
+            <label for="node-input-name" data-i18n="name"></label>
+        </div>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]name"/>
+    </div>
 </div>
-<div class="form-row">
-    <label for="node-input-age" ><i class="fa fa-tag"></i> Age</label>
-    <input type="text" id="node-input-age" placeholder="enter age"/>
+<div class="dxp-form-row">
+    <div class="main">
+        <div>
+            <i class="fa fa-tag"></i>
+            <label for="node-input-age">Age</label>
+        </div>
+        <input type="text" id="node-input-age"/>
+    </div>
+</div>
+<div class="dxp-form-row">
+    <div class="main">
+        <div>
+            <i class="fa fa-bolt"></i>
+            <label for="node-input-action">Action</label>
+        </div>
+        <select id="node-input-action">
+            <option value="mute">Mute</option>
+            <option value="volumeup">Volume Up</option>
+            <option value="volumedown">Volume Down</option>
+            <option value="power">Power</option>
+        </select>
+    </div>
+    <div class="hint">Some hint information</div>
 </div>

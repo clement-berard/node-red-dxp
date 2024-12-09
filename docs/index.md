@@ -23,10 +23,6 @@ features:
     details: Provides utility functions for building custom node editors and hassle-free configuration for common Node-RED workflows.
 ---
 
-::: warning Under construction 🚧
-Documentation is still a work in progress. But the package is fully functional and ready to use.
-:::
-
 ## 🚀 Why Choose node-red-dxp?
 
 - **Blazing Speed**: Thanks to **esbuild**, both builds and watches are ultra-fast, letting you focus on development, not waiting.
