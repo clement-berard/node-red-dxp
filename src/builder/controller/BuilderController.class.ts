@@ -43,7 +43,10 @@ export default async (RED: NodeAPI): Promise<void> => {
   buildScript() {
     const packageJson = fs.readFileSync(targetPackageJsonFile, 'utf8');
     const parsedPackageJson = JSON.parse(packageJson);
-    const toIncludeInBundle = currentContext.config.builder.esbuildControllerOptions.includeInBundle;
+    const toIncludeInBundle = [
+      ...currentContext.config.builder.esbuildControllerOptions.includeInBundle,
+      '@keload/node-red-dxp',
+    ];
     const targetPackageDependencies = Object.keys(parsedPackageJson.dependencies || {});
     const realExternals = targetPackageDependencies.filter((item) => !toIncludeInBundle.includes(item));
 

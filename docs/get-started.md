@@ -1,14 +1,11 @@
 # Get started
 
 <div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem">
+<img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="alt text" width="10%"/>
 <img src="./images/esbuild-logo.svg" alt="alt text" width="10%"/>
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="alt text" width="10%"/>
 <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="alt text" width="10%"/>
 </div>
-
-::: warning Under construction 🚧
-Documentation is still a work in progress. But the package is fully functional and ready to use.
-:::
 
 Start to build your own Node-RED node with `node-red-dxp`! 🚀
 
@@ -22,75 +19,23 @@ By adhering to this structure, you can take full advantage of the tool's feature
 
 ## Installation
 
-```bash
-npm install node-red-dxp
+```sh
+npm install @keload/node-red-dxp --dev // [!=npm auto]
 ```
+
+This package is primarily designed to be used during development, 
+providing tools to assist with building and bundling. It is not required in production by default.
+
+While the package is mostly used for development, some utility functions are intended for inclusion in the final production bundle:
+
+**Editor (Frontend):**
+
+- All JavaScript for the editor is bundled in the `iife` format. This ensures that necessary utilities are always included in the editor's final bundle without requiring additional configuration.
+
+**Controller (Backend):**
+- By default, all external libraries used in the controller are treated as external dependencies and are imported via require. However, you can configure which libraries should be included in the bundle explicitly. Refer to the configuration documentation [here](config-file.md#includeinbundle-string-default).
+- Note: The core library `@keload/node-red-dxp` is always bundled in the final package and is never referenced as an external dependency.
 
 ## Usage
 
-Typical project structure:
-
-```plaintext
-├── src
-│   ├── locales <- Your global translations (optional)
-│   │   ├── en-US.json
-│   │   └── fr.json
-│   ├── nodes <- Your nodes (mandatory)
-│   │   ├── my-node-1
-│   │   │   ├── controller.ts <- Your node controller (mandatory)
-│   │   │   ├── docs.md(x) <- Your ndoe documentation (optional)
-│   │   │   ├── editor <- Your node editor folder (mandatory)
-│   │   │   │   ├── index.html <- Your node editor HTML (mandatory)
-│   │   │   │   └── index.ts <- Your node editor script (mandatory)
-│   │   │   │   └── styles.scss <- Your node editor styles (optional)
-│   │   │   ├── locales <- Your node translations (optional)
-│   │   │   │   ├── en-US.json
-│   │   ├── ... <- Your other nodes
-│   └── styles.scss <- Your global styles (optional)
-│   └── red-server.ts <- Use to interact with Node-RED backend (optional)
-└── tsconfig.json <- Your Typescript configuration
-```
-
-### `src/nodes` _(mandatory)_
-
-This folder contains all your nodes.
-
-#### `src/nodes/<node_name>/controller.ts` _(mandatory)_
-
-This file contains the logic of your node (server-side).
-
-#### `src/nodes/<node_name>/editor` _(mandatory)_
-
-This folder contains the editor of your node.
-
-##### `src/nodes/<node_name>/editor/index.html` _(mandatory)_
-
-This file contains the HTML of your node editor.
-
-##### `src/nodes/<node_name>/editor/index.ts` _(mandatory)_
-
-This file contains the script of your node editor.
-
-##### `src/nodes/<node_name>/editor/styles.scss` _(optional)_
-
-This file contains the styles of your node editor.
-
----
-
-### `src/locales` _(optional)_
-
-This folder contains globals the translations for your nodes. Each file should be named according to the language code it represents (e.g., `en-US.json`).
-
-More information about the translation system can be found [here](i18n.md).
-
-### `src/red-server.ts` _(optional)_
-
-This file is used to interact with the Node-RED backend.
-
-More information about the red-server can be found [here](server-side.md).
-
-### `tsconfig.json`
-
-This file contains your TypeScript configuration.
-
-Add `@keload/node-red-dxp` to your `compilerOptions.types` array to get the types of the package.
+Please refer to the following page [Usage](usage.md)

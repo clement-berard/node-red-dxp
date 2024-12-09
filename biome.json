@@ -6,7 +6,8 @@
 			"src/**/*.ts",
 			"./build.ts",
 			"./tsup.config.ts",
-			"src/**/*.scss"
+			"src/**/*.scss",
+			"docs/.vitepress/**/*.ts"
 		],
 		"ignore": ["**/dist"]
 	},
