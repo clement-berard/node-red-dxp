@@ -1,6 +1,6 @@
 # Node Documentation
 
-```plaintext
+```sh{4}
 ├── src
 │   ├── nodes
 │   │   ├── my-node-1

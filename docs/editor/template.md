@@ -2,19 +2,15 @@
 
 Some classes are available to help you to create a beautiful template.
 
-![editor-template.png](editor-template.png)
+<p align="center">
+    <img src="./editor-template.png" alt="editor-template" style="height: 25rem">
+</p>
 
 ## Available Classes
 
 ### `.dxp-form-row`
 
 Help you to create a row in the form. But something more beautiful.
-
-::: tip Web Component 💪
-All the code below is available as a Web Component.
-:::
-
-#### Examples
 
 **Raw HTML**
 
@@ -47,8 +43,9 @@ All the code below is available as a Web Component.
     <div class="hint">Some hint information</div>
 </div>
 ```
-
-**Web Component**
+::: tip Web Component 💪
+All the code below is available as a Web Component.
+:::
 
 ```html
 <dxp-form-row label="Server" type="text" row-id="webdavServer" icon="tv"></dxp-form-row>
