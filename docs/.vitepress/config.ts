@@ -7,7 +7,24 @@ export default defineConfig({
   title: 'node-red-dxp',
   description: 'Build nodes effortless',
   base: process.env.CI ? '/node-red-dxp/' : '/',
-  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+  head: [
+    ['link', { rel: 'icon', href: '/favicon.ico' }],
+    [
+      'script',
+      {
+        async: '',
+        src: 'https://rum.cronitor.io/script.js',
+      },
+    ],
+    [
+      'script',
+      {},
+      `
+    window.cronitor = window.cronitor || function() { (window.cronitor.q = window.cronitor.q || []).push(arguments); };
+    cronitor('config', { clientKey: 'e592c5fce8d09201cfdb55663555d8a5' });
+      `,
+    ],
+  ],
   markdown: {
     config(md) {
       md.use(tabsMarkdownPlugin);
