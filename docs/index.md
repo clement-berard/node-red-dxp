@@ -23,6 +23,16 @@ features:
     details: Provides utility functions for building custom node editors and hassle-free configuration for common Node-RED workflows.
 ---
 
+<div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem">
+<img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="alt text" width="7%"/>
+</div>
+<div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem">
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="alt text" width="7%"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="alt text" width="7%"/>
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="alt text" width="7%"/>
+<img src="./images/esbuild-logo.svg" alt="alt text" width="7%"/>
+</div>
+
 ## 🚀 Why Choose node-red-dxp?
 
 - **Blazing Speed**: Thanks to **esbuild**, both builds and watches are ultra-fast, letting you focus on development, not waiting.

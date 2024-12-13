@@ -17,13 +17,21 @@ In HTML files, you can directly use [Tailwind](https://tailwindcss.com/)'s utili
 This ensures a seamless integration of your design while keeping the output optimized.
 :::
 
-💡 In addition, you can find some predefined classes [here](template.md).
+💡 To ensure a class is included, add the forceIncludeClasses property to the [configuration file](../config-file.md#forcedclassesinclusion-string-default).
+
+💡 You can find some predefined classes [here](template.md).
 
 ## Global scope
 
-::: info
+::: info ℹ️
 All styles in this file are globally available and can be used in any HTML file across all your nodes.
 :::
+
+```sh{2}
+├── src/
+│   └── styles.scss # Your global styles (optional)
+└── package.json
+```
 
 If you want to use custom styles, you can include them in the `src/styles.scss` file.
 While it's not mandatory, this is the dedicated location for personal styles in your project.
@@ -32,9 +40,18 @@ All other `.scss` files are not included, but you can import them in the `src/st
 
 ## Node's scope
 
-::: info
+::: info ℹ️
 All styles in this section are scoped to the node they are defined in and can only be used in the respective HTML file.
 :::
+
+```sh{5}
+├── src/
+│   ├── nodes/ # Your nodes
+│   │   ├── my-node-1/
+│   │   │   ├── editor/ # Your node editor folder
+│   │   │   │   └── styles.scss # Your node editor styles (optional)
+└── package.json
+```
 
 If you want to use custom styles, you can include them in the `src/nodes/<node-name>/editor/styles.scss` file.
 

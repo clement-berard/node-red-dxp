@@ -11,7 +11,7 @@ node-red-dxp create-node
 ```
 It will ask you some questions to create the node and generate the necessary files. Example:
 
-```
+```sh
 │   │   ├── my-node-1/
 │   │   │   ├── controller.ts <- Your node controller (mandatory)
 │   │   │   ├── docs.md(x) <- Your node documentation (optional)

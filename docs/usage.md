@@ -23,27 +23,27 @@ Now you can follow the structure below to start your project.
 
 Typical project structure:
 
-```plaintext
+```sh
 ├── src/
-│   ├── locales/ <- Your global translations (optional)
+│   ├── locales/ # Your global translations (optional)
 │   │   ├── en-US.json
 │   │   └── fr.json
-│   ├── nodes/ <- Your nodes (mandatory)
+│   ├── nodes/ # Your nodes (mandatory)
 │   │   ├── my-node-1/
-│   │   │   ├── controller.ts <- Your node controller (mandatory)
-│   │   │   ├── docs.md(x) <- Your node documentation (optional)
-│   │   │   ├── editor/ <- Your node editor folder (mandatory)
-│   │   │   │   ├── index.html <- Your node editor HTML (mandatory)
-│   │   │   │   └── index.ts <- Your node editor script (mandatory)
-│   │   │   │   └── styles.scss <- Your node editor styles (optional)
-│   │   │   ├── locales/ <- Your node translations (optional)
+│   │   │   ├── controller.ts # Your node controller (mandatory)
+│   │   │   ├── docs.md(x) # Your node documentation (optional)
+│   │   │   ├── editor/ # Your node editor folder (mandatory)
+│   │   │   │   ├── index.html # Your node editor HTML (mandatory)
+│   │   │   │   └── index.ts # Your node editor script (mandatory)
+│   │   │   │   └── styles.scss # Your node editor styles (optional)
+│   │   │   ├── locales/ # Your node translations (optional)
 │   │   │   │   ├── en-US.json
-│   │   ├── ... <- Your other nodes
-│   └── styles.scss <- Your global styles (optional)
-│   └── red-server.ts <- Use to interact with Node-RED backend (optional)
-└── rercources/ <- Your resources folder (optional)
-└── tsconfig.json <- Your Typescript configuration
-└── .node-red-dxprc.json <- Your configuration file (optional)
+│   │   ├── ... # Your other nodes
+│   └── styles.scss # Your global styles (optional)
+│   └── red-server.ts # Use to interact with Node-RED backend (optional)
+└── resources/ # Your resources folder (optional)
+└── tsconfig.json # Your Typescript configuration
+└── .node-red-dxprc.json # Your configuration file (optional)
 └── package.json
 ```
 

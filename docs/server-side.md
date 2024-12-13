@@ -1,8 +1,8 @@
 # Node-RED server side
 
-```plaintext
+```sh{2}
 ├── src
-│   └── red-server.ts <- this file
+│   └── red-server.ts # this file
 ```
 
 ## Usage
@@ -25,6 +25,6 @@ export default function () {
   // another stuff
 }
 ```
-::: tip
+::: tip 💡
 Feel free to import any package you need in this file. You can structure your code as you want.
 :::
