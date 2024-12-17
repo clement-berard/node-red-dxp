@@ -10,6 +10,7 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 
 [Explore the docs »](https://clement-berard.github.io/node-red-dxp/)
 
+<br/>
 <p align="center">
   <img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="alt text" width="7%"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="alt text" width="7%"/>
