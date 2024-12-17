@@ -6,6 +6,7 @@ import packageJson from '../../package.json';
 import { Builder } from '../builder';
 import { currentContext } from '../current-context';
 import { registerChecksCommands } from './commands/checks';
+import { registerCreateCommands } from './commands/create';
 import { registerInfoCommands } from './commands/info';
 import { registerScaffoldingCommands } from './commands/scaffolding';
 import { runWatcher } from './watcher';
@@ -48,5 +49,6 @@ program
 registerChecksCommands(program);
 registerInfoCommands(program);
 registerScaffoldingCommands(program);
+registerCreateCommands(program);
 
 program.parse(process.argv);
