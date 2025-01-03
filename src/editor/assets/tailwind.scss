@@ -35,6 +35,73 @@
     }
   }
 
+  .dxp-template-form-row {
+    @apply flex items-start mb-4;
+
+    label {
+      @apply flex-none w-[100px] relative py-1.5;
+      @apply truncate;
+      @apply mr-4;
+
+      i {
+        @apply mr-1;
+      }
+    }
+
+    .content {
+      @apply flex-1;
+
+      input,
+      select,
+      textarea,
+      .red-ui-typedInput-container{
+        @apply !w-full;
+      }
+
+      .red-ui-typedInput-container {
+        border: 1px solid var(--red-ui-form-input-border-color);
+
+        .red-ui-typedInput-type-select {
+          @apply bg-gray-50;
+          .red-ui-typedInput-type-label {
+            display: inline !important;
+          }
+
+          .red-ui-typedInput-icon {
+            @apply !ml-[5px];
+          }
+        }
+      }
+
+      div.checkbox {
+        @apply !mt-[0.35rem];
+        input[type="checkbox"] {
+          @apply !w-auto;
+        }
+      }
+    }
+
+    .hint {
+      @apply text-sm text-gray-500 mt-1;
+
+      &.hint-info {
+        @apply text-blue-800;
+      }
+
+      &.hint-danger {
+        @apply text-red-800;
+      }
+
+      &.hint-success {
+        @apply text-green-800;
+      }
+
+      &.hint-warning {
+        @apply text-yellow-800;
+      }
+    }
+  }
+
   .dxp-form-row {
     @apply mb-4;
     div.main {

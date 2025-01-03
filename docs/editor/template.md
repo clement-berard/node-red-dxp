@@ -8,53 +8,55 @@ Some classes are available to help you to create a beautiful template.
 
 ## Available Classes
 
-### `.dxp-form-row`
+### `.dxp-template-form-row`
 
 Help you to create a row in the form. But something more beautiful.
 
 **Raw HTML**
 
 ```html
-<div class="dxp-form-row">
-    <div class="main">
-        <div>
-            <i class="fa fa-tag"></i>
-            <label for="node-input-name" data-i18n="name"></label>
-        </div>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]name"/>
+<div class="dxp-template-form-row">
+    <label for="node-input-name">
+        <i class="fa fa-tag"></i>
+        Name
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-name"/>
     </div>
 </div>
-```
-
-```html
-<div class="dxp-form-row">
-    <div class="main">
-        <div>
-            <i class="fa fa-bolt"></i>
-            <label for="node-input-action">Action</label>
-        </div>
-        <select id="node-input-action">
-            <option value="mute">Mute</option>
-            <option value="volumeup">Volume Up</option>
-            <option value="volumedown">Volume Down</option>
-            <option value="power">Power</option>
-        </select>
+<div class="dxp-template-form-row">
+    <label for="node-input-entry">
+        <i class="fa fa-ellipsis-h"></i>
+        Property
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-entry">
+        <input type="hidden" id="node-input-entryType">
     </div>
-    <div class="hint">Some hint information</div>
 </div>
-```
-::: tip Web Component 💪
-All the code below is available as a Web Component.
-:::
-
-```html
-<dxp-form-row label="Server" type="text" row-id="webdavServer" icon="tv"></dxp-form-row>
-<dxp-form-row label="Name" type="text" row-id="name" icon="tag"></dxp-form-row>
-<dxp-form-row label="Property" type="text" row-id="entry" icon="ellipsis-h">
-    <div class="hint">
-        If empty, configuration below will be used.
+<div class="dxp-template-form-row">
+    <label for="node-input-category">
+        <i class="fa fa-list-alt"></i>
+        Category
+    </label>
+    <div class="content">
+        <select id="node-input-category"></select>
+        <div class="hint hint-info italic">Some hint</div>
     </div>
-</dxp-form-row>
+</div>
+<div class="dxp-template-form-row extra-field inverseReturnValue">
+    <label for="node-input-inverseReturnValue">
+        <i class="fa fa-arrow-circle-o-right"></i>
+        Inverse
+    </label>
+    <div class="content">
+        <div class="checkbox">
+            <input type="checkbox" id="node-input-inverseReturnValue">
+            <span>Inverse the return value (<span class="italic">not</span> of condition)</span>
+        </div>
+    </div>
+</div>
+<div class="alert alert-info fn-docs extra-field text-center"></div>
 ```
 
 ##### Hints
