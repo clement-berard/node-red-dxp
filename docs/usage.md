@@ -125,7 +125,6 @@ You need to add information in some files to make the package work correctly.
   }
 }
 ```
-
 :::
 
 ## Start a new project with the CLI
