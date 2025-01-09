@@ -33,7 +33,7 @@ Typical project structure:
 │   │   │   ├── controller.ts # Your node controller (mandatory)
 │   │   │   ├── docs.md(x) # Your node documentation (optional)
 │   │   │   ├── editor/ # Your node editor folder (mandatory)
-│   │   │   │   ├── index.html # Your node editor HTML (mandatory)
+│   │   │   │   ├── index.{html,pug} # Your node editor HTML/Pug (mandatory)
 │   │   │   │   └── index.ts # Your node editor script (mandatory)
 │   │   │   │   └── styles.scss # Your node editor styles (optional)
 │   │   │   ├── locales/ # Your node translations (optional)
@@ -59,9 +59,11 @@ This file contains the logic of your node (server-side).
 
 This folder contains the editor of your node.
 
-##### `src/nodes/<node_name>/editor/index.html` _(mandatory)_
+##### `src/nodes/<node_name>/editor/index.{html,pug}` _(mandatory)_
 
-This file contains the HTML of your node editor.
+This file contains the HTML or Pug of your node editor.
+
+**Pug file is prioritized over HTML file.**
 
 ##### `src/nodes/<node_name>/editor/index.ts` _(mandatory)_
 
