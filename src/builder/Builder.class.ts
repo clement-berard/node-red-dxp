@@ -1,3 +1,4 @@
+import fsPromise from 'node:fs/promises';
 import { currentContext } from '../current-context';
 import { cleanPaths, createFolderIfNotExists, writeFile } from '../tools/node-utils';
 import { BuilderController } from './controller/BuilderController.class';
@@ -27,9 +28,11 @@ export class Builder {
     // Create cache dir
     createFolderIfNotExists(currentContext.pathLibCacheDir);
     // Clean dist folder and write config file
+    const pugHelperSourceFile = `${currentContext.currentPackagedDistPath}/editor/assets/pug-helper.pug`;
     const runs = [
       cleanPaths([currentContext.pathDist]),
       writeFile(`${currentContext.pathLibCacheDir}/config.json`, JSON.stringify(currentContext.config, null, 2)),
+      fsPromise.copyFile(pugHelperSourceFile, `${currentContext.pathLibCacheDir}/pug-helper.pug`),
     ];
 
     return Promise.all(runs).then(() => {
