@@ -59,3 +59,7 @@ export class DxpFormRow extends HTMLElement {
     this.appendChild(this.formRowContainer);
   }
 }
+
+if (!customElements.get('dxp-form-row')) {
+  customElements.define('dxp-form-row', DxpFormRow);
+}

@@ -11,7 +11,7 @@ export default defineConfig([
       index: 'src/index.ts',
       'utils/index': 'src/utils/index.ts',
       'editor/dom-helper/index': 'src/editor/dom.ts',
-      'editor/dom-include': 'src/editor/dom-include.ts',
+      'editor/inject/dxpFormRow': 'src/editor/web-components/dxpFormRow.ts',
     },
     clean: true,
     bundle: true,
