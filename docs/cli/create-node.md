@@ -7,9 +7,31 @@ You can create a regular node or a config node.
 ## Usage
 
 ```bash
+Usage: node-red-dxp create-node [options]
+
+Create new node
+
+Options:
+  --name <name>   Node name
+  --config-node   Generate a config node
+  --regular-node  Generate a regular node
+  --skip-confirm  Skip confirmations (default: false)
+  -h, --help      display help for command
+```
+
+### Usage examples
+
+```bash
+node-red-dxp create-node --name "my-node-1" --regular-node --skip-confirm
+```
+
+_Without parameters, It will ask you some questions to create the node._
+```bash
 node-red-dxp create-node
 ```
-It will ask you some questions to create the node and generate the necessary files. Example:
+
+
+## Result
 
 ```sh
 │   │   ├── my-node-1/
