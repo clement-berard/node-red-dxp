@@ -1,12 +1,84 @@
 # HTML Template
 
+## Overview
+
+```sh{5}
+├── src/
+│   ├── nodes/ # Your nodes
+│   │   ├── my-node-1/
+│   │   │   ├── editor/ # Your node editor folder
+│   │   │   │   └── index.{html,pug} # Your node editor HTML/Pug (mandatory)
+└── package.json
+```
+
+You can use HTML or Pug to create your editor template.
+
+::: warning ⚠️
+The Pug file is prioritized over the HTML file.
+:::
+
+### Example
+
+:::tabs
+== index.html
+```html
+<div class="dxp-template-form-row">
+    <label for="node-input-name">
+        <i class="fa fa-tag"></i>
+        Name
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-name"/>
+    </div>
+</div>
+<div class="dxp-template-form-row">
+    <label for="node-input-entry">
+        <i class="fa fa-ellipsis-h"></i>
+        Property
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-entry">
+        <input type="hidden" id="node-input-entryType">
+    </div>
+</div>
+```
+== index.pug
+```jade
+.dxp-template-form-row
+    label(for="node-input-webdavServer")
+        i.fa.fa-tv
+        | Server
+    .content
+        input(type="text" id="node-input-webdavServer")
+
+.dxp-template-form-row
+    label(for="node-input-name")
+        i.fa.fa-tag
+        | Name
+    .content
+        input(type="text" id="node-input-name")
+        
+.dxp-template-form-row
+    label(for="node-input-exists-directory")
+        i.fa.fa-folder-o
+        | Directory
+    .content
+        input(type="text" id="node-input-exists-directory")
+        .hint If empty, configuration below will be used.
+
+.alert.alert-info.text-center
+    i.fa.fa-info-circle
+    | Some information
+```
+:::
+
+## Available Classes
+
 Some classes are available to help you to create a beautiful template.
 
 <p align="center">
     <img src="./editor-template.png" alt="editor-template" style="height: 25rem">
 </p>
-
-## Available Classes
 
 ### `.dxp-template-form-row`
 
