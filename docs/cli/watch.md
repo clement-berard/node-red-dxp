@@ -10,8 +10,15 @@ Refer to the [config file](../config-file.md) for more information.
 
 ## Usage
 
-```bash
-node-red-dxp watch
+```text
+Usage: node-red-dxp watch [options]
+
+watch project
+
+Options:
+  --minify    Minify the output (default: false)
+  -h, --help  display help for command
+
 ```
 
 You can directly run the build command in the terminal, or add it to your `package.json` scripts:
@@ -22,12 +29,4 @@ You can directly run the build command in the terminal, or add it to your `packa
     "dev": "pnpm node-red-dxp watch"
   }
 }
-```
-
-## Options
-
-```bash
-Options:
-  --minify    Minify the output (default: false)
-  -h, --help  display help for command
 ```
