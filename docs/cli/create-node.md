@@ -6,7 +6,7 @@ You can create a regular node or a config node.
 
 ## Usage
 
-```bash
+```text
 Usage: node-red-dxp create-node [options]
 
 Create new node

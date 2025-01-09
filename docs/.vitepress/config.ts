@@ -38,7 +38,7 @@ export default defineConfig({
     sidebar: [
       { text: 'Get started', link: '/get-started.md' },
       { text: 'Usage', link: '/usage.md' },
-      { text: 'Config file', link: '/config-file.md' },
+      { text: 'Configuration file', link: '/config-file.md' },
       {
         text: 'CLI',
         items: [
@@ -50,10 +50,10 @@ export default defineConfig({
       {
         text: 'Features',
         items: [
-          { text: 'i18n', link: '/i18n.md' },
           { text: 'Node Documentation', link: '/documentation.md' },
           { text: 'Server-side', link: '/server-side.md' },
           { text: 'Resources', link: '/resources.md' },
+          { text: 'i18n', link: '/i18n.md' },
           { text: 'Utils', link: '/utils-full-stack.md' },
         ],
       },
@@ -67,7 +67,7 @@ export default defineConfig({
       },
     ],
     outline: {
-      level: [2, 3], // Inclure h2 et h3 dans la Table of Contents
+      level: [2, 3],
     },
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/clement-berard/node-red-dxp' }],
