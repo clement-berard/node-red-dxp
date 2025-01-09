@@ -1,5 +1,7 @@
 import { readFileSync } from 'node:fs';
+import { globSync } from 'fast-glob';
 import { minify } from 'html-minifier-terser';
+import pug from 'pug';
 import type { ListNode, ListNodesFull } from '../../current-context';
 import { cleanSpaces } from '../../tools/common-utils';
 import { updateI18nAttributes } from './i18n';
@@ -25,7 +27,16 @@ function wrapHtml(nodeName: string, html: string) {
 }
 
 async function processNodeHtml(node: ListNode, packageNameSlug: string, minify = false) {
-  const htmlContent = readFileSync(node.editor.htmlPath, 'utf8');
+  let htmlContent = '';
+
+  const hasPug = globSync(node.editor.pugPath, { onlyFiles: true }).at(0);
+
+  if (hasPug) {
+    htmlContent = pug.renderFile(hasPug);
+  } else {
+    htmlContent = readFileSync(node.editor.htmlPath, 'utf8');
+  }
+
   const htmlContentWithAdditionalDiv = `
   <div class="${packageNameSlug}">
     <div id="${node.nodeIdentifier}">${htmlContent}</div>

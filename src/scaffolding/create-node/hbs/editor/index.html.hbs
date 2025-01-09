@@ -1,33 +1,31 @@
-<div class="dxp-form-row">
-    <div class="main">
-        <div>
-            <i class="fa fa-tag"></i>
-            <label for="node-input-name" data-i18n="name"></label>
-        </div>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]name"/>
+<div class="dxp-template-form-row">
+    <label for="node-input-webdavServer">
+        <i class="fa fa-tv"></i>
+        Server
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-webdavServer"/>
     </div>
 </div>
-<div class="dxp-form-row">
-    <div class="main">
-        <div>
-            <i class="fa fa-tag"></i>
-            <label for="node-input-age">Age</label>
-        </div>
-        <input type="text" id="node-input-age"/>
+
+<div class="dxp-template-form-row">
+    <label for="node-input-name">
+        <i class="fa fa-tag"></i>
+        Name
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-name"/>
     </div>
 </div>
-<div class="dxp-form-row">
-    <div class="main">
-        <div>
-            <i class="fa fa-bolt"></i>
-            <label for="node-input-action">Action</label>
-        </div>
-        <select id="node-input-action">
-            <option value="mute">Mute</option>
-            <option value="volumeup">Volume Up</option>
-            <option value="volumedown">Volume Down</option>
-            <option value="power">Power</option>
-        </select>
+
+<div class="dxp-template-form-row">
+    <label for="node-input-entry">
+        <i class="fa fa-ellipsis-h"></i>
+        Property
+    </label>
+    <div class="content">
+        <input type="text" id="node-input-entry"/>
+        <input type="hidden" id="node-input-entryType"/>
+        <div class="hint">If empty, configuration below will be used.</div>
     </div>
-    <div class="hint">Some hint information</div>
 </div>

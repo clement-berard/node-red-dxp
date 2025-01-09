@@ -59,6 +59,7 @@ function listNodeFolders(rawNodes: Entry[] = []) {
       editor: {
         tsPath: `${fullEditorPath}/${fixedConfig.nodes.editor.tsName}.ts`,
         htmlPath: `${fullEditorPath}/${fixedConfig.nodes.editor.htmlName}.html`,
+        pugPath: `${fullEditorPath}/${fixedConfig.nodes.editor.htmlName}.pug`,
         scssFiles,
       },
       doc: {
