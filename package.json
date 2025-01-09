@@ -58,8 +58,8 @@
   "homepage": "https://github.com/clement-berard/node-red-dxp",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@release-it/conventional-changelog": "9.0.3",
-    "release-it": "17.10.0",
+    "@release-it/conventional-changelog": "10.0.0",
+    "release-it": "18.1.1",
     "tsup": "8.3.5",
     "tsx": "4.19.2",
     "typedoc": "0.27.6",
