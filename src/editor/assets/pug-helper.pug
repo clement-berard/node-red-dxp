@@ -1,0 +1,15 @@
+mixin dxpFormRowInputText(id, label, icon='', placeholder='')
+    .dxp-template-form-row
+        label(for=`node-input-${id}`)
+            if icon
+                i.fa(class=`fa-${icon}`)
+            span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
+        .content
+            input(
+                type="text"
+                id=`node-input-${id}`
+                data-i18n=`[placeholder]${label}`
+                placeholder=placeholder
+            )&attributes(attributes)
+            if block
+                block
