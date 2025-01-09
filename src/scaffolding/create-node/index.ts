@@ -26,6 +26,11 @@ export async function renderTemplate(templateFilePath: string, data: object): Pr
   }
 }
 
+type CreateNodeScaffoldingOptions = {
+  innerNodeName: string;
+  isConfigNode?: boolean;
+};
+
 export class CreateNodeScaffolding {
   readonly nodePascalName: string;
   readonly nodeDashName: string;
@@ -34,14 +39,14 @@ export class CreateNodeScaffolding {
   readonly scaffoldedDistHbs: string;
   private isConfigNode: boolean;
 
-  constructor(innerNodeName: string, isConfigNode = false) {
-    const { pascalName, dashName } = computeNodeName(innerNodeName);
+  constructor(options: CreateNodeScaffoldingOptions) {
+    const { pascalName, dashName } = computeNodeName(options.innerNodeName);
     this.nodePascalName = pascalName;
     this.nodeDashName = dashName;
     this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
     this.newNodeEditorDistPath = `${this.newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`;
     this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
-    this.isConfigNode = isConfigNode;
+    this.isConfigNode = options.isConfigNode;
   }
 
   distFolderExist() {
