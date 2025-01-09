@@ -1,11 +1,19 @@
 export type Config = {
-  builder: {
+  builder?: {
     outputDir: string;
     esbuildControllerOptions?: {
       includeInBundle?: string[];
     };
     tailwind?: {
       forcedClassesInclusion?: string[];
+    };
+    editor?: {
+      webComponents?: {
+        /**
+         * @default false
+         */
+        formRow?: boolean;
+      };
     };
   };
   watcher: {
@@ -25,6 +33,11 @@ export const defaultConfig: Partial<Config> = {
     },
     tailwind: {
       forcedClassesInclusion: [],
+    },
+    editor: {
+      webComponents: {
+        formRow: false,
+      },
     },
   },
   watcher: {
