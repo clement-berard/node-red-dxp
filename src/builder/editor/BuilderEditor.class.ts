@@ -10,7 +10,7 @@ import { getAllCompiledStyles } from './styles';
 async function getEditorIndexContent() {
   return `
 import type { NodeAPI } from 'node-red';
-${currentContext.listNodesFull.map((node) => `import ${node.pascalName} from '${node.editor.tsPath}';`).join('\n')}
+${currentContext.listNodesFull.map((node) => `// @ts-ignore\nimport ${node.pascalName} from '${node.editor.tsPath}';`).join('\n')}
 
 declare const RED: NodeAPI;
 

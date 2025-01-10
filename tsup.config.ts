@@ -7,13 +7,28 @@ const noExternals = ['merge-anything'];
 export default defineConfig([
   {
     entry: {
+      'utils/controller': 'src/utils/server-side/controller.ts',
+    },
+    bundle: true,
+    dts: true,
+    minify: minifyFlag,
+    minifyWhitespace: minifyFlag,
+    minifyIdentifiers: minifyFlag,
+    minifySyntax: minifyFlag,
+    sourcemap: !minifyFlag,
+    treeshake: true,
+    platform: 'node',
+    format: ['esm', 'cjs'],
+    target: 'es6',
+  },
+  {
+    entry: {
       'editor/index': 'src/editor/index.ts',
       index: 'src/index.ts',
       'utils/index': 'src/utils/index.ts',
       'editor/dom-helper/index': 'src/editor/dom.ts',
       'editor/inject/dxpFormRow': 'src/editor/web-components/dxpFormRow.ts',
     },
-    clean: true,
     bundle: true,
     dts: true,
     minify: minifyFlag,
@@ -28,6 +43,7 @@ export default defineConfig([
     platform: 'browser',
     onSuccess: '. build.sh',
   },
+
   // {
   //   entry: {
   //     'builder/index': 'src/builder/index.ts',
@@ -53,7 +69,6 @@ export default defineConfig([
     banner: {
       js: '#!/usr/bin/env node',
     },
-    clean: true,
     bundle: true,
     dts: false,
     minify: minifyFlag,
