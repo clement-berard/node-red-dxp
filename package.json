@@ -43,6 +43,10 @@
       "import": "./dist/utils/index.js",
       "require": "./dist/utils/index.cjs"
     },
+    "./utils/controller": {
+      "import": "./dist/utils/controller.js",
+      "require": "./dist/utils/controller.cjs"
+    },
     "./package.json": "./package.json"
   },
   "keywords": [],

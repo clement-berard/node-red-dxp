@@ -20,21 +20,20 @@ export class BuilderController {
   async getControllerIndexContent() {
     return `
 import type { NodeAPI } from 'node-red';
-${currentContext.listNodesFull.map((node) => `import ${node.pascalName}, {credentials as cred${node.pascalName}} from '${node.fullControllerPath}';`).join('\n')}
-${currentContext.redServerPath.map((path) => `import RedServer from '${path}';`).join('\n')}
-
+${currentContext.listNodesFull.map((node) => `// @ts-ignore\nimport ${node.pascalName}, {credentials as cred${node.pascalName}} from '${node.fullControllerPath}';`).join('\n')}
+${currentContext.redServerPath.map((path) => `// @ts-ignore\nimport RedServer from '${path}';`).join('\n')}
 
 export default async (RED: NodeAPI): Promise<void> => {
     global.RED = RED;
 
     ${currentContext.listNodesFull
-      .map(
-        (node) => `// @ts-ignore\nglobal.RED.nodes.registerType('${node.name}', ${node.pascalName}, {
-        credentials: cred${node.pascalName}
-    });`,
+      .map((node) =>
+        `
+  // @ts-ignore
+  global.RED.nodes.registerType('${node.name}', ${node.pascalName}, { credentials: cred${node.pascalName} });
+     `.trim(),
       )
       .join('\n')}
-    
     ${currentContext.redServerPath.length > 0 ? 'RedServer();' : ''}
 };
 `.trim();

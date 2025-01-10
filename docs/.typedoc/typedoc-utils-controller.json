@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["../../src/utils/index.ts"],
+  "entryPoints": ["../../src/utils/server-side/controller.ts"],
   "out": "../../docs",
   "exclude": [
     "dist",
@@ -21,6 +21,6 @@
   "hideBreadcrumbs": true,
   "hidePageHeader": true,
   "hidePageTitle": true,
-  "entryFileName": "./utils/utils-full-stack.md",
-  "readme": "../../docs/utils/utils-full-stack-header.md"
+  "entryFileName": "./utils/utils-controller.md",
+  "readme": "../../docs/utils/utils-controller-header.md"
 }

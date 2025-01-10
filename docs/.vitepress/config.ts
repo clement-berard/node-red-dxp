@@ -54,7 +54,14 @@ export default defineConfig({
           { text: 'Server-side', link: '/server-side.md' },
           { text: 'Resources', link: '/resources.md' },
           { text: 'i18n', link: '/i18n.md' },
-          { text: 'Utils', link: '/utils-full-stack.md' },
+          {
+            text: 'Utils',
+            collapsed: true,
+            items: [
+              { link: '/utils/utils-full-stack.md', text: 'Full stack' },
+              { link: '/utils/utils-controller.md', text: 'Controller' },
+            ],
+          },
         ],
       },
       {
