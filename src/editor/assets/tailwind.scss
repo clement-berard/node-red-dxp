@@ -79,6 +79,13 @@
           @apply !w-auto;
         }
       }
+
+
+      &.force-w-full {
+        > div {
+          @apply !w-full;
+        }
+      }
     }
 
     .hint {

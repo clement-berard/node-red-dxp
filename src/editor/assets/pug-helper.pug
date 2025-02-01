@@ -1,42 +1,88 @@
-mixin dxpFormRowInputText(id, label, icon='', placeholder='')
+mixin dxpFormRowInputText(id, label, icon='', placeholder='', isConfig=false)
+    - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
     .dxp-template-form-row
-        label(for=`node-input-${id}`)
+        label(for=`${prefix}${id}`)
             if icon
                 i.fa(class=`fa-${icon}`)
             span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
         .content
             input(
                 type="text"
-                id=`node-input-${id}`
+                id=`${prefix}${id}`
                 data-i18n=`[placeholder]${label}`
                 placeholder=placeholder
             )&attributes(attributes)
             if block
                 block
 
-mixin dxpFormRowSelect(id, label, icon='')
+mixin dxpFormRowInputTextTyped(id, label, icon='', placeholder='', isConfig=false)
+    - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
     .dxp-template-form-row
-        label(for=`node-input-${id}`)
+        label(for=`${prefix}${id}`)
             if icon
                 i.fa(class=`fa-${icon}`)
             span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
         .content
-            select(
-                id=`node-input-${id}`
+            input(
+                type="text"
+                id=`${prefix}${id}`
+                data-i18n=`[placeholder]${label}`
+                placeholder=placeholder
             )&attributes(attributes)
+            input(type="hidden" id=`${prefix}${id}Type`)
             if block
                 block
 
-mixin dxpFormRowCheckbox(id, label, icon='', checkboxText='')
+mixin dxpFormRowSelect(id, label, icon='', isConfig=false)
+    - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
     .dxp-template-form-row
-        label(for=`node-input-${id}`)
+        label(for=`${prefix}${id}`)
+            if icon
+                i.fa(class=`fa-${icon}`)
+            span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
+        .content
+            select(id=`${prefix}${id}`)&attributes(attributes)
+            if block
+                block
+
+mixin dxpFormRowSelectConfig(id, label, icon='', isConfig=false)
+    - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
+    .dxp-template-form-row
+        label(for=`${prefix}${id}`)
+            if icon
+                i.fa(class=`fa-${icon}`)
+            span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
+        .content.force-w-full
+            select(id=`${prefix}${id}`)&attributes(attributes)
+            if block
+                block
+
+mixin dxpFormRowCheckbox(id, label, icon='', checkboxText='', isConfig=false)
+    - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
+    .dxp-template-form-row
+        label(for=`${prefix}${id}`)
             if icon
                 i.fa(class=`fa-${icon}`)
             span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
         .content
             .checkbox
-                input(type="checkbox" id=`node-input-${id}`)&attributes(attributes)
+                input(type="checkbox" id=`${prefix}${id}`)&attributes(attributes)
                 if checkboxText
                     span.italic= checkboxText
             if block
                 block
+
+mixin dxpTabs(targetId)
+    div
+        ul(id=targetId)
+    div(id=`tabs-content-${targetId}`, class='mt-4')
+        if block
+            block
+
+mixin dxpHint(state, icon)
+    - var classState = state ? 'hint-' + state : ''
+    .hint(class=classState + 'max-w-[350px]')
+        if icon
+            i(class='mr-1 fa fa-' + icon)
+        if block
+            block
