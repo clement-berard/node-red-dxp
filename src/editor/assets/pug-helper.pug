@@ -86,3 +86,8 @@ mixin dxpHint(state, icon)
             i(class='mr-1 fa fa-' + icon)
         if block
             block
+
+mixin dxpFormTitleSeparator(label="")
+    div.flex.items-center.gap-4.mb-2
+        span.text-md.font-semibold= label
+        div.flex-1.border-t.border-gray-300

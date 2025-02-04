@@ -71,6 +71,13 @@
             @apply !ml-[5px];
           }
         }
+
+        .red-ui-typedInput-option-trigger {
+          .red-ui-typedInput-option-label {
+            background-color: transparent !important;
+            @apply !mt-2;
+          }
+        }
       }
 
       div.checkbox {
