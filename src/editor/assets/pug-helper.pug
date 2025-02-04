@@ -45,6 +45,18 @@ mixin dxpFormRowSelect(id, label, icon='', isConfig=false)
             if block
                 block
 
+mixin dxpFormRowSelectConfigNode(id, label, icon='', isConfig=false)
+    - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
+    .dxp-template-form-row
+        label(for=`${prefix}${id}`)
+            if icon
+                i.fa(class=`fa-${icon}`)
+            span(data-i18n=label)= label.charAt(0).toUpperCase() + label.slice(1)
+        .content.force-w-full
+            select(id=`${prefix}${id}`)&attributes(attributes)
+            if block
+                block
+
 mixin dxpFormRowCheckbox(id, label, icon='', checkboxText='', isConfig=false)
     - var prefix = isConfig ? 'node-config-input-' : 'node-input-'
     .dxp-template-form-row
