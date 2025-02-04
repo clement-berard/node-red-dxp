@@ -41,7 +41,7 @@ export default defineConfig([
     target: 'es6',
     noExternal: [...noExternals, 'radash'],
     platform: 'browser',
-    onSuccess: '. build.sh',
+    onSuccess: `${process.env.CI ? 'cat build.sh && ./build.sh' : '. build.sh'}`,
   },
 
   // {
