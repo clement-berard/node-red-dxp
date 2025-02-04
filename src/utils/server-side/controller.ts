@@ -1,3 +1,4 @@
+import '../../index';
 import type { Node, NodeMessage } from 'node-red';
 
 /**
