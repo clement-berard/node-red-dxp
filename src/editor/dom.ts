@@ -178,15 +178,21 @@ export function initSelect(
  * @param selectors - A single selector string or an array of selector strings.
  * @param callback - A function to call with the updated values of the inputs.
  *
+ * @param opt
  * @example
  * watchInput('$input-id', (values) => console.log(values));
  * watchInput(['$input-1', '$input-2'], (values) => console.log(values));
  */
-export function watchInput<T = any>(selectors: string | string[], callback: (values: T[]) => void) {
+export function watchInput<T = any>(
+  selectors: string | string[],
+  callback: (values: T[]) => void,
+  opt = { additionalEvents: [] },
+) {
   const selectorsArray = Array.isArray(selectors) ? selectors : [selectors];
   const realSelectors = selectorsArray.map(resolveSelector).join(', ');
+  const events = ['input', ...opt.additionalEvents];
 
-  $(realSelectors).on('input', () => {
+  $(realSelectors).on(events.join(' '), () => {
     const values = $(realSelectors)
       .map(function () {
         return $(this).val() as T;
