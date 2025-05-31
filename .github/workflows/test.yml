@@ -25,6 +25,8 @@ jobs:
         uses: taiki-e/install-action@git-cliff
 
       - name: Generate changelog
+        env:
+          GITHUB_REPO: ${{ github.repository }}
         run: git-cliff v1.23.0..origin/main
 
 
