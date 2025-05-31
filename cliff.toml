@@ -45,7 +45,7 @@ link_parsers = [
 ]
 
 
-[remote.github]
-owner = "clement-berard"
-repo = "node-red-dxp"
-url = "https://github.com" # Utilisé pour construire les URLs absolues dans le template
+#[remote.github]
+#owner = "clement-berard"
+#repo = "node-red-dxp"
+#url = "https://github.com" # Utilisé pour construire les URLs absolues dans le template
