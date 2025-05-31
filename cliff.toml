@@ -6,12 +6,10 @@ body = """\
     ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits_in_group %}
         - {% if commit.scope %}**{{ commit.scope }}**: {% endif %}{{ commit.message | upper_first }} \
-          {# Lien du commit construit manuellement #}\
-          ([{{ commit.id | truncate(length=7, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))\
-          {# Affichage des liens trouvés par link_parsers, en construisant l'URL complète #}\
+          ([{{ commit.id | truncate(length=7, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
           {%- if commit.links is defined and commit.links %}\
-            {% for link in commit.links %} ([{{ link.text }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/{{ link.href }}))\
-            {% endfor %}\
+            {% for link in commit.links %} ([{{ link.text }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/{{ link.href }})) (@{{commit.author.name}})
+            {% endfor %}
           {%- endif %}
     {% endfor %}
 {% endfor %}\n
