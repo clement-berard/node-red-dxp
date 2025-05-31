@@ -9,10 +9,10 @@ body = """\
           ([{{ commit.id | truncate(length=7, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
           {%- if commit.links is defined and commit.links %}\
             {% for link in commit.links %} ([{{ link.text }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/{{ link.href }})) (@{{commit.author.name}})
-            {% endfor %}
+            {%- endfor %}
           {%- endif %}
-    {% endfor %}
-{% endfor %}\n
+    {%- endfor %}
+{%- endfor %}
 """
 trim = true
 postprocessors = [
@@ -37,10 +37,8 @@ commit_parsers = [
     { message = "^chore", group = "🧹 Chores" },
     { message = "^revert", group = "⏪ Reverts" },
 ]
+
 link_parsers = [
-    # pattern: trouve "(#<numéros>)"
-    # href: stocke "pull/<numéros>" dans link.href (c'est relatif)
-    # text: stocke "PR #<numéros>" dans link.text
     { pattern = "\\(#(\\d+)\\)", href = "pull/$1", text = "#$1"},
 ]
 
