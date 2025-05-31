@@ -13,9 +13,9 @@ trim = true
 
 [git]
 #github_repo = "clement-berard/node-red-dxp"
-commit_preprocessors = [
-    { pattern = '\\(#(\\d+)\\)', replace = '([#$1](https://github.com/clement-berard/node-red-dxp/pull/$1))' },
-]
+#commit_preprocessors = [
+#    { pattern = '\\(#(\\d+)\\)', replace = '([#$1](https://github.com/clement-berard/node-red-dxp/pull/$1))' },
+#]
 
 conventional_commits = true
 filter_unconventional = true
