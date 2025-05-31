@@ -1,49 +1,26 @@
-# cliff.toml - Configuration simple pour Conventional Commits
-
-# Configuration de l'apparence du Changelog
 [changelog]
-# En-tête global du changelog. Laisser vide pour aucun en-tête.
-header = ""
 
-# Modèle pour le corps du changelog.
-body = """\
+body = """
 {% for group, commits_in_group in commits | group_by(attribute="group") %}
     ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits_in_group %}
         - {% if commit.scope %}**{{ commit.scope }}**: {% endif %}{{ commit.message | upper_first }}{% if commit.id %} ([{% if commit.hyperlink %}[{{ commit.id | truncate(length=7, end="") }}]({{ commit.hyperlink }}){% else %}{{ commit.id | truncate(length=7, end="") }}{% endif %}]) {% endif %}\
     {% endfor %}
-{% endfor %}\n
+{% endfor %}
 """
 
-# Supprimer les espaces vides au début et à la fin du modèle rendu.
 trim = true
 
-# Pied de page global du changelog. Laisser vide pour aucun footer.
-footer = """"""
-
-# Configuration du traitement de l'historique Git
 [git]
 #github_repo = "clement-berard/node-red-dxp"
-# Dans la section [git]
 commit_preprocessors = [
-    # Pour transformer #<numéro_PR> en lien vers la PR
-    { pattern = '#(\\d+)', replace = '[#$1](https://github.com/clement-berard/node-red-dxp/pull/$1)' },
-    # Optionnel: si vous utilisez aussi #<numéro_issue> pour des issues, vous pouvez ajouter:
-    # { pattern = '\\b(?:issue|issues|fix|fixes|close|closes)[\\s-]+#(\\d+)', replace = '$0 ([#$1](https://github.com/clement-berard/node-red-dxp/issues/$1))' }
+    { pattern = '\\(#(\\d+)\\)', replace = '([#$1](https://github.com/clement-berard/node-red-dxp/pull/$1))' },
 ]
-# Activer l'analyse des Conventional Commits.
+
 conventional_commits = true
-
-# Si true, les commits ne suivant pas le format Conventional Commit sont ignorés.
 filter_unconventional = true
-
-# Trier les commits à l'intérieur de chaque section. Options: "oldest", "newest".
 sort_commits = "oldest"
 
-# commit_parsers = [
-#    { message = "^feat", group = "Features" },
-#    { message = "^fix", group = "Bug Fixes" },
-#    { message = "^perf", group = "Performance" },
-#    { message = "^chore\\(deps\\)", group = "Dependencies" },
-#    { message = "^chore", group = "Chores" },
-# ]
+[remote.github]
+owner = "clement-berard"
+repo = "node-red-dxp"
