@@ -1,26 +1,53 @@
-[changelog]
+# cliff.toml (construire URL complète pour commit.links)
 
-body = """
+[changelog]
+body = """\
 {% for group, commits_in_group in commits | group_by(attribute="group") %}
     ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits_in_group %}
-        - {% if commit.scope %}**{{ commit.scope }}**: {% endif %}{{ commit.message | upper_first }}{% if commit.id %} ([{% if commit.hyperlink %}[{{ commit.id | truncate(length=7, end="") }}]({{ commit.hyperlink }}){% else %}{{ commit.id | truncate(length=7, end="") }}{% endif %}]) {% endif %}\
+        - {% if commit.scope %}**{{ commit.scope }}**: {% endif %}{{ commit.message | upper_first }} \
+          {# Lien du commit construit manuellement #}\
+          ([{{ commit.id | truncate(length=7, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))\
+          {# Affichage des liens trouvés par link_parsers, en construisant l'URL complète #}\
+          {%- if commit.links is defined and commit.links %}\
+            {% for link in commit.links %} ([{{ link.text }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/{{ link.href }}))\
+            {% endfor %}\
+          {%- endif %}
     {% endfor %}
-{% endfor %}
+{% endfor %}\n
 """
-
 trim = true
+postprocessors = [
+    # Supprime le motif original " (#dd)" (avec l'espace avant) après que le link_parser l'a traité.
+    { pattern = "\\s*\\(#(\\d+)\\)", replace = "" },
+]
 
 [git]
-#github_repo = "clement-berard/node-red-dxp"
-#commit_preprocessors = [
-#    { pattern = '\\(#(\\d+)\\)', replace = '([#$1](https://github.com/clement-berard/node-red-dxp/pull/$1))' },
-#]
-
 conventional_commits = true
 filter_unconventional = true
 sort_commits = "oldest"
+commit_parsers = [
+    { message = "^feat", group = "✨ Features" },
+    { message = "^fix", group = "🐛 Bug Fixes" },
+    { message = "^perf", group = "⚡ Performance Improvements" },
+    { message = "^refactor", group = "♻️ Refactoring" },
+    { message = "^docs", group = "📝 Documentation" },
+    { message = "^style", group = "💄 Styling" },
+    { message = "^test", group = "✅ Testing" },
+    { message = "^build", group = "📦 Build System" },
+    { message = "^ci", group = "🤖 Continuous Integration" },
+    { message = "^chore", group = "🧹 Chores" },
+    { message = "^revert", group = "⏪ Reverts" },
+]
+link_parsers = [
+    # pattern: trouve "(#<numéros>)"
+    # href: stocke "pull/<numéros>" dans link.href (c'est relatif)
+    # text: stocke "PR #<numéros>" dans link.text
+    { pattern = "\\(#(\\d+)\\)", href = "pull/$1", text = "#$1"},
+]
+
 
 [remote.github]
 owner = "clement-berard"
 repo = "node-red-dxp"
+url = "https://github.com" # Utilisé pour construire les URLs absolues dans le template
