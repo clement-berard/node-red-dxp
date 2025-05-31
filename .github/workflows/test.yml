@@ -19,19 +19,36 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Important pour avoir tous les tags et l'historique
 
       - name: Install git-cliff
         uses: taiki-e/install-action@git-cliff
 
       - name: Generate changelog
-        id: generate_changelog_step # Donnez un ID à cette étape pour référencer sa sortie
+        id: generate_changelog_step
         env:
           GITHUB_REPO: ${{ github.repository }}
-        run: echo "CHANGELOG_CONTENT=$(git-cliff v1.23.0..origin/main)" >> $GITHUB_OUTPUT
+        run: |
+          set -e # Arrêter le script en cas d'erreur
+          echo "Génération du changelog..."
+          # Assurez-vous que le tag (ex: v0.0.11) existe et utilisez origin/master
+          # Remplacez 'v0.0.11' par le tag de départ réel que vous souhaitez utiliser.
+          CHANGELOG_CLIFF_OUTPUT=$(git-cliff v0.0.11..origin/master)
+          
+          echo "Contenu du changelog brut :"
+          echo "$CHANGELOG_CLIFF_OUTPUT"
+          
+          echo "Enregistrement du contenu dans GITHUB_OUTPUT..."
+          # Utilisation de la syntaxe heredoc pour les sorties multilignes
+          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CLIFF_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "Variable de sortie CHANGELOG_CONTENT définie."
 
       - name: Echo changelog
-        run: echo "${{ steps.generate_changelog_step.outputs.CHANGELOG_CONTENT }}"
+        run: |
+          echo "Affichage du changelog depuis la variable de sortie :"
+          echo "${{ steps.generate_changelog_step.outputs.CHANGELOG_CONTENT }}"
 
 
   # Build job
