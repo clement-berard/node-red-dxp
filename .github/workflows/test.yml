@@ -33,7 +33,7 @@ jobs:
           echo "Génération du changelog..."
           # Assurez-vous que le tag (ex: v0.0.11) existe et utilisez origin/master
           # Remplacez 'v0.0.11' par le tag de départ réel que vous souhaitez utiliser.
-          CHANGELOG_CLIFF_OUTPUT=$(git-cliff v0.0.11..origin/master)
+          CHANGELOG_CLIFF_OUTPUT=$(git-cliff v1.23.0..origin/main)
           
           echo "Contenu du changelog brut :"
           echo "$CHANGELOG_CLIFF_OUTPUT"
