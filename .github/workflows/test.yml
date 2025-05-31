@@ -25,9 +25,13 @@ jobs:
         uses: taiki-e/install-action@git-cliff
 
       - name: Generate changelog
+        id: generate_changelog_step # Donnez un ID à cette étape pour référencer sa sortie
         env:
           GITHUB_REPO: ${{ github.repository }}
-        run: git-cliff v1.23.0..origin/main
+        run: echo "CHANGELOG_CONTENT=$(git-cliff v1.23.0..origin/main)" >> $GITHUB_OUTPUT
+
+      - name: Echo changelog
+        run: echo "${{ steps.generate_changelog_step.outputs.CHANGELOG_CONTENT }}"
 
 
   # Build job
