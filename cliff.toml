@@ -23,7 +23,7 @@ footer = """"""
 
 # Configuration du traitement de l'historique Git
 [git]
-github_repo = "clement-berard/node-red-dxp"
+#github_repo = "clement-berard/node-red-dxp"
 # Dans la section [git]
 commit_preprocessors = [
     # Pour transformer #<numéro_PR> en lien vers la PR
