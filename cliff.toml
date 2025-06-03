@@ -9,7 +9,7 @@ body = """\
                 {% for link in commit.links %} ([{{ link.text }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/{{ link.href }}))
             {%- endfor %}
           {%- endif %}
-          ([{{ commit.id | truncate(length=5, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }})) ({{ remote.username }})
+          ([{{ commit.id | truncate(length=5, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }})) ({{ remote.github.username }})
     {%- endfor %}
 {% endfor %}
 """
