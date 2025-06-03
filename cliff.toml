@@ -15,9 +15,7 @@ body = """\
 
 {% for tonton in remote %}
     {{ tonton }}
-    {% for truite in tonton %}
-        {{ truite }}
-    {% endfor %}
+
 {% endfor %}
 
 """
