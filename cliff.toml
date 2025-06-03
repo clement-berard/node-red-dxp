@@ -13,10 +13,11 @@ body = """\
     {%- endfor %}
 {% endfor %}
 
-{% for tonton in remote %}
-    {{ tonton }}
-
-{% endfor %}
+{% for commit in commits %}
+  * {{ commit.message | split(pat="\n") | first | trim }}\
+    {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif %}\
+    {% if commit.remote.pr_number %} in #{{ commit.remote.pr_number }}{%- endif %}
+{%- endfor -%}
 
 """
 
