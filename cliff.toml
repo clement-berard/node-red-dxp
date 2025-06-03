@@ -1,54 +1,51 @@
-[changelog]
+# cliff.toml (construire URL complète pour commit.links)
 
+[changelog]
+header = ""
+footer = ""
 body = """\
 {% for group, commits_in_group in commits | group_by(attribute="group") %}
-    ### {{ group | striptags | trim }}
+    ### {{ group | striptags | trim | upper_first }}
     {% for commit in commits_in_group %}
         - {% if commit.scope %}**{{ commit.scope }}**: {% endif %}{{ commit.message }} \
-            {%- if commit.links is defined and commit.links %}\
-                {% for link in commit.links %} ([{{ link.text }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/{{ link.href }}))
-            {%- endfor %}
-          {%- endif %}
-          ([{{ commit.id | truncate(length=5, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
+          ([{{ commit.id | truncate(length=7, end="") }}]({{ remote.github.url | default(value="https://github.com") }}/{{ remote.github.owner }}/{{ remote.github.repo }}/commit/{{ commit.id }}))
     {%- endfor %}
 {% endfor %}
-
-{% for commit in commits %}
-  * {{ commit.message | split(pat="\n") | first | trim }}\
-    {% if commit.remote.username %} by @{{ commit.remote.username }}{%- endif %}\
-    {% if commit.remote.pr_number %} in #{{ commit.remote.pr_number }}{%- endif %}
-{%- endfor -%}
-
 """
-
 trim = true
-postprocessors = [
-    { pattern = "\\s*\\(#(\\d+)\\)", replace = "" },
-]
+#commit_preprocessors = [
+#  # Transforme "#52 implement..." en "implement... (#52)"
+#  { pattern = "\\(?#(\\d+)\\)?", replace = "#$1 -- toto" }
+#]
 
 [git]
 conventional_commits = true
+filter_commits = true
 filter_unconventional = true
 sort_commits = "oldest"
+#commit_preprocessors = [
+#    { pattern = "#(\\d+)", replace = "[#$1](https://github.com//pull/$1)" },
+#    #  { pattern = "#(\\d+)", replace = "" },
+#]
+
 commit_parsers = [
-    { message = "^feat", group = "✨ Features" },
-    { message = "^fix", group = "🐛 Bug Fixes" },
-    { message = "^chore", group = "🧹 Chores" },
-    { message = "^perf", group = "⚡ Performance Improvements" },
-    { message = "^refactor", group = "♻️ Refactoring" },
-    { message = "^docs", group = "📝 Documentation" },
-    { message = "^doc", group = "📝 Documentation" },
-    { message = "^style", group = "💄 Styling" },
-    { message = "^test", group = "✅ Testing" },
-    { message = "^build", group = "📦 Build System" },
-    { message = "^ci", group = "🤖 Continuous Integration" },
-    { message = "^revert", group = "⏪ Reverts" },
+    { message = "^feat", group = "<!-- 0 -->Features" },
+    { message = "^(fix|Fix)", group = "<!-- 1 -->Bug Fixes" },
+    { message = "^perf", group = "Performance Improvements" },
+    { message = "^refactor", group = "Refactoring" },
+    { message = "^(docs|doc)", group = "Documentation" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Testing" },
+    { message = "^build", group = "Build System" },
+    { message = "^ci", group = "Continuous Integration" },
+    { message = "^chore", group = "Chores" },
+    { message = "^revert", group = "Reverts" },
 ]
 
 link_parsers = [
-    { pattern = "\\(#(\\d+)\\)", href = "pull/$1", text = "#$1" },
+    # Seulement au début du message
+    { pattern = "#(\\d+)", href = "pull/$1", text = "#$1"},
 ]
-
 
 #[remote.github]
 #owner = "clement-berard"
