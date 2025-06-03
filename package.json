@@ -14,7 +14,8 @@
     "docs:dev": "./build-docs.sh && vitepress dev docs",
     "docs:build": "./build-docs.sh && vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "test:unit": "vitest"
+    "test:unit": "vitest",
+    "cliff": "git-cliff v1.23.0..main"
   },
   "publishConfig": {
     "access": "public"
