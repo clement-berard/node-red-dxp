@@ -1,7 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["../../src/utils/index.ts"],
-  "out": "../../docs",
+  "out": "../../docs/utils",
   "exclude": [
     "dist",
     "tests",

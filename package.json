@@ -67,12 +67,12 @@
     "tsup": "8.5.0",
     "tsx": "4.20.3",
     "typedoc": "0.28.5",
-    "typedoc-plugin-markdown": "4.6.4",
+    "typedoc-plugin-markdown": "4.7.0",
     "typescript": "5.8.3",
     "vitepress": "1.6.3",
     "vitepress-plugin-npm-commands": "^0.8.1",
     "vitepress-plugin-tabs": "^0.7.1",
-    "vitest": "3.2.3"
+    "vitest": "3.2.4"
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "7.0.2",
@@ -84,26 +84,33 @@
     "autoprefixer": "10.4.21",
     "browser-sync": "3.0.4",
     "chokidar": "4.0.3",
-    "commander": "13.1.0",
-    "consola": "3.3.3",
+    "commander": "14.0.0",
+    "consola": "3.4.2",
     "cosmiconfig": "9.0.0",
     "cssnano": "7.0.7",
-    "esbuild": "0.24.2",
+    "esbuild": "0.25.5",
     "fast-glob": "3.3.3",
     "handlebars": "4.7.8",
     "html-minifier-terser": "7.2.0",
-    "mdx-to-md": "0.3.2",
+    "mdx-to-md": "0.5.2",
     "merge-anything": "6.0.6",
     "nodemon": "3.1.10",
-    "ora": "8.1.1",
+    "ora": "8.2.0",
     "postcss": "8.5.6",
     "prettyjson": "1.2.5",
     "pug": "3.0.3",
     "radash": "12.1.1",
-    "sass": "1.83.1",
+    "sass": "1.89.2",
     "tailwindcss": "3.4.17"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@parcel/watcher",
+      "esbuild"
+    ]
+  }
 }

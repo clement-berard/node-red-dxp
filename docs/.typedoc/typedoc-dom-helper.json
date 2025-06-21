@@ -1,7 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["../../src/editor/dom.ts"],
-  "out": "../../docs",
+  "out": "../../docs/editor",
   "exclude": [
     "**/node_modules/**",
     "dist",
@@ -23,6 +23,5 @@
   "hideBreadcrumbs": true,
   "hidePageHeader": true,
   "hidePageTitle": true,
-  "entryFileName": "./editor/dom-helper.md",
   "readme": "../../docs/editor/dom-helper-header.md"
 }
