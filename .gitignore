@@ -22,5 +22,6 @@ dist
 docs/.vitepress/cache
 docs/.vitepress/dist
 /docs/editor/dom-helper.md
+/docs/editor/README.md
 /docs/utils/utils-full-stack.md
 /docs/utils/utils-controller.md
