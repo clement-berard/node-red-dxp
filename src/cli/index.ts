@@ -5,11 +5,11 @@ import ora from 'ora';
 import packageJson from '../../package.json';
 import { Builder } from '../builder';
 import { currentContext } from '../current-context';
-import { registerChecksCommands } from './commands/checks';
-import { registerCreateCommands } from './commands/create';
+import registerChecksCommands from './commands/checks';
+import registerCreateCommands from './commands/create';
 import registerInfoCommands from './commands/info';
-import registerScaffoldingCommands from './commands/scaffolding';
 import registerInstallRelativePackageCommands from './commands/install-relative-package';
+import registerScaffoldingCommands from './commands/scaffolding';
 import registerWatchCommands from './commands/watch';
 
 const program = new Command();

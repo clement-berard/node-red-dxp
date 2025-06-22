@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { runWatcher } from '../../watcher';
+import { runWatcher } from './watcher';
 
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('watch')

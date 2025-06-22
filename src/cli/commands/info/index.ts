@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { consola } from 'consola';
 import prettyJson from 'prettyjson';
-import { currentContext, currentConfig } from '../../../current-context';
+import { currentConfig, currentContext } from '../../../current-context';
 
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('info')

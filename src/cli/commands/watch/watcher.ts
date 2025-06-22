@@ -2,8 +2,8 @@ import browserSync, { type BrowserSyncInstance } from 'browser-sync';
 import chokidar from 'chokidar';
 import { consola } from 'consola';
 import nodemon, { type Nodemon } from 'nodemon';
-import { Builder } from '../builder';
-import { currentContext } from '../current-context';
+import { Builder } from '../../../builder';
+import { currentContext } from '../../../current-context';
 
 let nodemonInstance: Nodemon;
 let browserSyncInstance: BrowserSyncInstance;
