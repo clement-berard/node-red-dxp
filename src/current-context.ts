@@ -24,7 +24,7 @@ function getConfig() {
   }
 }
 
-const currentConfig = getConfig();
+export const currentConfig = getConfig();
 const currentDir = process.cwd();
 const jsonPackage = JSON.parse(readFileSync(`${currentDir}/package.json`, 'utf-8'));
 const pathSrcDir = `${currentDir}/${fixedConfig.srcDir}`;

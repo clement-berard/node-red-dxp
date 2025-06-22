@@ -5,11 +5,12 @@ import ora from 'ora';
 import packageJson from '../../package.json';
 import { Builder } from '../builder';
 import { currentContext } from '../current-context';
-import { registerChecksCommands } from './commands/checks';
-import { registerCreateCommands } from './commands/create';
-import { registerInfoCommands } from './commands/info';
-import { registerScaffoldingCommands } from './commands/scaffolding';
-import { runWatcher } from './watcher';
+import registerChecksCommands from './commands/checks';
+import registerCreateCommands from './commands/create';
+import registerInfoCommands from './commands/info';
+import registerInstallRelativePackageCommands from './commands/install-relative-package';
+import registerScaffoldingCommands from './commands/scaffolding';
+import registerWatchCommands from './commands/watch';
 
 const program = new Command();
 
@@ -36,19 +37,21 @@ program
     spinner.succeed(`Build completed in ${elapsedSeconds} for ${nodesCount} nodes(s)`);
   });
 
-program
-  .command('watch')
-  .description('watch project')
-  .option('--minify', 'Minify the output', false)
-  .action((options) => {
-    runWatcher({
-      minify: options.minify,
-    });
-  });
+// program
+//   .command('watch')
+//   .description('watch project')
+//   .option('--minify', 'Minify the output', false)
+//   .action((options) => {
+//     runWatcher({
+//       minify: options.minify,
+//     });
+//   });
 
-registerChecksCommands(program);
+registerWatchCommands(program);
 registerInfoCommands(program);
+registerChecksCommands(program);
 registerScaffoldingCommands(program);
 registerCreateCommands(program);
+registerInstallRelativePackageCommands(program);
 
 program.parse(process.argv);

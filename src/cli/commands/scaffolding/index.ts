@@ -19,7 +19,7 @@ async function promptIfNotExists<T>(mainValue: unknown | undefined, promptText: 
   return mainValue as T;
 }
 
-export function registerScaffoldingCommands(parentCommand: Command) {
+export default function commandHandler(parentCommand: Command) {
   const scaffolding = new Command('create-node')
     .description('Create new node')
     .option('--name <name>', 'Node name')
