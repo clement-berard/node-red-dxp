@@ -8,11 +8,55 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name || github.ref }}
   cancel-in-progress: true
 
 jobs:
+  changelog-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Important pour avoir tous les tags et l'historique
+
+      - name: Install git-cliff
+        uses: taiki-e/install-action@git-cliff
+
+      - name: Generate changelog
+        id: generate_changelog_step
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          git-cliff v1.23.0..origin/main --context | jq .
+          set -e # Arrêter le script en cas d'erreur
+          echo "Génération du changelog..."
+          # Assurez-vous que le tag (ex: v0.0.11) existe et utilisez origin/master
+          # Remplacez 'v0.0.11' par le tag de départ réel que vous souhaitez utiliser.
+          CHANGELOG_CLIFF_OUTPUT=$(git-cliff v1.23.0..origin/main)
+          
+          echo "Contenu du changelog brut :"
+          echo "$CHANGELOG_CLIFF_OUTPUT"
+          
+          echo "Enregistrement du contenu dans GITHUB_OUTPUT..."
+          # Utilisation de la syntaxe heredoc pour les sorties multilignes
+          echo "CHANGELOG_CONTENT<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CLIFF_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "Variable de sortie CHANGELOG_CONTENT définie."
+
+      - name: Echo changelog
+        run: |
+          echo "Affichage du changelog depuis la variable de sortie :"
+          echo "${{ steps.generate_changelog_step.outputs.CHANGELOG_CONTENT }}"
+
+
   # Build job
   static-checks:
     runs-on: ubuntu-latest
