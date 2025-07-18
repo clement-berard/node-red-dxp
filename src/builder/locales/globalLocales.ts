@@ -18,7 +18,6 @@ export async function getGlobalLocales() {
 
   const grouped = {} as any;
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
   nodesList.forEach((nodeName) => {
     for (const { codeLang, content } of srcLocalesWithContent) {
       if (!grouped[codeLang]) {

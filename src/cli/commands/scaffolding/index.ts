@@ -1,5 +1,5 @@
 import { Command, Option } from 'commander';
-import { type PromptOptions, consola } from 'consola';
+import { consola, type PromptOptions } from 'consola';
 import { dash } from 'radash';
 import { CreateNodeScaffolding } from '../../../scaffolding/create-node';
 import { createFolderIfNotExists } from '../../../tools/node-utils';
