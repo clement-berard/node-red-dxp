@@ -23,5 +23,6 @@
   "hideBreadcrumbs": true,
   "hidePageHeader": true,
   "hidePageTitle": true,
+  "entryFileName": "./editor/dom-helper.md",
   "readme": "../../docs/editor/dom-helper-header.md"
 }
