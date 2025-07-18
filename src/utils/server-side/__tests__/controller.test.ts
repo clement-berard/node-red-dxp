@@ -1,4 +1,4 @@
-import { type Mock, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { evaluateNodeProperty, getREDNode, splitBooleanOutputs, useControllerNode } from '../controller';
 
 // Mock global RED object
@@ -102,7 +102,7 @@ describe('controller', () => {
     const mockMsg = { payload: 'test' } as any;
 
     it('should resolve with result when evaluation succeeds', async () => {
-      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((_value, _type, _node, _msg, callback) => {
         callback(null, 'evaluated-result');
       });
 
@@ -125,7 +125,7 @@ describe('controller', () => {
 
     it('should resolve with error when evaluation fails', async () => {
       const mockError = new Error('Evaluation failed');
-      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((_value, _type, _node, _msg, callback) => {
         callback(mockError, null);
       });
 
@@ -161,7 +161,7 @@ describe('controller', () => {
     const mockMsg = { payload: 'test' } as any;
 
     beforeEach(() => {
-      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, _type, _node, _msg, callback) => {
         // Default mock behavior
         callback(null, value);
       });
@@ -201,7 +201,7 @@ describe('controller', () => {
           testPropType: 'str',
         };
 
-        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((_value, _type, _node, _msg, callback) => {
           callback(null, 'evaluated-value');
         });
 
@@ -242,7 +242,7 @@ describe('controller', () => {
           testPropType: 'str',
         };
 
-        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((_value, _type, _node, _msg, callback) => {
           callback(null, ''); // empty string
         });
 
@@ -260,7 +260,7 @@ describe('controller', () => {
           testPropType: 'bool',
         };
 
-        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((_value, _type, _node, _msg, callback) => {
           callback(null, false);
         });
 
@@ -278,7 +278,7 @@ describe('controller', () => {
           testPropType: 'str',
         };
 
-        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, node, msg, callback) => {
+        (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((_value, _type, _node, _msg, callback) => {
           callback(null, 'actual-value');
         });
 

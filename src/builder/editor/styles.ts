@@ -6,7 +6,7 @@ import { globSync } from 'fast-glob';
 import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
-import { type ListNodesFull, currentContext } from '../../current-context';
+import { currentContext, type ListNodesFull } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { distributionPackagePath } from '../../tools/node-utils';
 

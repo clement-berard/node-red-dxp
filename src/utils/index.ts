@@ -1,2 +1,2 @@
+export { merge, tryit } from 'radash';
 export * from './validators';
-export { tryit, merge } from 'radash';

@@ -25,7 +25,6 @@ export async function getScopedNodesLocales() {
 
   const grouped = {} as any;
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
   res.forEach(({ nodeName, codeLang, content }) => {
     if (!grouped[codeLang]) {
       grouped[codeLang] = [];

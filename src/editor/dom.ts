@@ -76,11 +76,9 @@ export function resolveSelector(inSelector: string) {
  * handleAddRemoveClassesOnSelectors('remove', ['#element1', '.element2'], ['hidden']);
  */
 export function handleAddRemoveClassesOnSelectors(action: 'add' | 'remove', selectors: string[], classes: string[]) {
-  // biome-ignore lint/complexity/noForEach: <explanation>
   selectors.forEach((selector) => {
     const targetElement = document.querySelector(selector);
     if (targetElement) {
-      // biome-ignore lint/complexity/noForEach: <explanation>
       classes.forEach((cls) => targetElement.classList[action](cls));
     }
   });
@@ -302,7 +300,6 @@ export function isCheckboxChecked(selector: string) {
 export function getFormValues(prefix: string): Record<string, string | boolean> {
   const values: Record<string, string | boolean> = {};
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
   document.querySelectorAll(`[id^="node-input-${prefix}-"]`).forEach((element) => {
     const input = element as HTMLInputElement | HTMLSelectElement;
     const key = input.id.replace(`node-input-${prefix}-`, '');
@@ -343,7 +340,7 @@ export function setFormValues(prefix: string, values: Record<string, unknown | b
   if (!values) {
     return;
   }
-  // biome-ignore lint/complexity/noForEach: <explanation>
+
   Object.entries(values).forEach(([key, value]) => {
     const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(`#node-input-${prefix}-${key}`);
 
@@ -410,7 +407,6 @@ export function initTabs(params: InitTabsParams) {
     },
   });
 
-  // biome-ignore lint/complexity/noForEach: <explanation>
   (params.tabsLabel || []).forEach((tabLabel) => {
     // @ts-ignore
     tabs.addTab({
