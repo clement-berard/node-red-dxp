@@ -61,14 +61,14 @@
   },
   "homepage": "https://github.com/clement-berard/node-red-dxp",
   "devDependencies": {
-    "@biomejs/biome": "2.1.4",
+    "@biomejs/biome": "2.2.0",
     "@release-it/conventional-changelog": "10.0.1",
     "release-it": "19.0.4",
     "tsup": "8.5.0",
     "tsx": "4.20.3",
     "typedoc": "0.28.10",
-    "typedoc-plugin-markdown": "4.7.0",
-    "typescript": "5.8.3",
+    "typedoc-plugin-markdown": "4.8.1",
+    "typescript": "5.9.2",
     "vitepress": "1.6.4",
     "vitepress-plugin-npm-commands": "^0.8.1",
     "vitepress-plugin-tabs": "^0.7.1",
@@ -100,7 +100,7 @@
     "prettyjson": "1.2.5",
     "pug": "3.0.3",
     "radash": "12.1.1",
-    "sass": "1.89.2",
+    "sass": "1.90.0",
     "tailwindcss": "4.1.11"
   },
   "files": [
