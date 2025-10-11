@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from 'tsdown';
 
 const minifyFlag = true;
 
@@ -9,12 +9,8 @@ export default defineConfig([
     entry: {
       'utils/controller': 'src/utils/server-side/controller.ts',
     },
-    bundle: true,
     dts: true,
     minify: minifyFlag,
-    minifyWhitespace: minifyFlag,
-    minifyIdentifiers: minifyFlag,
-    minifySyntax: minifyFlag,
     sourcemap: !minifyFlag,
     treeshake: true,
     platform: 'node',
@@ -29,12 +25,8 @@ export default defineConfig([
       'editor/dom-helper/index': 'src/editor/dom.ts',
       'editor/inject/dxpFormRow': 'src/editor/web-components/dxpFormRow.ts',
     },
-    bundle: true,
     dts: true,
     minify: minifyFlag,
-    minifyWhitespace: minifyFlag,
-    minifyIdentifiers: minifyFlag,
-    minifySyntax: minifyFlag,
     treeshake: true,
     sourcemap: !minifyFlag,
     format: ['esm', 'cjs'],
@@ -69,12 +61,8 @@ export default defineConfig([
     banner: {
       js: '#!/usr/bin/env node',
     },
-    bundle: true,
     dts: false,
     minify: minifyFlag,
-    minifyWhitespace: minifyFlag,
-    minifyIdentifiers: minifyFlag,
-    minifySyntax: minifyFlag,
     sourcemap: !minifyFlag,
     treeshake: true,
     format: ['cjs'],
