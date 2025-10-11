@@ -66,8 +66,8 @@
     "release-it": "19.0.4",
     "tsdown": "^0.15.6",
     "tsx": "4.20.3",
-    "typedoc": "0.28.10",
-    "typedoc-plugin-markdown": "4.7.0",
+    "typedoc": "0.28.14",
+    "typedoc-plugin-markdown": "4.9.0",
     "typescript": "5.8.3",
     "vitepress": "1.6.4",
     "vitepress-plugin-npm-commands": "^0.8.1",
@@ -111,6 +111,11 @@
       "@biomejs/biome",
       "@parcel/watcher",
       "esbuild"
-    ]
+    ],
+    "updateConfig": {
+      "ignoreDependencies": [
+        "tailwindcss"
+      ]
+    }
   }
 }
