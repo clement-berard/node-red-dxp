@@ -37,7 +37,7 @@ export async function getScopedNodesLocales() {
 
   for (const [lang, locales] of Object.entries(grouped)) {
     const content = locales
-      // @ts-ignore
+      // @ts-expect-error
       .map((innerContent: string) => innerContent)
       .join(',')
       .slice(0, -1);

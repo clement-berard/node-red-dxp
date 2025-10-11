@@ -91,7 +91,7 @@ describe('controller', () => {
       expect(result).toBe(mockNode);
       if (result) {
         expect(result.customField).toBe('value');
-        // @ts-ignore
+        // @ts-expect-error
         expect(result.apiKey).toBe('secret');
       }
     });

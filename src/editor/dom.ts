@@ -79,6 +79,7 @@ export function handleAddRemoveClassesOnSelectors(action: 'add' | 'remove', sele
   selectors.forEach((selector) => {
     const targetElement = document.querySelector(selector);
     if (targetElement) {
+      // biome-ignore lint: use in builder
       classes.forEach((cls) => targetElement.classList[action](cls));
     }
   });
@@ -397,10 +398,9 @@ type InitTabsParams = {
 export function initTabs(params: InitTabsParams) {
   const elementContent = `#tabs-content-${params.targetId}`;
 
-  // @ts-ignore
+  // @ts-expect-error
   const tabs = RED.tabs.create({
     id: params.targetId,
-    // @ts-ignore
     onchange: (tab: { id: string }) => {
       $(elementContent).children().addClass('hidden');
       $(`#${tab.id}`).removeClass('hidden');
@@ -408,7 +408,6 @@ export function initTabs(params: InitTabsParams) {
   });
 
   (params.tabsLabel || []).forEach((tabLabel) => {
-    // @ts-ignore
     tabs.addTab({
       id: `tab-${snake(tabLabel)}`,
       label: tabLabel,

@@ -9,7 +9,7 @@ let nodemonInstance: Nodemon;
 let browserSyncInstance: BrowserSyncInstance;
 
 function runNodemonAndBrowserSync() {
-  // @ts-ignore
+  // @ts-expect-error
   nodemonInstance = nodemon({
     exec: `node-red -u ${currentContext.config.watcher.nodeRed.path}`,
     ignore: ['**/*'],
