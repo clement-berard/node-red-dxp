@@ -87,8 +87,8 @@
     "commander": "14.0.2",
     "consola": "3.4.2",
     "cosmiconfig": "9.0.0",
-    "cssnano": "7.1.1",
-    "esbuild": "0.25.11",
+    "cssnano": "7.1.2",
+    "esbuild": "0.25.12",
     "fast-glob": "3.3.3",
     "handlebars": "4.7.8",
     "html-minifier-terser": "7.2.0",
@@ -100,7 +100,7 @@
     "prettyjson": "1.2.5",
     "pug": "3.0.3",
     "radash": "12.1.1",
-    "sass": "1.93.2",
+    "sass": "1.93.3",
     "tailwindcss": "^3"
   },
   "files": [
