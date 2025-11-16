@@ -1,6 +1,7 @@
 import { snake } from 'radash';
 import type { EditorDomHelper } from './types';
 import '../index';
+import type { EditorWidgetTypedInputType, EditorWidgetTypedInputTypeDefinition } from 'node-red';
 
 /**
  * Checks if a given selector is a node input selector.
@@ -166,6 +167,31 @@ export function initSelect(
         return $('<option>', { value: opt.value, text: opt.text, selected: opt.value === params?.selected });
       }),
     );
+}
+
+/**
+ * Applies a typed input widget to a DOM element.
+ *
+ * @param params - Configuration object for the typed input
+ * @param params.selector - CSS selector of the input element to enhance
+ * @param params.types - Array of available input types or type definitions
+ *
+ * @example
+ * ```typescript
+ * applyTypedInput({
+ *   selector: '$myInput',
+ *   types: ['str', 'num', 'bool']
+ * });
+ * ```
+ */
+export function applyTypedInput(params: {
+  selector: string;
+  types: (EditorWidgetTypedInputType | EditorWidgetTypedInputTypeDefinition)[];
+}) {
+  jqSelector(params.selector).typedInput({
+    types: params.types,
+    typeField: resolveSelector(`${params.selector}Type`),
+  });
 }
 
 /**
