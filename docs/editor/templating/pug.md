@@ -25,6 +25,8 @@ You need to import relative link to our helper:
 include ../../../../.node-red-dxp/pug/helper
 ```
 
+💡 See all components [here](https://github.com/clement-berard/node-red-dxp/blob/main/src/editor/assets/pug/helper.pug)
+
 ## Available components
 
 | Component                        | Description                                   |

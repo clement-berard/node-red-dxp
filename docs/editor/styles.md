@@ -17,7 +17,7 @@ In HTML files, you can directly use [Tailwind](https://tailwindcss.com/)'s utili
 This ensures a seamless integration of your design while keeping the output optimized.
 :::
 
-💡 To ensure a class is included, add the forceIncludeClasses property to the [configuration file](../config-file.md#forcedclassesinclusion-string-default).
+💡 To ensure a class is included, add the `forceIncludeClasses` property to the [configuration file](../config-file.md#forcedclassesinclusion-string-default).
 
 💡 You can find some predefined classes [here](template.md).
 
