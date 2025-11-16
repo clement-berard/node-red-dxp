@@ -37,16 +37,6 @@ program
     spinner.succeed(`Build completed in ${elapsedSeconds} for ${nodesCount} nodes(s)`);
   });
 
-// program
-//   .command('watch')
-//   .description('watch project')
-//   .option('--minify', 'Minify the output', false)
-//   .action((options) => {
-//     runWatcher({
-//       minify: options.minify,
-//     });
-//   });
-
 registerWatchCommands(program);
 registerInfoCommands(program);
 registerChecksCommands(program);

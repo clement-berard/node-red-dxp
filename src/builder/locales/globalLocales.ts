@@ -2,7 +2,8 @@ import fsPromise from 'node:fs/promises';
 import { currentContext } from '../../current-context';
 
 async function getWithContent(path: string) {
-  const codeLang = path.split('/').pop().split('.').shift();
+  // biome-ignore lint/style/noNonNullAssertion: OK
+  const codeLang = path.split('/').pop()!.split('.').shift()!;
   const content = await fsPromise.readFile(path, 'utf-8');
 
   return {
@@ -16,7 +17,7 @@ export async function getGlobalLocales() {
   const srcLocales = currentContext.resolvedSrcLocalesPaths;
   const srcLocalesWithContent = await Promise.all(srcLocales.map(getWithContent));
 
-  const grouped = {} as any;
+  const grouped: Record<string, string[]> = {};
 
   nodesList.forEach((nodeName) => {
     for (const { codeLang, content } of srcLocalesWithContent) {
@@ -28,17 +29,10 @@ export async function getGlobalLocales() {
     }
   });
 
-  let allContent = '';
+  const langEntries = Object.entries(grouped).map(([lang, locales]) => {
+    const content = locales.join(',');
+    return `"${lang}":{${content}}`;
+  });
 
-  for (const [lang, locales] of Object.entries(grouped)) {
-    const content = locales
-      // @ts-expect-error
-      .map((innerContent: string) => innerContent)
-      .join(',')
-      .slice(0, -1);
-
-    allContent += `"${lang}":{${content}},`;
-  }
-
-  return `{${allContent.slice(0, -1)}}`;
+  return `{${langEntries.join(',')}}`;
 }

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
+    "lib": ["es2022"],
     "esModuleInterop": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Bundler"
   }
 }

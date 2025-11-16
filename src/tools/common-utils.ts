@@ -4,10 +4,10 @@ export function cleanSpaces(str: string) {
   return str.trim().replace(/\n\s+/g, '');
 }
 
-export function computeNodeName(inName = '') {
+export function computeNodeName(name = '') {
   return {
-    name: inName,
-    dashName: dash(inName),
-    pascalName: pascal(inName),
+    name,
+    dashName: dash(name),
+    pascalName: pascal(name),
   };
 }
