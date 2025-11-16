@@ -68,7 +68,15 @@ export default defineConfig({
         text: 'Editor',
         items: [
           { text: 'DOM Helper ', link: '/editor/dom-helper.md' },
-          { text: 'Template', link: '/editor/template.md' },
+          {
+            text: 'Templating',
+            collapsed: true,
+            items: [
+              { link: '/editor/templating/pug.md', text: 'Pug' },
+              { link: '/editor/templating/html.md', text: 'Html' },
+              { link: '/editor/templating/classes.md', text: 'Available classes' },
+            ],
+          },
           { text: 'Styling nodes', link: '/editor/styles.md' },
         ],
       },

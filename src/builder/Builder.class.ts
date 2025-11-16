@@ -29,10 +29,12 @@ export class Builder {
     createFolderIfNotExists(currentContext.pathLibCacheDir);
     // Clean dist folder and write config file
     const pugHelperSourceFile = `${currentContext.currentPackagedDistPath}/editor/assets/pug-helper.pug`;
+    const pugHelperSourceFolder = `${currentContext.currentPackagedDistPath}/editor/assets/pug`;
     const runs = [
       cleanPaths([currentContext.pathDist]),
       writeFile(`${currentContext.pathLibCacheDir}/config.json`, JSON.stringify(currentContext.config, null, 2)),
       fsPromise.copyFile(pugHelperSourceFile, `${currentContext.pathLibCacheDir}/pug-helper.pug`),
+      fsPromise.cp(pugHelperSourceFolder, `${currentContext.pathLibCacheDir}/pug`, { recursive: true }),
     ];
 
     return Promise.all(runs).then(() => {
