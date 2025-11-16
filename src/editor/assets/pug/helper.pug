@@ -31,17 +31,18 @@ mixin commonLabel(params)
     - var capitalizedLabel = capitalizeFirst(params.label || '')
     label(for=params.id)
         +iconFontAwesome(params.icon)
-        span(data-i18n=params.label title=capitalizedLabel)= capitalizedLabel
+        span(data-i18n=`${params.i18nKey};[title]${params.i18nKey}` title=capitalizedLabel)= capitalizedLabel
 
 mixin dxpFormRowInputText(params)
     - var inputId = generateInputId(params.id, params.isConfig)
+    - var i18nKey = params.i18nKey || params.id
     .dxp-template-form-row(class=params.rowClasses)
-        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        +commonLabel({label: params.label, icon: params.icon, id: inputId, i18nKey })
         .content
             input(
                 type="text"
                 id=inputId
-                data-i18n=`[placeholder]${params.label}`
+                data-i18n=`[placeholder]${params.id}-placeholder`
                 placeholder=params.placeholder || ''
             )&attributes(attributes)
             if params.isTyped
@@ -51,8 +52,9 @@ mixin dxpFormRowInputText(params)
 
 mixin dxpFormRowCheckbox(params)
     - var inputId = generateInputId(params.id, params.isConfig)
+    - var i18nKey = params.i18nKey || params.id
     .dxp-template-form-row(class=params.rowClasses)
-        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        +commonLabel({label: params.label, icon: params.icon, id: inputId, i18nKey })
         .content
             .checkbox
                 input(type="checkbox" id=inputId)&attributes(attributes)
@@ -63,8 +65,9 @@ mixin dxpFormRowCheckbox(params)
 
 mixin dxpFormRowSelect(params)
     - var inputId = generateInputId(params.id, params.isConfig)
+    - var i18nKey = params.i18nKey || params.id
     .dxp-template-form-row(class=params.rowClasses)
-        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        +commonLabel({label: params.label, icon: params.icon, id: inputId, i18nKey })
         .content
             select(id=inputId)&attributes(attributes)
             if block
@@ -72,8 +75,9 @@ mixin dxpFormRowSelect(params)
 
 mixin dxpFormRowSelectConfigNode(params)
     - var inputId = generateInputId(params.id, params.isConfig)
+    - var i18nKey = params.i18nKey || params.id
     .dxp-template-form-row(class=params.rowClasses)
-        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        +commonLabel({label: params.label, icon: params.icon, id: inputId, i18nKey })
         .content.force-w-full
             select(id=inputId)&attributes(attributes)
             if block
@@ -87,8 +91,9 @@ mixin dxpFormTitleSeparator(label)
         div.flex-1.border-t.border-gray-300
 
 mixin dxpHint(params)
-    - var classState = params.state ? 'hint-' + params.state : ''
-    - var width = params.fullWidth ? '' : 'max-w-[350px]'
+    - var params = params ?? {}
+    - var classState = params?.state ? 'hint-' + params.state : ''
+    - var width = params?.fullWidth ? '' : 'max-w-[350px]'
     .hint(class=classState + ' ' + width)
         +iconFontAwesome(params.icon)(class="mr-1")
         if block

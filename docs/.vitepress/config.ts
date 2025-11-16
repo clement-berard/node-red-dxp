@@ -53,7 +53,7 @@ export default defineConfig({
           { text: 'Node Documentation', link: '/documentation.md' },
           { text: 'Server-side', link: '/server-side.md' },
           { text: 'Resources', link: '/resources.md' },
-          { text: 'i18n', link: '/i18n.md' },
+          { text: 'Internationalisation', link: '/i18n.md' },
           {
             text: 'Utils',
             collapsed: true,
