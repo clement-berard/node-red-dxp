@@ -35,7 +35,7 @@ mixin commonLabel(params)
 
 mixin dxpFormRowInputText(params)
     - var inputId = generateInputId(params.id, params.isConfig)
-    .dxp-template-form-row
+    .dxp-template-form-row(class=params.rowClasses)
         +commonLabel({label: params.label, icon: params.icon, id: inputId})
         .content
             input(
@@ -51,7 +51,7 @@ mixin dxpFormRowInputText(params)
 
 mixin dxpFormRowCheckbox(params)
     - var inputId = generateInputId(params.id, params.isConfig)
-    .dxp-template-form-row
+    .dxp-template-form-row(class=params.rowClasses)
         +commonLabel({label: params.label, icon: params.icon, id: inputId})
         .content
             .checkbox
@@ -63,7 +63,7 @@ mixin dxpFormRowCheckbox(params)
 
 mixin dxpFormRowSelect(params)
     - var inputId = generateInputId(params.id, params.isConfig)
-    .dxp-template-form-row
+    .dxp-template-form-row(class=params.rowClasses)
         +commonLabel({label: params.label, icon: params.icon, id: inputId})
         .content
             select(id=inputId)&attributes(attributes)
@@ -72,7 +72,7 @@ mixin dxpFormRowSelect(params)
 
 mixin dxpFormRowSelectConfigNode(params)
     - var inputId = generateInputId(params.id, params.isConfig)
-    .dxp-template-form-row
+    .dxp-template-form-row(class=params.rowClasses)
         +commonLabel({label: params.label, icon: params.icon, id: inputId})
         .content.force-w-full
             select(id=inputId)&attributes(attributes)
