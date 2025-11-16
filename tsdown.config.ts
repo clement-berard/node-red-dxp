@@ -16,6 +16,7 @@ export default defineConfig([
     platform: 'node',
     format: ['esm', 'cjs'],
     target: 'es6',
+    fixedExtension: false,
   },
   {
     entry: {
@@ -34,6 +35,7 @@ export default defineConfig([
     noExternal: [...noExternals, 'radash'],
     platform: 'browser',
     onSuccess: `${process.env.CI ? 'cat build.sh && ./build.sh' : '. build.sh'}`,
+    fixedExtension: false,
   },
 
   // {
@@ -69,6 +71,7 @@ export default defineConfig([
     target: 'node16',
     platform: 'node',
     noExternal: [...noExternals, 'ora'],
+    fixedExtension: false,
     external: [
       'esbuild',
       'fast-glob',
