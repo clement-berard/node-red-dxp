@@ -1,0 +1,102 @@
+- var INPUT_NODE_ID = 'node-input'
+- var INPUT_NODE_CONFIG_ID = 'node-config-input'
+
+-
+    function generatePrefix(isConfig) {
+        return isConfig ? INPUT_NODE_CONFIG_ID + '-' : INPUT_NODE_ID + '-';
+    }
+
+-
+    function generateInputId(id, isConfig) {
+        var prefix = generatePrefix(isConfig);
+        return prefix + id;
+    }
+
+-
+    function capitalizeFirst(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1)
+    }
+
+mixin iconFontAwesome(iconName)
+    if iconName
+        i.fa(class=`fa-${iconName}`)&attributes(attributes)
+
+mixin simpleButton(opts)
+    - var id = opts.id || ''
+    - var color = opts.color || 'blue'
+    - var text = opts.text || 'Button'
+    button(id=id class=`px-4 py-2 bg-${color}-500 text-white rounded hover:bg-${color}-600`)= text
+
+mixin commonLabel(params)
+    - var capitalizedLabel = capitalizeFirst(params.label || '')
+    label(for=params.id)
+        +iconFontAwesome(params.icon)
+        span(data-i18n=params.label title=capitalizedLabel)= capitalizedLabel
+
+mixin dxpFormRowInputText(params)
+    - var inputId = generateInputId(params.id, params.isConfig)
+    .dxp-template-form-row
+        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        .content
+            input(
+                type="text"
+                id=inputId
+                data-i18n=`[placeholder]${params.label}`
+                placeholder=params.placeholder || ''
+            )&attributes(attributes)
+            if params.isTyped
+                input(type="hidden" id=`${inputId}Type`)
+            if block
+                block
+
+mixin dxpFormRowCheckbox(params)
+    - var inputId = generateInputId(params.id, params.isConfig)
+    .dxp-template-form-row
+        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        .content
+            .checkbox
+                input(type="checkbox" id=inputId)&attributes(attributes)
+                if params.text
+                    span.italic= params.text
+            if block
+                block
+
+mixin dxpFormRowSelect(params)
+    - var inputId = generateInputId(params.id, params.isConfig)
+    .dxp-template-form-row
+        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        .content
+            select(id=inputId)&attributes(attributes)
+            if block
+                block
+
+mixin dxpFormRowSelectConfigNode(params)
+    - var inputId = generateInputId(params.id, params.isConfig)
+    .dxp-template-form-row
+        +commonLabel({label: params.label, icon: params.icon, id: inputId})
+        .content.force-w-full
+            select(id=inputId)&attributes(attributes)
+            if block
+                block
+
+mixin dxpFormTitleSeparator(label)
+    - var realLabel = label || ''
+    div.flex.items-center.gap-4.mb-4&attributes(attributes)
+        if realLabel
+            span.text-md.font-semibold= label
+        div.flex-1.border-t.border-gray-300
+
+mixin dxpHint(params)
+    - var classState = params.state ? 'hint-' + params.state : ''
+    - var width = params.fullWidth ? '' : 'max-w-[350px]'
+    .hint(class=classState + ' ' + width)
+        +iconFontAwesome(params.icon)(class="mr-1")
+        if block
+            block
+
+mixin dxpTabs(targetId)
+    div
+        ul(id=targetId)
+    div(id=`tabs-content-${targetId}`, class='mt-4')
+        if block
+            block
