@@ -14,6 +14,7 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 <p align="center">
   <img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="alt text" width="7%"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="alt text" width="7%"/>
+  <img src="./docs/images/esbuild-logo.svg" alt="alt text" width="7%"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="alt text" width="7%"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="alt text" width="7%"/>
 </p>
@@ -47,7 +48,7 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 
 - [node-red-contrib-ultimate-toolkit](https://www.npmjs.com/package/@keload/node-red-contrib-ultimate-toolkit)️
 - [node-red-contrib-js-philips-tv-control](https://www.npmjs.com/package/@keload/node-red-contrib-js-philips-tv-control)
-- [node-red-contrib-happy-http-client](https://www.npmjs.com/package/@keload/node-red-contrib-happy-http-client) 🏗️
+- [node-red-contrib-happy-http-client](https://www.npmjs.com/package/@keload/node-red-contrib-happy-http-client)
 - [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav) 🏗️
 
 ## License
