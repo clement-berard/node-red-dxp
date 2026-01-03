@@ -4,9 +4,9 @@ import { cosmiconfigSync } from 'cosmiconfig';
 import { type Entry, globSync } from 'fast-glob';
 import { merge } from 'merge-anything';
 import { dash, pascal } from 'radash';
+import { ZodError } from 'zod';
 import { ConfigSchema, defaultConfig } from './default-config';
 import { fixedConfig } from './fixed-config';
-import { ZodError } from 'zod';
 
 const CONFIG_FILE_NAME = 'node-red-dxp';
 
