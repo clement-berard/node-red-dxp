@@ -2,14 +2,10 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import packageJson from '../../package.json';
 
-process.on('SIGINT', () => {
-  console.log('\n\n👋 Operation cancelled by user');
-  process.exit(0);
-});
-
-process.on('SIGTERM', () => {
-  console.log('\n\n👋 Operation terminated');
-  process.exit(0);
+['SIGINT', 'SIGTERM'].forEach((ev: string) => {
+  process.on(ev, () => {
+    process.exit(0);
+  });
 });
 
 const PKG_NAME = packageJson.name;
