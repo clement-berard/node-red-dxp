@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "module": "ESNext",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "rootDir": "./",
+    "types": ["jquery", "jqueryui", "node-red", "@keload/node-red-dxp"]
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": [
+    "./src/editor.ts",
+    "./src/editor/**/*",
+    "./src/nodes/**/editor/**/*",
+    "./src/nodes/**/editor.*",
+    "./test"
+  ]
+}
