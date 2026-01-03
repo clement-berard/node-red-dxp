@@ -24,7 +24,7 @@
         "types": [
           { "type": "feat", "section": "✨ Features", "hidden": false },
           { "type": "fix", "section": "🐛 Fixes", "hidden": false },
-          { "type": "chore", "section": "📦 Chores", "hidden": true },
+          { "type": "chore", "section": "📦 Chores", "hidden": false },
           { "type": "docs", "section": "📝 Documentation", "hidden": false },
           { "type": "style", "section": "💅 Styling", "hidden": false },
           { "type": "refactor", "section": "🔨 Refactors", "hidden": false },
