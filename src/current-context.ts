@@ -105,5 +105,5 @@ function getCurrentContext() {
 export const currentContext = getCurrentContext();
 
 export type CurrentContext = ReturnType<typeof getCurrentContext>;
-export type ListNodesFull = typeof currentContext.listNodesFull;
+export type ListNodesFull = CurrentContext['listNodesFull'];
 export type ListNode = ListNodesFull[number];
