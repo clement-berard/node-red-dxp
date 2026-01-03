@@ -4,7 +4,8 @@ import { cosmiconfigSync } from 'cosmiconfig';
 import { type Entry, globSync } from 'fast-glob';
 import { merge } from 'merge-anything';
 import { dash, pascal } from 'radash';
-import { type Config, defaultConfig } from './default-config';
+import { ZodError } from 'zod';
+import { ConfigSchema, defaultConfig } from './default-config';
 import { fixedConfig } from './fixed-config';
 
 const CONFIG_FILE_NAME = 'node-red-dxp';
@@ -16,14 +17,38 @@ function getConfig() {
 
   try {
     const result = explorerSync.search();
+    const userConfig = result ? result.config : {};
 
-    return merge(defaultConfig, result ? result.config : {}) as Config;
+    const mergedConfig = merge(defaultConfig, userConfig);
+
+    return ConfigSchema.parse(mergedConfig);
   } catch (error) {
-    console.error('Error while loading configuration', error);
+    if (error instanceof ZodError) {
+      const result = explorerSync.search();
+      const configFile = result ? result.filepath : 'unknown';
+
+      console.error(`\n❌  Configuration error in ${configFile}:\n`);
+      error.issues.forEach((issue) => {
+        if (issue.path.length > 0) {
+          console.error(`  - Field "${issue.path.join('.')}": ${issue.message}`);
+        } else {
+          if (issue.code === 'unrecognized_keys' && 'keys' in issue && issue.keys.length > 0) {
+            issue.keys.forEach((key) => {
+              console.error(`  - Field "${key}": Unrecognized key`);
+            });
+          } else {
+            console.error(`  - ${issue.message}`);
+          }
+        }
+      });
+      console.error(
+        '\nℹ️  See configuration documentation: https://clement-berard.github.io/node-red-dxp/config-file.html\n',
+      );
+      process.exit(1);
+    }
     throw error;
   }
 }
-
 export const currentConfig = getConfig();
 const currentDir = process.cwd();
 const jsonPackage = JSON.parse(readFileSync(`${currentDir}/package.json`, 'utf-8'));
