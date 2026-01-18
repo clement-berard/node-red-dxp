@@ -2,6 +2,9 @@ import { defineConfig } from 'vitepress';
 import { npmCommandsMarkdownPlugin } from 'vitepress-plugin-npm-commands';
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
 
+const releaseVersion = process.env.RELEASE_VERSION || 'dev';
+const buildDate = new Date().toISOString().split('T')[0];
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'node-red-dxp',
@@ -86,5 +89,8 @@ export default defineConfig({
     },
 
     socialLinks: [{ icon: 'github', link: 'https://github.com/clement-berard/node-red-dxp' }],
+    footer: {
+      message: `Version ${releaseVersion} - Built on ${buildDate}`,
+    },
   },
 });
