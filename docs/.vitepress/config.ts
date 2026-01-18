@@ -7,10 +7,18 @@ const buildDate = new Date().toISOString().split('T')[0];
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'node-red-dxp',
-  description: 'Build nodes effortless',
+  title: 'Node-RED DXP - Fast TypeScript Node Builder & Toolkit',
+  description:
+    'Build custom Node-RED nodes faster with Node-RED DXP. An all-in-one toolkit featuring ultra-fast esbuild, TypeScript support, and automated documentation for a superior developer experience.',
+  cleanUrls: true,
+  sitemap: {
+    hostname: 'https://clement-berard.github.io/node-red-dxp',
+  },
   base: process.env.CI ? '/node-red-dxp/' : '/',
   head: [
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:locale', content: 'en_US' }],
+    ['meta', { property: 'og:site_name', content: 'Node-RED DXP - Fast TypeScript Node Builder & Toolkit' }],
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     [
       'script',
