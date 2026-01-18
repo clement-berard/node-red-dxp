@@ -64,6 +64,7 @@
     "@biomejs/biome": "2.3.11",
     "@release-it/conventional-changelog": "10.0.4",
     "@types/pug": "^2.0.10",
+    "js-yaml": "^4.1.1",
     "plop": "^4.0.4",
     "release-it": "19.2.2",
     "tsdown": "^0.16.4",
@@ -74,7 +75,8 @@
     "vitepress": "1.6.4",
     "vitepress-plugin-npm-commands": "^0.8.1",
     "vitepress-plugin-tabs": "^0.7.1",
-    "vitest": "4.0.16"
+    "vitest": "4.0.16",
+    "zod2md": "^0.2.5"
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "7.0.2",

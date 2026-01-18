@@ -5,6 +5,7 @@
 		"includes": [
 			"**/src/**/*.ts",
 			"build.ts",
+			"generate-config-doc.ts",
 			"tsup.config.ts",
 			"**/src/**/*.scss",
 			"**/docs/.vitepress/**/*.ts",
