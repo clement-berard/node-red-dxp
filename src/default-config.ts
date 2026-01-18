@@ -1,56 +1,59 @@
 import { z } from 'zod';
 
-export const ConfigSchema = z
+export const watcher = z
   .object({
-    builder: z
+    nodeRed: z
       .object({
-        outputDir: z.string().default('dist'),
-        esbuildControllerOptions: z
-          .object({
-            includeInBundle: z.array(z.string()).default([]),
-          })
-          .strict()
-          .default({
-            includeInBundle: [],
-          }),
-        tailwind: z
-          .object({
-            forcedClassesInclusion: z.array(z.string()).default([]),
-          })
-          .strict()
-          .default({
-            forcedClassesInclusion: [],
-          }),
+        enabled: z.boolean(),
+        path: z.string(),
+        url: z.url(),
       })
-      .strict()
-      .default({
-        outputDir: 'dist',
-        esbuildControllerOptions: {
-          includeInBundle: [],
-        },
-        tailwind: {
-          forcedClassesInclusion: [],
-        },
-      }),
-    watcher: z
-      .object({
-        nodeRed: z
-          .object({
-            enabled: z.boolean().default(true),
-            path: z.string().default('~/.node-red'),
-            url: z.url().default('http://localhost:1880'),
-          })
-          .strict(),
-      })
-      .strict()
-      .default({
-        nodeRed: {
-          enabled: true,
-          path: '~/.node-red',
-          url: 'http://localhost:1880',
-        },
-      }),
+      .strict(),
   })
   .strict();
 
-export const defaultConfig = ConfigSchema.parse({});
+export const builder = z
+  .object({
+    outputDir: z.string(),
+    esbuildControllerOptions: z
+      .object({
+        includeInBundle: z.array(z.string()),
+      })
+      .strict(),
+    tailwind: z
+      .object({
+        forcedClassesInclusion: z.array(z.string()),
+      })
+      .strict(),
+  })
+  .strict();
+
+export const RootSchema = z
+  .object({
+    builder,
+    watcher,
+  })
+  .strict();
+
+function getDefaultConfig(inputs: z.infer<typeof RootSchema>) {
+  return RootSchema.parse(inputs);
+}
+
+export const defaultConfig = getDefaultConfig({
+  watcher: {
+    nodeRed: {
+      enabled: true,
+      path: '~/.node-red',
+      url: 'http://localhost:1880',
+    },
+  },
+  builder: {
+    outputDir: 'dist',
+    esbuildControllerOptions: {
+      includeInBundle: [],
+    },
+    tailwind: {
+      forcedClassesInclusion: [],
+    },
+  },
+});
