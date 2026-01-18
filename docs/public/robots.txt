@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Indiquez l'URL complète de votre sitemap
+Sitemap: https://clement-berard.github.io/node-red-dxp/sitemap.xml
