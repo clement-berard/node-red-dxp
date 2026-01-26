@@ -72,8 +72,8 @@ importers:
         specifier: 3.1.11
         version: 3.1.11
       ora:
-        specifier: 9.0.0
-        version: 9.0.0
+        specifier: 9.1.0
+        version: 9.1.0
       package-manager-detector:
         specifier: ^1.6.0
         version: 1.6.0
@@ -2241,8 +2241,8 @@ packages:
     resolution: {integrity: sha512-ywqV+5MmyL4E7ybXgKys4DugZbX0FC6LnwrhjuykIjnK9k8OQacQ7axGKnjDXWNhns0xot3bZI5h55H8yo9cJg==}
     engines: {node: '>=6'}
 
-  cli-spinners@3.3.0:
-    resolution: {integrity: sha512-/+40ljC3ONVnYIttjMWrlL51nItDAbBrq2upN8BPyvGU/2n5Oxw3tbNwORCaNuNqLJnxGqOfjUuhsv7l5Q4IsQ==}
+  cli-spinners@3.4.0:
+    resolution: {integrity: sha512-bXfOC4QcT1tKXGorxL3wbJm6XJPDqEnij2gQ2m7ESQuE+/z9YFIWnl/5RpTiKWbMq3EVKR4fRLJGn6DVfu0mpw==}
     engines: {node: '>=18.20'}
 
   cli-width@4.1.0:
@@ -3742,6 +3742,10 @@ packages:
 
   ora@9.0.0:
     resolution: {integrity: sha512-m0pg2zscbYgWbqRR6ABga5c3sZdEon7bSgjnlXC64kxtxLOyjRcbbUkLj7HFyy/FTD+P2xdBWu8snGhYI0jc4A==}
+    engines: {node: '>=20'}
+
+  ora@9.1.0:
+    resolution: {integrity: sha512-53uuLsXHOAJl5zLrUrzY9/kE+uIFEx7iaH4g2BIJQK4LZjY4LpCCYZVKDWIkL+F01wAaCg93duQ1whnK/AmY1A==}
     engines: {node: '>=20'}
 
   os-name@6.1.0:
@@ -6950,7 +6954,7 @@ snapshots:
 
   cli-spinners@2.9.2: {}
 
-  cli-spinners@3.3.0: {}
+  cli-spinners@3.4.0: {}
 
   cli-width@4.1.0: {}
 
@@ -8772,13 +8776,24 @@ snapshots:
     dependencies:
       chalk: 5.6.2
       cli-cursor: 5.0.0
-      cli-spinners: 3.3.0
+      cli-spinners: 3.4.0
       is-interactive: 2.0.0
       is-unicode-supported: 2.1.0
       log-symbols: 7.0.1
       stdin-discarder: 0.2.2
       string-width: 8.1.0
       strip-ansi: 7.1.2
+
+  ora@9.1.0:
+    dependencies:
+      chalk: 5.6.2
+      cli-cursor: 5.0.0
+      cli-spinners: 3.4.0
+      is-interactive: 2.0.0
+      is-unicode-supported: 2.1.0
+      log-symbols: 7.0.1
+      stdin-discarder: 0.2.2
+      string-width: 8.1.0
 
   os-name@6.1.0:
     dependencies:
