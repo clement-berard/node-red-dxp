@@ -5,7 +5,7 @@ import { type Entry, globSync } from 'fast-glob';
 import { merge } from 'merge-anything';
 import { dash, pascal } from 'radash';
 import { ZodError } from 'zod';
-import { ConfigSchema, defaultConfig } from './default-config';
+import { defaultConfig, RootSchema } from './default-config';
 import { fixedConfig } from './fixed-config';
 
 const CONFIG_FILE_NAME = 'node-red-dxp';
@@ -21,7 +21,7 @@ function getConfig() {
 
     const mergedConfig = merge(defaultConfig, userConfig);
 
-    return ConfigSchema.parse(mergedConfig);
+    return RootSchema.parse(mergedConfig);
   } catch (error) {
     if (error instanceof ZodError) {
       const result = explorerSync.search();
@@ -42,7 +42,7 @@ function getConfig() {
         }
       });
       console.error(
-        '\nℹ️  See configuration documentation: https://clement-berard.github.io/node-red-dxp/config-file.html\n',
+        '\nℹ️  See configuration documentation: https://clement-berard.github.io/node-red-dxp/config-file\n',
       );
       process.exit(1);
     }
