@@ -1,6 +1,6 @@
 {
   "name": "@keload/node-red-dxp",
-  "version": "1.28.2",
+  "version": "1.28.3",
   "description": "",
   "type": "module",
   "scripts": {
