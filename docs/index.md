@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /get-started
+      link: /overview
     - theme: alt
       text: View on GitHub
       link: https://github.com/clement-berard/node-red-dxp
@@ -34,9 +34,9 @@ features:
 <div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem; flex-wrap: wrap;">
   <img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="Node-RED logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript logo" width="40"/>
+  <img src="./images/esbuild-logo.svg" alt="esbuild logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="Sass logo" width="50"/>
-  <img src="./images/esbuild-logo.svg" alt="esbuild logo" width="100"/>
 </div>
 
 ## 🚀 Why Choose Node-RED DXP for your Nodes?
@@ -49,7 +49,4 @@ features:
 
 These open-source nodes are already built using the **Node-RED DXP** workflow:
 
-* [node-red-contrib-ultimate-toolkit](https://www.npmjs.com/package/@keload/node-red-contrib-ultimate-toolkit)
-* [node-red-contrib-js-philips-tv-control](https://www.npmjs.com/package/@keload/node-red-contrib-js-philips-tv-control)
-* [node-red-contrib-happy-http-client](https://www.npmjs.com/package/@keload/node-red-contrib-happy-http-client)
-* [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav)
+<!--@include: ./partials/trusted-projects.md-->
