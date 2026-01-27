@@ -9,16 +9,17 @@ Additionally, there is already a CLI command available to add a new node to the 
 You can check it out [here](cli/create-node.md).
 :::
 
-💡 Some packages already use `@keload/node-red-dxp` as a dependency. You can check them out:
+💡 Some [packages](https://github.com/topics/node-red-dxp) already use `@keload/node-red-dxp` as a dependency. You can check them out:
 
-- [node-red-contrib-ultimate-toolkit](https://www.npmjs.com/package/@keload/node-red-contrib-ultimate-toolkit)️
-- [node-red-contrib-js-philips-tv-control](https://www.npmjs.com/package/@keload/node-red-contrib-js-philips-tv-control)
-- [node-red-contrib-happy-http-client](https://www.npmjs.com/package/@keload/node-red-contrib-happy-http-client)
-- [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav) 🏗️
+<!--@include: ./partials/trusted-projects.md-->
 
 ## Start a new project manually
 
-Init a new node package with, for example `npm init -y` (or another package manager).
+Init a new node package with, for example `npm init -y` (or another package manager) and install as dev-dependency:
+
+```sh
+npm install @keload/node-red-dxp --dev // [!=npm auto]
+```
 
 Now you can follow the structure below to start your project.
 
@@ -48,45 +49,16 @@ Typical project structure:
 └── package.json
 ```
 
-### `src/nodes` _(mandatory)_
-
-This folder contains all your nodes.
-
-#### `src/nodes/<node_name>/controller.ts` _(mandatory)_
-
-This file contains the logic of your node (server-side).
-
-#### `src/nodes/<node_name>/editor` _(mandatory)_
-
-This folder contains the editor of your node.
-
-##### `src/nodes/<node_name>/editor/index.{html,pug}` _(mandatory)_
-
-This file contains the HTML or Pug of your node editor.
-
-**Pug file is prioritized over HTML file.**
-
-##### `src/nodes/<node_name>/editor/index.ts` _(mandatory)_
-
-This file contains the script of your node editor.
-
-##### `src/nodes/<node_name>/editor/styles.scss` _(optional)_
-
-This file contains the styles of your node editor.
-
----
-
-### `src/locales` _(optional)_
-
-This folder contains globals the translations for your nodes. Each file should be named according to the language code it represents (e.g., `en-US.json`).
-
-More information about the translation system can be found [here](i18n.md).
-
-### `src/red-server.ts` _(optional)_
-
-This file is used to interact with the Node-RED backend.
-
-More information about the red-server can be found [here](server-side.md).
+| Path | Requirement | Description |
+| :--- | :--- | :--- |
+| `src/nodes` | **Mandatory** | This folder contains all of your nodes. |
+| `src/nodes/<node_name>/controller.ts` | **Mandatory** | This file contains the logic of your node (server-side). |
+| `src/nodes/<node_name>/editor` | **Mandatory** | This folder contains the editor of your node. |
+| `src/nodes/<node_name>/editor/index.{html,pug}` | **Mandatory** | This file contains the HTML or Pug of your node editor. Pug file is prioritized over HTML file. |
+| `src/nodes/<node_name>/editor/index.ts` | **Mandatory** | This file contains the script of your node editor. |
+| `src/nodes/<node_name>/editor/styles.scss` | *Optional* | This file contains the styles of your node editor. |
+| `src/locales` | *Optional* | This folder contains global translations for your nodes. Each file should be named according to the language code it represents (example: `en-US.json`). |
+| `src/red-server.ts` | *Optional* | This file is used to interact with the Node-RED backend. |
 
 ### `tsconfig.json`
 

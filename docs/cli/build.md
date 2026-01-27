@@ -5,10 +5,8 @@ with the output defaulting to the `dist` directory. (you can edit this in the [c
 
 ## Usage
 
-```text
+```shell
 Usage: node-red-dxp build [options]
-
-The build script compiles all nodes into a production-ready, optimized format at lightning speed, with the output defaulting to the dist directory.
 
 Options:
   --no-minify  No minify the output
@@ -20,7 +18,7 @@ You can directly run the build command in the terminal, or add it to your `packa
 ```json
 {
   "scripts": {
-    "build": "pnpm node-red-dxp build"
+    "build": "node-red-dxp build"
   }
 }
 ```

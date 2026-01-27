@@ -10,10 +10,8 @@ Refer to the [config file](../config-file.md) for more information.
 
 ## Usage
 
-```text
+```shell
 Usage: node-red-dxp watch [options]
-
-watch project
 
 Options:
   --minify    Minify the output (default: false)
@@ -26,7 +24,7 @@ You can directly run the build command in the terminal, or add it to your `packa
 ```json
 {
   "scripts": {
-    "dev": "pnpm node-red-dxp watch"
+    "dev": "node-red-dxp watch"
   }
 }
 ```

@@ -6,10 +6,8 @@ You can create a regular node or a config node.
 
 ## Usage
 
-```text
+```shell
 Usage: node-red-dxp create-node [options]
-
-Create new node
 
 Options:
   --name <name>   Node name
@@ -23,13 +21,11 @@ Options:
 
 ```bash
 node-red-dxp create-node --name "my-node-1" --regular-node --skip-confirm
-```
 
-_Without parameters, It will ask you some questions to create the node._
-```bash
-node-red-dxp create-node
-```
+# Without parameters, It will ask you some questions to create the node.
 
+node-red-dxp create-node 
+```
 
 ## Result
 

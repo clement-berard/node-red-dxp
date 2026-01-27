@@ -7,7 +7,7 @@ const buildDate = new Date().toISOString().split('T')[0];
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'Node-RED DXP - Fast TypeScript Node Builder & Toolkit',
+  title: 'Node-RED DXP',
   description:
     'Build custom Node-RED nodes faster with Node-RED DXP. An all-in-one toolkit featuring ultra-fast esbuild, TypeScript support, and automated documentation for a superior developer experience.',
   cleanUrls: true,
@@ -47,7 +47,7 @@ export default defineConfig({
     nav: [{ text: 'Home', link: '/' }],
 
     sidebar: [
-      { text: 'Get started', link: '/get-started.md' },
+      { text: 'Overview', link: '/overview.md' },
       { text: 'Usage', link: '/usage.md' },
       { text: 'Configuration file', link: '/config-file.md' },
       {
