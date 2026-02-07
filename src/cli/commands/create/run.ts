@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import nodePlop from 'node-plop';
+import { getLatestVersion } from '../../utils';
 import { registerActions } from './plop.actions';
 import { getPackageManager } from './utils';
 
@@ -24,6 +25,9 @@ export async function handleCreatePackage(targetDir?: string) {
       throw new Error(`Templates directory not found: ${templatesDir}`);
     }
 
+    const currentPackageManager = getPackageManager();
+    const nrDXPLastVersion = await getLatestVersion('@keload/node-red-dxp');
+
     registerActions(plop);
 
     plop.setGenerator('project', {
@@ -46,7 +50,7 @@ export async function handleCreatePackage(targetDir?: string) {
             {
               type: 'confirm',
               name: 'installDependencies',
-              message: `Install dependencies with ${getPackageManager()}?`,
+              message: `Install dependencies with ${currentPackageManager}?`,
               default: true,
             },
           ],
@@ -65,7 +69,7 @@ export async function handleCreatePackage(targetDir?: string) {
               type: 'add',
               path: `${answers?.projectName}/${fileName}`,
               templateFile: join(templatesDir, `${fileName}.hbs`),
-              data: answers,
+              data: { ...answers, nrDXPLastVersion },
             }),
           ),
         ];
@@ -85,6 +89,12 @@ export async function handleCreatePackage(targetDir?: string) {
         actions.push({
           type: 'lint',
           projectName: answers?.projectName,
+        });
+
+        actions.push({
+          type: 'onSuccess',
+          projectName: answers?.projectName,
+          currentPackageManager,
         });
 
         return actions;
