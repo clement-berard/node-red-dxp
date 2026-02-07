@@ -11,6 +11,7 @@ export default function (this: NodeControllerInst<Node{{nodePascalName}}Props>, 
 
     this.on('input', async (msg) => {
         this.send({
+            ...msg,
             payload: 'foo',
         });
     });

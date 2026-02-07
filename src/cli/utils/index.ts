@@ -7,3 +7,19 @@ export function resolveHomePath(path: string): string {
   }
   return resolve(path);
 }
+
+export async function getLatestVersion(packageName: string) {
+  try {
+    const response = await fetch(`https://registry.npmjs.org/${packageName}/latest`);
+
+    if (!response.ok) {
+      throw new Error(`Package ${packageName} not found`);
+    }
+
+    const data = await response.json();
+    return data.version as string;
+  } catch (error) {
+    console.error(`Error fetching version for ${packageName}:`, error);
+    throw error;
+  }
+}

@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import path from 'node:path';
+import { consola } from 'consola';
 import type { CustomActionFunction, NodePlopAPI } from 'plop';
 import { getPackageManager } from './utils';
 
@@ -48,8 +49,17 @@ export const createConfigNodeAction: CustomActionFunction = async (_answers, con
   );
 };
 
+export const onSuccessAction: CustomActionFunction = async (_answers, config) => {
+  const projectName = (config as any).projectName;
+  const currentPackageManager = (config as any).currentPackageManager;
+  consola.box(`cd ${projectName}\n${currentPackageManager} dev`);
+
+  return undefined;
+};
+
 export function registerActions(plop: NodePlopAPI) {
   plop.setActionType('installDeps', installDepsAction);
   plop.setActionType('lint', lintAction);
   plop.setActionType('createConfigNode', createConfigNodeAction);
+  plop.setActionType('onSuccess', onSuccessAction);
 }
