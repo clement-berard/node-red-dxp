@@ -26,9 +26,11 @@ function runNodemonAndBrowserSync() {
           target: currentContext.config.watcher.nodeRed.url,
           ws: true,
         },
+        host: currentContext.config.watcher.browserSync.host,
+        port: currentContext.config.watcher.browserSync.port,
         ghostMode: false,
-        open: false,
-        reloadDelay: 4000,
+        open: currentContext.config.watcher.browserSync.open,
+        reloadDelay: currentContext.config.watcher.browserSync.reloadDelay,
       });
     })
     .on('quit', () => {

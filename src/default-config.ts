@@ -9,6 +9,14 @@ export const watcher = z
         url: z.url(),
       })
       .strict(),
+    browserSync: z
+      .object({
+        host: z.string(),
+        port: z.number(),
+        reloadDelay: z.number(),
+        open: z.boolean(),
+      })
+      .strict(),
   })
   .strict();
 
@@ -45,6 +53,12 @@ export const defaultConfig = getDefaultConfig({
       enabled: true,
       path: '~/.node-red',
       url: 'http://localhost:1880',
+    },
+    browserSync: {
+      host: 'localhost',
+      port: 3003,
+      open: false,
+      reloadDelay: 2000,
     },
   },
   builder: {
