@@ -8,7 +8,7 @@ export function resolveHomePath(path: string): string {
   return resolve(path);
 }
 
-export async function getLatestVersion(packageName: string) {
+export async function getLatestNpmPackageVersion(packageName: string) {
   try {
     const response = await fetch(`https://registry.npmjs.org/${packageName}/latest`);
 

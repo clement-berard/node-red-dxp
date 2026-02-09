@@ -1,8 +1,8 @@
 import { performance } from 'node:perf_hooks';
 import { Command } from 'commander';
 import ora from 'ora';
-import { Builder } from '../../builder';
-import { currentContext } from '../../current-context';
+import { Builder } from '../../../builder';
+import { currentContext } from '../../../current-context';
 
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('build')

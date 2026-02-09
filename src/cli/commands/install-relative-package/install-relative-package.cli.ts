@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import { Command } from 'commander';
 import { currentConfig, currentContext } from '../../../current-context';
-import { resolveHomePath } from '../../utils';
+import { resolveHomePath } from '../../cli.utils';
 
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('install-local-package')

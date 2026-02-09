@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SOURCE="./src/scaffolding"
-DESTINATION="./dist/scaffolding"
+SOURCE="./src/cli/commands/create-node"
+DESTINATION="./dist/scaffolding/create-node"
 
 mkdir -p "$DESTINATION"
 rsync -a --include='*.hbs' --include='*/' --exclude='*' "$SOURCE/" "$DESTINATION/"
