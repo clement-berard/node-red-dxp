@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SOURCE="./src/scaffolding"
+SOURCE="./src/cli/commands/create-node"
 DESTINATION="./dist/scaffolding"
 
 mkdir -p "$DESTINATION"

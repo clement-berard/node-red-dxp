@@ -1,8 +1,8 @@
 import { Command, Option } from 'commander';
 import { consola, type PromptOptions } from 'consola';
 import { dash } from 'radash';
-import { CreateNodeScaffolding } from '../../../scaffolding/create-node';
 import { createFolderIfNotExists } from '../../../tools/node-utils';
+import { CreateNodeScaffolding } from './scaffolding';
 
 type CliOptions = {
   name?: string;

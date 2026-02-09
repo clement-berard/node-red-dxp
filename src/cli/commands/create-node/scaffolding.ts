@@ -2,10 +2,10 @@ import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import path from 'node:path';
 import Handlebars from 'handlebars';
-import { currentContext } from '../../current-context';
-import { fixedConfig } from '../../fixed-config';
-import { computeNodeName } from '../../tools/common-utils';
-import { writeFile } from '../../tools/node-utils';
+import { currentContext } from '../../../current-context';
+import { fixedConfig } from '../../../fixed-config';
+import { computeNodeName } from '../../../tools/common-utils';
+import { writeFile } from '../../../tools/node-utils';
 
 async function loadTemplate(filePath: string): Promise<string> {
   try {
