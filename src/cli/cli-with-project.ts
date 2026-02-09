@@ -3,8 +3,8 @@ import packageJson from '../../package.json';
 import registerBuildCommands from './commands/build.command';
 import registerChecksCommands from './commands/checks';
 import registerScaffoldingCommands from './commands/create-node/create-node.cli';
-import registerInfoCommands from './commands/info';
-import registerInstallRelativePackageCommands from './commands/install-relative-package';
+import registerInfoCommands from './commands/info/info.cli';
+import registerInstallRelativePackageCommands from './commands/install-relative-package/install-relative-package.cli';
 import registerWatchCommands from './commands/watch';
 
 const program = new Command();
