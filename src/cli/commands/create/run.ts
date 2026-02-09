@@ -87,6 +87,11 @@ export async function handleCreatePackage(targetDir?: string) {
         });
 
         actions.push({
+          type: 'createRegularNode',
+          projectName: answers?.projectName,
+        });
+
+        actions.push({
           type: 'lint',
           projectName: answers?.projectName,
         });
