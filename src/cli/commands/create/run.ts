@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import nodePlop from 'node-plop';
-import { getLatestVersion } from '../../utils';
+import { getLatestNpmPackageVersion } from '../../cli.utils';
 import { registerActions } from './plop.actions';
 import { getPackageManager } from './utils';
 
@@ -26,7 +26,7 @@ export async function handleCreatePackage(targetDir?: string) {
     }
 
     const currentPackageManager = getPackageManager();
-    const nrDXPLastVersion = await getLatestVersion('@keload/node-red-dxp');
+    const nrDXPLastVersion = await getLatestNpmPackageVersion('@keload/node-red-dxp');
 
     registerActions(plop);
 
