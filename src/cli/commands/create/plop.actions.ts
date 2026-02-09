@@ -49,6 +49,15 @@ export const createConfigNodeAction: CustomActionFunction = async (_answers, con
   );
 };
 
+export const createRegularNodeAction: CustomActionFunction = async (_answers, config) => {
+  const projectName = (config as any).projectName;
+  return runCommand(
+    projectName,
+    ['node-red-dxp', 'create-node', '--name', 'my-node', '--regular-node', '--skip-confirm'],
+    'Regular Node completed',
+  );
+};
+
 export const onSuccessAction: CustomActionFunction = async (_answers, config) => {
   const projectName = (config as any).projectName;
   const currentPackageManager = (config as any).currentPackageManager;
@@ -61,5 +70,6 @@ export function registerActions(plop: NodePlopAPI) {
   plop.setActionType('installDeps', installDepsAction);
   plop.setActionType('lint', lintAction);
   plop.setActionType('createConfigNode', createConfigNodeAction);
+  plop.setActionType('createRegularNode', createRegularNodeAction);
   plop.setActionType('onSuccess', onSuccessAction);
 }
