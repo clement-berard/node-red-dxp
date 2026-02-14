@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
+    "prebuild": "pnpm tsc --noEmit",
     "build": "tsdown",
     "watch": "tsdown --watch",
     "format": "pnpm biome format",

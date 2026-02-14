@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "module": "esnext",
     "lib": ["es2022"],
     "esModuleInterop": true,
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "skipLibCheck": true
   }
 }
