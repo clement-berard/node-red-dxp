@@ -15,6 +15,21 @@ Build Node-RED nodes effortlessly with node-red-dxp 🚀
 **Prerequisites: Project Structure**
 To utilize the zero-config features of this tool, your project must adhere to a specific folder structure. This convention allows `node-red-dxp` to streamline the build and bundling process without complex configuration files.
 
+## Quick Start
+
+Run the creation command directly:
+
+:::tabs
+== pnpx
+```sh
+pnpx @keload/node-red-dxp create
+```
+== npx
+```sh
+npx @keload/node-red-dxp create
+```
+:::
+
 ## Bundling Strategy
 
 `node-red-dxp` is primarily a development dependency used for building and bundling. However, it handles production artifacts differently depending on the context:
@@ -27,6 +42,9 @@ To utilize the zero-config features of this tool, your project must adhere to a 
 * **Dependencies:** By default, external libraries are treated as **externals** (imported via `require`).
     * *Customization:* You can explicitly configure specific libraries to be included in the bundle (see [configuration documentation](config-file.md)).
 * **Core Exception:** The `@keload/node-red-dxp` core library is **always bundled** into the final package and is never treated as an external dependency.
-## Usage
 
-Please refer to the following page [Usage](usage.md)
+## 💪 Trusted by Community Projects
+
+💡 Some [packages](https://github.com/topics/node-red-dxp) already use `@keload/node-red-dxp` as a dependency. You can check them out:
+
+<!--@include: ./partials/trusted-projects.md-->
