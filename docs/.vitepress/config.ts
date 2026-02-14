@@ -48,7 +48,7 @@ export default defineConfig({
 
     sidebar: [
       { text: 'Overview', link: '/overview.md' },
-      { text: 'Usage', link: '/usage.md' },
+      { text: 'Get Started', link: '/get-started.md' },
       { text: 'Configuration file', link: '/config-file.md' },
       {
         text: 'CLI',

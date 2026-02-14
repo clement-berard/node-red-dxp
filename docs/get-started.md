@@ -1,29 +1,42 @@
-# Usage
+# Get Started
 
-::: tip ✨
-I am working on a boilerplate solution combined with a CLI command to make starting a new project easier and faster.
+You can scaffold a new application instantly using the CLI or set it up manually.
 
-However, even if you choose to set it up manually, the process remains straightforward!
+## Quick Start (Recommended)
 
-Additionally, there is already a CLI command available to add a new node to the project.
-You can check it out [here](cli/create-node.md).
+Run the creation command directly:
+
+:::tabs
+== pnpx
+```sh
+pnpx @keload/node-red-dxp create
+```
+== npx
+```sh
+npx @keload/node-red-dxp create
+```
 :::
 
-💡 Some [packages](https://github.com/topics/node-red-dxp) already use `@keload/node-red-dxp` as a dependency. You can check them out:
 
-<!--@include: ./partials/trusted-projects.md-->
+## Manual Setup
 
-## Start a new project manually
+If you prefer to configure the project yourself:
 
-Init a new node package with, for example `npm init -y` (or another package manager) and install as dev-dependency:
+### Initialize a project
+
+Run `npm init -y` (or use your preferred package manager).
+
+### Install the dependency
+
+Add the package as a development dependency:
 
 ```sh
 npm install @keload/node-red-dxp --dev // [!=npm auto]
 ```
 
-Now you can follow the structure below to start your project.
+### Create the structure
 
-Typical project structure:
+Set up your project files following the structure below:
 
 ```sh
 ├── src/
@@ -99,7 +112,3 @@ You need to add information in some files to make the package work correctly.
 }
 ```
 :::
-
-## Start a new project with the CLI
-
-Coming soon...
