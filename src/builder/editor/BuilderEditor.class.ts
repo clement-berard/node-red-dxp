@@ -21,10 +21,6 @@ ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nwindow.RED.nodes.re
 async function getBuiltScript(minify = false) {
   const toInject = [];
 
-  if (currentContext?.config?.builder?.editor?.webComponents?.formRow) {
-    toInject.push(`${currentContext.currentPackagedDistPath}/editor/inject/dxpFormRow.js`);
-  }
-
   const result = await esbuild.build({
     entryPoints: [currentContext.cacheDirFiles.editorIndex],
     bundle: true,
