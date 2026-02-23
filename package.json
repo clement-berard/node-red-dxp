@@ -77,7 +77,7 @@
     "vitepress-plugin-npm-commands": "^0.8.1",
     "vitepress-plugin-tabs": "^0.7.1",
     "vitest": "4.0.18",
-    "zod2md": "^0.2.5"
+    "zod2md": "^0.3.2"
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "8.0.0",
