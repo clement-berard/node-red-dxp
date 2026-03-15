@@ -11,7 +11,7 @@ import { defaultConfig } from './src/default-config';
 
   let content = markdown.replace(/^.*\n/, '');
 
-  content = content.replace(/<([a-zA-Z0-9_]+)([\s,>\[\]])/g, (match, p1, p2) => {
+  content = content.replace(/<([a-zA-Z0-9_]+)([\s,>[\]])/g, (match, p1, p2) => {
     const htmlTags = [
       'br',
       'p',
