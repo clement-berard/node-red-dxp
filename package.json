@@ -12,9 +12,10 @@
     "lint:check": "pnpm biome check",
     "release": "pnpm release-it",
     "release:test": "pnpm release-it --dry-run",
-    "docs:dev": "./build-docs.sh && vitepress dev docs",
-    "docs:build": "./build-docs.sh && vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "docs:prepare": "node build-docs.mjs && pnpm tsx generate-config-doc.ts",
+    "docs:dev": "pnpm docs:prepare && vitepress dev docs",
+    "docs:build": "pnpm docs:prepare && vitepress build docs",
+    "docs:preview": "pnpm docs:prepare && vitepress preview docs",
     "test:unit": "vitest"
   },
   "publishConfig": {
