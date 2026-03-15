@@ -8,14 +8,44 @@ import { defaultConfig } from './src/default-config';
     entry: 'src/default-config.ts',
     title: 'Models reference',
   });
-  const content = markdown.replace(/^.*\n/, '');
+
+  let content = markdown.replace(/^.*\n/, '');
+
+  content = content.replace(/<([a-zA-Z0-9_]+)([\s,>\[\]])/g, (match, p1, p2) => {
+    const htmlTags = [
+      'br',
+      'p',
+      'div',
+      'span',
+      'ul',
+      'li',
+      'a',
+      'b',
+      'i',
+      'strong',
+      'em',
+      'details',
+      'summary',
+      'code',
+      'table',
+      'tr',
+      'td',
+      'th',
+      'tbody',
+      'thead',
+    ];
+    if (htmlTags.includes(p1.toLowerCase())) return match;
+
+    return `&lt;${p1}${p2}`;
+  });
+
   const yamlConfig = yaml.dump(defaultConfig);
 
   const final = `
 ## Default configuration / Example
 
 :::tabs
-== .node-red-dxprc.yaml 
+== .node-red-dxprc.yaml
 \`\`\`yaml
 ${yamlConfig}
 \`\`\`
@@ -26,7 +56,7 @@ ${JSON.stringify(defaultConfig, null, 2)}
 :::
 
 ${content}
-  `;
+`;
 
   writeFileSync('docs/generated-config.md', final.trim(), 'utf-8');
 })();
