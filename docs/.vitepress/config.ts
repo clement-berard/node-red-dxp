@@ -1,3 +1,4 @@
+import { existsSync, readdirSync } from 'node:fs';
 import { defineConfig } from 'vitepress';
 import { npmCommandsMarkdownPlugin } from 'vitepress-plugin-npm-commands';
 import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
@@ -5,7 +6,16 @@ import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs';
 const releaseVersion = process.env.RELEASE_VERSION || 'dev';
 const buildDate = new Date().toISOString().split('T')[0];
 
-// https://vitepress.dev/reference/site-config
+function getGeneratedPages(dir: string, urlBase: string) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.match(/^(Function|Variable|Class|Interface)\./))
+    .map((f) => ({
+      text: f.replace(/^(Function|Variable|Class|Interface)\./, '').replace('.md', ''),
+      link: `${urlBase}/${f.replace('.md', '')}`,
+    }));
+}
+
 export default defineConfig({
   title: 'Node-RED DXP',
   description:
@@ -43,9 +53,7 @@ export default defineConfig({
     },
   },
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     nav: [{ text: 'Home', link: '/' }],
-
     sidebar: [
       { text: 'Overview', link: '/overview.md' },
       { text: 'Get Started', link: '/get-started.md' },
@@ -69,8 +77,15 @@ export default defineConfig({
             text: 'Utils',
             collapsed: true,
             items: [
-              { link: '/utils/utils-full-stack.md', text: 'Full stack' },
-              { link: '/utils/utils-controller.md', text: 'Controller' },
+              {
+                text: 'Full stack',
+                collapsed: true,
+                items: [
+                  { link: '/utils/utils-full-stack', text: 'Overview' },
+                  ...getGeneratedPages('./docs/utils', '/utils'),
+                ],
+              },
+              { link: '/utils/utils-controller', text: 'Controller' },
             ],
           },
         ],
@@ -78,24 +93,27 @@ export default defineConfig({
       {
         text: 'Editor',
         items: [
-          { text: 'DOM Helper ', link: '/editor/dom-helper.md' },
+          {
+            text: 'DOM Helper',
+            collapsed: true,
+            items: [{ link: '/editor/dom-helper', text: 'Overview' }, ...getGeneratedPages('./docs/editor', '/editor')],
+          },
           {
             text: 'Templating',
             collapsed: true,
             items: [
-              { link: '/editor/templating/pug.md', text: 'Pug' },
-              { link: '/editor/templating/html.md', text: 'Html' },
-              { link: '/editor/templating/classes.md', text: 'Available classes' },
+              { link: '/editor/templating/pug', text: 'Pug' },
+              { link: '/editor/templating/html', text: 'Html' },
+              { link: '/editor/templating/classes', text: 'Available classes' },
             ],
           },
-          { text: 'Styling nodes', link: '/editor/styles.md' },
+          { text: 'Styling nodes', link: '/editor/styles' },
         ],
       },
     ],
     outline: {
       level: [2, 3],
     },
-
     socialLinks: [{ icon: 'github', link: 'https://github.com/clement-berard/node-red-dxp' }],
     footer: {
       message: `Version ${releaseVersion} - Built on ${buildDate}`,

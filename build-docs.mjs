@@ -24,6 +24,7 @@ const baseConfig = {
 const targets = [
     {
         entryPoints: ["src/editor/dom.ts"],
+        outputFileStrategy: "members",
         out: "docs/editor",
         excludeExternals: true,
         externalPattern: "**/node_modules/**",
@@ -32,6 +33,7 @@ const targets = [
     },
     {
         entryPoints: ["src/utils/server-side/controller.ts"],
+        // outputFileStrategy: "members",
         out: "docs/utils",
         excludeExternals: false,
         entryFileName: "utils-controller.md",
@@ -39,6 +41,8 @@ const targets = [
     },
     {
         entryPoints: ["src/utils/index.ts"],
+        outputFileStrategy: "members",
+        exclude: ["dist", "tests", "**/*.spec.ts"],
         out: "docs/utils",
         excludeExternals: false,
         entryFileName: "utils-full-stack.md",
