@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { isUrl, isValidIP, isValidIPv4, isValidIPv6 } from '../validators';
+import { isValidIP, isValidIPv4, isValidIPv6 } from '../validators/ip.validator';
+import { isUrl } from '../validators/url.validator';
 
 describe('validators', () => {
   describe('isValidIPv4', () => {

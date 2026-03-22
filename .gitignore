@@ -25,3 +25,5 @@ docs/.vitepress/dist
 /docs/utils/utils-full-stack.md
 /docs/utils/utils-controller.md
 docs/generated-config.md
+docs/**/Function.*.md
+docs/**/Variable.*.md
