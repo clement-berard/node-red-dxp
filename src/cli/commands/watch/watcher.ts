@@ -1,4 +1,4 @@
-// @ts-ignore TS6 - No types exports in this package
+// @ts-expect-error TS6 - No types exports in this package
 import browserSync, { type BrowserSyncInstance } from 'browser-sync';
 import chokidar from 'chokidar';
 import { consola } from 'consola';

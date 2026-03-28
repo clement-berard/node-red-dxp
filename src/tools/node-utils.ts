@@ -6,31 +6,13 @@ import path from 'node:path';
 export const distributionPackagePath = `${path.resolve(__dirname, '..')}`;
 
 export function createFolderIfNotExists(folderPath: string) {
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true });
-  }
+  fs.mkdirSync(folderPath, { recursive: true });
 }
 
-export async function writeFile(path: string, content: string): Promise<void> {
-  try {
-    await fsPromise.writeFile(path, content);
-  } catch (error) {
-    console.error('Error writing controller index:', error);
-  }
+export async function writeFile(filePath: string, content: string): Promise<void> {
+  await fsPromise.writeFile(filePath, content);
 }
 
 export async function cleanPaths(paths: string[]): Promise<void> {
-  for (const dirPath of paths) {
-    try {
-      const resolvedPath = path.resolve(dirPath);
-
-      const stats = await fsPromise.stat(resolvedPath).catch(() => null);
-
-      if (stats?.isDirectory()) {
-        await fsPromise.rm(resolvedPath, { recursive: true, force: true });
-      }
-    } catch (error) {
-      console.error(`Error cleaning path (${dirPath}): ${error}`);
-    }
-  }
+  await Promise.all(paths.map((dirPath) => fsPromise.rm(path.resolve(dirPath), { recursive: true, force: true })));
 }

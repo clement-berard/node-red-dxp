@@ -1,4 +1,4 @@
-import { snake } from 'radash';
+import { snakeCase } from 'es-toolkit';
 import type { EditorDomHelper } from './types';
 import '../index';
 import type { EditorWidgetTypedInputType, EditorWidgetTypedInputTypeDefinition } from 'node-red';
@@ -435,10 +435,10 @@ export function initTabs(params: InitTabsParams) {
 
   (params.tabsLabel || []).forEach((tabLabel) => {
     tabs.addTab({
-      id: `tab-${snake(tabLabel)}`,
+      id: `tab-${snakeCase(tabLabel)}`,
       label: tabLabel,
     });
   });
 
-  tabs.activateTab(`tab-${snake(params.initialTab)}`);
+  tabs.activateTab(`tab-${snakeCase(params.initialTab)}`);
 }
