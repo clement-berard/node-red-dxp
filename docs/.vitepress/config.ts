@@ -85,7 +85,14 @@ export default defineConfig({
                   ...getGeneratedPages('./docs/utils', '/utils'),
                 ],
               },
-              { link: '/utils/utils-controller', text: 'Controller' },
+              {
+                text: 'Controller',
+                collapsed: true,
+                items: [
+                  { link: '/utils/controller/utils-controller', text: 'Overview' },
+                  ...getGeneratedPages('./docs/utils/controller', '/utils/controller'),
+                ],
+              },
             ],
           },
         ],

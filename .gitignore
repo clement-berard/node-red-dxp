@@ -23,7 +23,7 @@ docs/.vitepress/cache
 docs/.vitepress/dist
 /docs/editor/dom-helper.md
 /docs/utils/utils-full-stack.md
-/docs/utils/utils-controller.md
+/docs/utils/controller/utils-controller.md
 docs/generated-config.md
 docs/**/Function.*.md
 docs/**/Variable.*.md
