@@ -25,7 +25,7 @@ async function processResources(path: string) {
   return wrapCss(getFinalSrcPath(path));
 }
 
-export async function getResources() {
+export async function getResources(): Promise<string> {
   const path = currentContext.pathResourcesDir;
   const files = globSync(`${path}/**/*.{js,css}`, { onlyFiles: true });
   const result = await Promise.all(files.map(processResources));

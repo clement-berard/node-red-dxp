@@ -10,16 +10,7 @@ import { currentContext, type ListNodesFull } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { distributionPackagePath } from '../../tools/node-utils';
 
-const forcedIncludeInternal = [
-  'hidden',
-  'block',
-  'font-bold',
-  'red-ui-typedInput-container',
-  'red-ui-typedInput-type-select',
-  'red-ui-typedInput-type-label',
-  'red-ui-typedInput-type-icon',
-  ...currentContext.config.builder.tailwind.forcedClassesInclusion,
-];
+const forcedIncludeInternal = currentContext.config.builder.tailwind.forcedClassesInclusion;
 
 const allClassesIncluded = [...forcedIncludeInternal, ...forcedIncludeInternal.map((item) => `!${item}`)];
 

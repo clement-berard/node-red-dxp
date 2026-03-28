@@ -7,7 +7,7 @@ import { getNodesHtml } from './html';
 import { getResources } from './resources';
 import { getAllCompiledStyles } from './styles';
 
-async function getEditorIndexContent() {
+async function getEditorIndexContent(): Promise<string> {
   return `
 import type { NodeAPI } from 'node-red';
 ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nimport ${node.pascalName} from '${node.editor.tsPath}';`).join('\n')}
@@ -18,9 +18,7 @@ ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nwindow.RED.nodes.re
 `.trim();
 }
 
-async function getBuiltScript(minify = false) {
-  const toInject: string[] = [];
-
+async function getBuiltScript(minify = false): Promise<string> {
   const result = await esbuild.build({
     entryPoints: [currentContext.cacheDirFiles.editorIndex],
     bundle: true,
@@ -28,20 +26,13 @@ async function getBuiltScript(minify = false) {
     format: 'iife',
     target: 'es6',
     sourcemap: false,
-    minify: minify,
-    minifyWhitespace: minify,
-    minifySyntax: minify,
-    minifyIdentifiers: minify,
+    minify,
     legalComments: 'none',
-    inject: toInject,
     write: false,
     loader: { '.ts': 'ts' },
   });
 
-  if (result.outputFiles && result.outputFiles.length > 0) {
-    return result.outputFiles[0].text;
-  }
-  return '';
+  return result.outputFiles?.[0]?.text ?? '';
 }
 
 type BuilderEditorParams = {
@@ -49,50 +40,42 @@ type BuilderEditorParams = {
 };
 
 export class BuilderEditor {
-  private params: BuilderEditorParams;
+  private readonly minify: boolean;
 
-  constructor(params: BuilderEditorParams) {
-    this.params = { minify: false, ...params };
+  constructor({ minify = false }: BuilderEditorParams = {}) {
+    this.minify = minify;
   }
 
-  async prepareEditorIndex() {
-    const parts = [getBuiltScript(this.params.minify), handleDocs(), getResources()];
-
-    const [js, docs, resources] = (await Promise.all(parts)) as [string, string, string];
-
-    const html = await getNodesHtml({
-      minify: this.params.minify,
-      nodes: currentContext.listNodesFull,
-      packageNameSlug: currentContext.packageNameSlug,
-    });
+  async prepareEditorIndex(): Promise<string> {
+    const [js, docs, resources, html] = await Promise.all([
+      getBuiltScript(this.minify),
+      handleDocs(),
+      getResources(),
+      getNodesHtml({
+        minify: this.minify,
+        nodes: currentContext.listNodesFull,
+        packageNameSlug: currentContext.packageNameSlug,
+      }),
+    ]);
 
     const css = await getAllCompiledStyles({
       rawHtml: html.html,
-      minify: this.params.minify,
+      minify: this.minify,
       nodes: currentContext.listNodesFull,
     });
-
-    const wrappedJs = `<script type="application/javascript">${js.trim()}</script>`;
-    const wrappedCss = `<style>${css}</style>`;
 
     return `
 ${resources}
 ${html.allWrappedHtml}
-${wrappedCss}
-${wrappedJs}
+<style>${css}</style>
+<script type="application/javascript">${js.trim()}</script>
 ${docs}`.trim();
   }
 
-  async getEditorTask() {
-    return getEditorIndexContent().then((content) => {
-      writeFile(`${currentContext.cacheDirFiles.editorIndex}`, content).then(() => {
-        this.prepareEditorIndex().then(async (contentFinalIndexHtml) => {
-          await writeFile(
-            `${currentContext.pathDist}/${fixedConfig.nodes.editor.htmlName}.html`,
-            contentFinalIndexHtml,
-          );
-        });
-      });
-    });
+  async getEditorTask(): Promise<void> {
+    const content = await getEditorIndexContent();
+    await writeFile(currentContext.cacheDirFiles.editorIndex, content);
+    const contentFinalIndexHtml = await this.prepareEditorIndex();
+    await writeFile(`${currentContext.pathDist}/${fixedConfig.nodes.editor.htmlName}.html`, contentFinalIndexHtml);
   }
 }

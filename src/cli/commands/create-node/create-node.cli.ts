@@ -1,6 +1,6 @@
 import { Command, Option } from 'commander';
 import { consola, type PromptOptions } from 'consola';
-import { dash } from 'radash';
+import { kebabCase } from 'es-toolkit';
 import { createFolderIfNotExists } from '../../../tools/node-utils';
 import { CreateNodeScaffolding } from './scaffolding';
 
@@ -32,7 +32,7 @@ export default function commandHandler(parentCommand: Command) {
       type: 'text',
     });
 
-    const nodeName = dash(inqName);
+    const nodeName = kebabCase(inqName);
 
     const userIsOkWithName =
       options?.skipConfirm ||
