@@ -2,7 +2,7 @@ import { defineConfig } from 'tsdown';
 
 const minifyFlag = true;
 
-const noExternals = ['merge-anything'];
+const noExternals: string[] = [];
 
 export default defineConfig([
   {

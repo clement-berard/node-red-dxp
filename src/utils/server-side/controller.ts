@@ -134,10 +134,10 @@ export function evaluateNodeProperty(
   return new Promise((resolve) => {
     try {
       RED.util.evaluateNodeProperty(params.value, params.type, params.node, params.msg, (err, result) => {
-        resolve([err, result]);
+        resolve([err as Error, result]);
       });
     } catch (e) {
-      resolve([e, undefined]);
+      resolve([e as Error, undefined]);
     }
   });
 }
@@ -206,14 +206,14 @@ export function useControllerNode(node: Node, msg: NodeMessage, opts = { typedSu
    * @param {any} [quickOpts.strictDefaultValue=undefined] - A fallback value if the evaluated property is empty.
    * @returns {Promise<any>} A promise resolving to the evaluated value, or the strict default value if applicable.
    */
-  async function quickNodePropertyEval<T extends object>(
+  async function quickNodePropertyEval<T extends Record<string, unknown>>(
     bag: T,
     term: keyof T,
-    quickOpts = { strictDefaultValue: undefined },
-  ) {
+    quickOpts: { strictDefaultValue?: string } = { strictDefaultValue: undefined },
+  ): Promise<any> {
     const [, data] = await evaluateNodePropertyWithDefaults(
-      bag?.[term as string],
-      bag?.[`${String(term)}${opts.typedSuffix}`],
+      bag?.[term] as string,
+      bag?.[`${String(term)}${String(opts.typedSuffix)}`] as string,
     );
 
     if (quickOpts?.strictDefaultValue !== undefined) {

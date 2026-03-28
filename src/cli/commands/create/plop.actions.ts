@@ -63,7 +63,7 @@ export const onSuccessAction: CustomActionFunction = async (_answers, config) =>
   const currentPackageManager = (config as any).currentPackageManager;
   consola.box(`cd ${projectName}\n${currentPackageManager} dev`);
 
-  return undefined;
+  return '';
 };
 
 export function registerActions(plop: NodePlopAPI) {

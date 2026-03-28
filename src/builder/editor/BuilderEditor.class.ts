@@ -19,7 +19,7 @@ ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nwindow.RED.nodes.re
 }
 
 async function getBuiltScript(minify = false) {
-  const toInject = [];
+  const toInject: string[] = [];
 
   const result = await esbuild.build({
     entryPoints: [currentContext.cacheDirFiles.editorIndex],
