@@ -21,7 +21,7 @@ const baseConfig: Partial<TypeDocOptions & PluginOptions> = {
   cleanOutputDir: false,
   disableSources: true,
   mergeReadme: true,
-  outputFileStrategy: 'modules',
+  router: 'module',
   hideBreadcrumbs: false,
   hidePageHeader: true,
   hidePageTitle: false,
@@ -42,7 +42,7 @@ const targets: Partial<TypeDocOptions & PluginOptions>[] = [
   {
     name: 'Editor / DOM Helper',
     entryPoints: ['src/editor/dom.ts'],
-    outputFileStrategy: 'members',
+    router: 'member',
     out: 'docs/editor',
     excludeExternals: true,
     externalPattern: ['**/node_modules/**'],
@@ -52,7 +52,7 @@ const targets: Partial<TypeDocOptions & PluginOptions>[] = [
   {
     name: 'Utils / Controller',
     entryPoints: ['src/utils/server-side/controller.ts'],
-    outputFileStrategy: 'members',
+    router: 'member',
     out: 'docs/utils/controller',
     excludeExternals: false,
     entryFileName: 'utils-controller.md',
@@ -61,7 +61,7 @@ const targets: Partial<TypeDocOptions & PluginOptions>[] = [
   {
     name: 'Utils / Full Stack',
     entryPoints: ['src/utils/index.ts'],
-    outputFileStrategy: 'members',
+    router: 'member',
     exclude: ['dist', 'tests', '**/*.spec.ts'],
     out: 'docs/utils',
     excludeExternals: false,
