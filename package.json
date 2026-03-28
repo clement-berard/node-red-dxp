@@ -13,7 +13,7 @@
     "lint:ci": "pnpm biome ci",
     "release": "pnpm release-it",
     "release:test": "pnpm release-it --dry-run",
-    "docs:prepare": "node build-docs.mjs && pnpm tsx generate-config-doc.ts",
+    "docs:prepare": "pnpm tsx generate-docs.ts",
     "docs:dev": "pnpm docs:prepare && vitepress dev docs",
     "docs:build": "pnpm docs:prepare && vitepress build docs",
     "docs:preview": "pnpm docs:prepare && vitepress preview docs",
