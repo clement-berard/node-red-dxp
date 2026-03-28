@@ -1,4 +1,4 @@
-import { merge } from 'es-toolkit';
+import { deepmerge } from 'deepmerge-ts';
 import { currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { createFolderIfNotExists, writeFile } from '../../tools/node-utils';
@@ -8,7 +8,7 @@ import { getScopedNodesLocales } from './scopedNodeLocales';
 export async function writeAllLocales() {
   const [globalLocales, scopedLocales] = await Promise.all([getGlobalLocales(), getScopedNodesLocales()]);
 
-  const res = merge(JSON.parse(globalLocales), JSON.parse(scopedLocales));
+  const res = deepmerge(JSON.parse(globalLocales), JSON.parse(scopedLocales)) as Record<string, unknown>;
 
   const localesBasePath = `${currentContext.pathDist}/${fixedConfig.localesDirName}`;
 

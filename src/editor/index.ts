@@ -1,4 +1,4 @@
-import { merge } from 'es-toolkit';
+import { deepmerge } from 'deepmerge-ts';
 import type { EditorNodeDef, EditorNodeProperties } from 'node-red';
 
 export type * from './types';
@@ -10,5 +10,5 @@ export function createEditorNode<
   TCreds = undefined,
   TInstProps extends TProps = TProps,
 >(props: Partial<EditorNodeDef<TProps, TCreds, TInstProps>>): EditorNodeDef<TProps, TCreds, TInstProps> {
-  return merge(defaultNodeDef, props) as EditorNodeDef<TProps, TCreds, TInstProps>;
+  return deepmerge(defaultNodeDef, props) as EditorNodeDef<TProps, TCreds, TInstProps>;
 }

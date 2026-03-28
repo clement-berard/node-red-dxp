@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
-import { merge } from 'es-toolkit';
+import { deepmerge } from 'deepmerge-ts';
 import { type Entry, globSync } from 'fast-glob';
 import { dash, pascal } from 'radash';
 import { ZodError } from 'zod';
@@ -19,7 +19,7 @@ function getConfig() {
     const result = explorerSync.search();
     const userConfig = result ? result.config : {};
 
-    const mergedConfig = merge(defaultConfig, userConfig);
+    const mergedConfig = deepmerge(defaultConfig, userConfig);
 
     return RootSchema.parse(mergedConfig);
   } catch (error) {

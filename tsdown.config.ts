@@ -2,7 +2,7 @@ import { defineConfig } from 'tsdown';
 
 const minifyFlag = true;
 
-const noExternals: string[] = [];
+const noExternals: string[] = ['deepmerge-ts'];
 
 export default defineConfig([
   {
