@@ -4,6 +4,8 @@
     "lib": ["es2022"],
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "resolvePackageJsonExports": false,
+    "noImplicitAny": false
   }
 }

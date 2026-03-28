@@ -1,4 +1,4 @@
-import { merge } from 'merge-anything';
+import { merge } from 'es-toolkit';
 import { currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { createFolderIfNotExists, writeFile } from '../../tools/node-utils';
@@ -10,21 +10,12 @@ export async function writeAllLocales() {
 
   const res = merge(JSON.parse(globalLocales), JSON.parse(scopedLocales));
 
-  const toResolveCreateDirs = [];
-  const toResolve = [];
+  const localesBasePath = `${currentContext.pathDist}/${fixedConfig.localesDirName}`;
 
-  for (const [folderName, locales] of Object.entries(res)) {
-    toResolveCreateDirs.push(
-      createFolderIfNotExists(`${currentContext.pathDist}/${fixedConfig.localesDirName}/${folderName}`),
-    );
-    toResolve.push(
-      writeFile(
-        `${currentContext.pathDist}/${fixedConfig.localesDirName}/${folderName}/index.json`,
-        JSON.stringify(locales),
-      ),
-    );
-  }
-
-  await Promise.all(toResolveCreateDirs);
-  await Promise.all(toResolve);
+  await Promise.all(
+    Object.entries(res).map(([folderName, locales]) => {
+      createFolderIfNotExists(`${localesBasePath}/${folderName}`);
+      return writeFile(`${localesBasePath}/${folderName}/index.json`, JSON.stringify(locales));
+    }),
+  );
 }

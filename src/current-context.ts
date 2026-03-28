@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
+import { merge } from 'es-toolkit';
 import { type Entry, globSync } from 'fast-glob';
-import { merge } from 'merge-anything';
 import { dash, pascal } from 'radash';
 import { ZodError } from 'zod';
 import { defaultConfig, RootSchema } from './default-config';

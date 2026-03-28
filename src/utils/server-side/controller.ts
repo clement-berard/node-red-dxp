@@ -134,10 +134,10 @@ export function evaluateNodeProperty(
   return new Promise((resolve) => {
     try {
       RED.util.evaluateNodeProperty(params.value, params.type, params.node, params.msg, (err, result) => {
-        resolve([err, result]);
+        resolve([err as Error, result]);
       });
     } catch (e) {
-      resolve([e, undefined]);
+      resolve([e as Error, undefined]);
     }
   });
 }
@@ -209,8 +209,8 @@ export function useControllerNode(node: Node, msg: NodeMessage, opts = { typedSu
   async function quickNodePropertyEval<T extends object>(
     bag: T,
     term: keyof T,
-    quickOpts = { strictDefaultValue: undefined },
-  ) {
+    quickOpts: { strictDefaultValue?: string } = { strictDefaultValue: undefined },
+  ): Promise<any> {
     const [, data] = await evaluateNodePropertyWithDefaults(
       bag?.[term as string],
       bag?.[`${String(term)}${opts.typedSuffix}`],

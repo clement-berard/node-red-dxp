@@ -1,4 +1,4 @@
-import { merge } from 'merge-anything';
+import { merge } from 'es-toolkit';
 import type { EditorNodeDef, EditorNodeProperties } from 'node-red';
 
 export type * from './types';

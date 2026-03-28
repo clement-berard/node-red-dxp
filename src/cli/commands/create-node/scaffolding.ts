@@ -12,7 +12,10 @@ async function loadTemplate(filePath: string): Promise<string> {
     const absolutePath = path.resolve(filePath);
     return await fsPromises.readFile(absolutePath, 'utf-8');
   } catch (error) {
-    throw new Error(`Failed to load file: ${error.message}`);
+    if (error instanceof Error) {
+      throw new Error(`Failed to load file: ${error.message}`);
+    }
+    throw error;
   }
 }
 
@@ -22,7 +25,10 @@ export async function renderTemplate(templateFilePath: string, data: object): Pr
     const template = Handlebars.compile(templateSource);
     return template(data);
   } catch (error) {
-    throw new Error(`Failed to render template: ${error.message}`);
+    if (error instanceof Error) {
+      throw new Error(`Failed to render template: ${error.message}`);
+    }
+    throw error;
   }
 }
 
@@ -37,7 +43,7 @@ export class CreateNodeScaffolding {
   readonly newNodeDistPath: string;
   readonly newNodeEditorDistPath: string;
   readonly scaffoldedDistHbs: string;
-  private isConfigNode: boolean;
+  private readonly isConfigNode: boolean;
 
   constructor(options: CreateNodeScaffoldingOptions) {
     const { pascalName, dashName } = computeNodeName(options.innerNodeName);
@@ -46,7 +52,7 @@ export class CreateNodeScaffolding {
     this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
     this.newNodeEditorDistPath = `${this.newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`;
     this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
-    this.isConfigNode = options.isConfigNode;
+    this.isConfigNode = !!options.isConfigNode;
   }
 
   distFolderExist() {
