@@ -1,73 +1,60 @@
 import { z } from 'zod';
 
-export const watcher = z
-  .object({
-    nodeRed: z
-      .object({
-        enabled: z.boolean(),
-        path: z.string(),
-        url: z.url(),
-      })
-      .strict(),
-    browserSync: z
-      .object({
-        host: z.string(),
-        port: z.number(),
-        reloadDelay: z.number(),
-        open: z.boolean(),
-      })
-      .strict(),
-  })
-  .strict();
+export const watcher = z.strictObject({
+  nodeRed: z.strictObject({
+    enabled: z.boolean(),
+    path: z.string(),
+    url: z.url(),
+  }),
+  browserSync: z.strictObject({
+    host: z.string(),
+    port: z.number(),
+    reloadDelay: z.number(),
+    open: z.boolean(),
+  }),
+});
 
-export const builder = z
-  .object({
-    outputDir: z.string(),
-    esbuildControllerOptions: z
-      .object({
-        includeInBundle: z.array(z.string()),
-      })
-      .strict(),
-    tailwind: z
-      .object({
-        forcedClassesInclusion: z.array(z.string()),
-      })
-      .strict(),
-  })
-  .strict();
+export const builder = z.strictObject({
+  outputDir: z.string(),
+  esbuildControllerOptions: z.strictObject({
+    includeInBundle: z.array(z.string()),
+  }),
+  tailwind: z.strictObject({
+    forcedClassesInclusion: z.array(z.string()),
+  }),
+});
 
-export const RootSchema = z
-  .object({
-    builder,
-    watcher,
-  })
-  .strict();
+export const RootSchema = z.strictObject({
+  builder,
+  watcher,
+});
 
 function getDefaultConfig(inputs: z.infer<typeof RootSchema>) {
   return RootSchema.parse(inputs);
 }
 
-export const defaultConfig = getDefaultConfig({
-  watcher: {
-    nodeRed: {
-      enabled: true,
-      path: '~/.node-red',
-      url: 'http://localhost:1880',
+export const defaultConfig = () =>
+  getDefaultConfig({
+    watcher: {
+      nodeRed: {
+        enabled: true,
+        path: '~/.node-red',
+        url: 'http://localhost:1880',
+      },
+      browserSync: {
+        host: 'localhost',
+        port: 3003,
+        open: false,
+        reloadDelay: 2000,
+      },
     },
-    browserSync: {
-      host: 'localhost',
-      port: 3003,
-      open: false,
-      reloadDelay: 2000,
+    builder: {
+      outputDir: 'dist',
+      esbuildControllerOptions: {
+        includeInBundle: [],
+      },
+      tailwind: {
+        forcedClassesInclusion: [],
+      },
     },
-  },
-  builder: {
-    outputDir: 'dist',
-    esbuildControllerOptions: {
-      includeInBundle: [],
-    },
-    tailwind: {
-      forcedClassesInclusion: [],
-    },
-  },
-});
+  });

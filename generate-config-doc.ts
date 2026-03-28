@@ -40,7 +40,7 @@ import { defaultConfig } from './src/default-config';
     return `&lt;${p1}${p2}`;
   });
 
-  const yamlConfig = yaml.dump(defaultConfig);
+  const yamlConfig = yaml.dump(defaultConfig());
 
   const final = `
 ## Default configuration / Example
@@ -52,7 +52,7 @@ ${yamlConfig}
 \`\`\`
 == .node-red-dxprc.json
 \`\`\`json
-${JSON.stringify(defaultConfig, null, 2)}
+${JSON.stringify(defaultConfig(), null, 2)}
 \`\`\`
 :::
 
