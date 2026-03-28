@@ -1,12 +1,11 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
-import { deepmerge } from 'deepmerge-ts';
 import { type Entry, globSync } from 'fast-glob';
-import { dash, pascal } from 'radash';
 import { ZodError } from 'zod';
 import { defaultConfig, RootSchema } from './default-config';
-import { fixedConfig } from './fixed-config';
+import { fixedConfig, forcedClasses } from './fixed-config';
+import { computeNodeName, mergeConfigs } from './tools/common-utils';
 
 const CONFIG_FILE_NAME = 'node-red-dxp';
 
@@ -19,9 +18,16 @@ function getConfig() {
     const result = explorerSync.search();
     const userConfig = result ? result.config : {};
 
-    const mergedConfig = deepmerge(defaultConfig, userConfig);
+    const mergedConfig = mergeConfigs(defaultConfig(), userConfig);
 
-    return RootSchema.parse(mergedConfig);
+    const finalConfig = mergeConfigs(mergedConfig, {
+      builder: {
+        tailwind: { forcedClassesInclusion: [...forcedClasses] },
+        esbuildControllerOptions: { includeInBundle: ['@keload/node-red-dxp'] },
+      },
+    });
+
+    return RootSchema.parse(finalConfig);
   } catch (error) {
     if (error instanceof ZodError) {
       const result = explorerSync.search();
@@ -69,13 +75,13 @@ function listNodeFolders(rawNodes: Entry[] = []) {
     const scssFiles = globSync(`${fullEditorPath}/${fixedConfig.nodes.editor.stylesName}.scss`);
     const mdxFiles = globSync(`${fullPath}/docs.mdx`);
     const mdFiles = globSync(`${fullPath}/docs.md`);
-    const dashName = dash(entry.name);
+    const { dashName, pascalName } = computeNodeName(entry.name);
 
     return {
       fullEditorPath,
       fullPath,
       name: entry.name,
-      pascalName: pascal(entry.name),
+      pascalName,
       dashName,
       relativeEditorPath,
       relativePath,

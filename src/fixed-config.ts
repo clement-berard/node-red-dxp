@@ -14,3 +14,13 @@ export const fixedConfig = {
     },
   },
 };
+
+export const forcedClasses = [
+  'hidden',
+  'block',
+  'font-bold',
+  'red-ui-typedInput-container',
+  'red-ui-typedInput-type-select',
+  'red-ui-typedInput-type-label',
+  'red-ui-typedInput-type-icon',
+];
