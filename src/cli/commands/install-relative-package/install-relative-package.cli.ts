@@ -1,21 +1,29 @@
 import { execSync } from 'node:child_process';
 import { Command } from 'commander';
+import { consola } from 'consola';
 import { currentConfig, currentContext } from '../../../current-context';
 import { resolveHomePath } from '../../cli.utils';
+
+type InstallLocalPackageParams = {
+  pathToInstall?: string;
+  userDir?: string;
+};
+
+export function installLocalPackage(params?: InstallLocalPackageParams) {
+  const pathToInstall = params?.pathToInstall ?? currentContext.currentDir;
+  const userDir = params?.userDir ?? resolveHomePath(currentConfig.watcher.nodeRed.userDir);
+  try {
+    execSync(`cd "${userDir}" && npm install "${pathToInstall}"`);
+    consola.success('Local package installed in Node-RED userDir');
+  } catch (e) {
+    consola.error('Error while installing local package:', e);
+  }
+}
 
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('install-local-package')
     .description('Install this package into the current Node-RED local installation to develop on it')
-    .action(() => {
-      const pathToInstall = currentContext.currentDir;
-      const packageName = resolveHomePath(currentConfig.watcher.nodeRed.path);
-
-      try {
-        execSync(`cd "${packageName}" && npm install "${pathToInstall}"`);
-      } catch (e) {
-        console.log('Error while installing package:', e);
-      }
-    });
+    .action(() => installLocalPackage());
 
   parentCommand.addCommand(cmd);
 }

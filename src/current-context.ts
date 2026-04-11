@@ -3,9 +3,9 @@ import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { type Entry, globSync } from 'fast-glob';
 import { ZodError } from 'zod';
-import { defaultConfig, RootSchema } from './default-config';
+import { resolveConfig } from './default-config';
 import { fixedConfig, forcedClasses } from './fixed-config';
-import { computeNodeName, mergeConfigs } from './tools/common-utils';
+import { computeNodeName } from './tools/common-utils';
 
 const CONFIG_FILE_NAME = 'node-red-dxp';
 
@@ -18,16 +18,17 @@ function getConfig() {
     const result = explorerSync.search();
     const userConfig = result ? result.config : {};
 
-    const mergedConfig = mergeConfigs(defaultConfig(), userConfig);
+    const baseConfig = resolveConfig(userConfig);
 
-    const finalConfig = mergeConfigs(mergedConfig, {
-      builder: {
-        tailwind: { forcedClassesInclusion: [...forcedClasses] },
-        esbuildControllerOptions: { includeInBundle: ['@keload/node-red-dxp'] },
-      },
-    });
+    baseConfig.builder.tailwind.forcedClassesInclusion = Array.from(
+      new Set([...baseConfig.builder.tailwind.forcedClassesInclusion, ...forcedClasses]),
+    );
 
-    return RootSchema.parse(finalConfig);
+    baseConfig.builder.esbuildControllerOptions.includeInBundle = Array.from(
+      new Set([...baseConfig.builder.esbuildControllerOptions.includeInBundle, '@keload/node-red-dxp']),
+    );
+
+    return baseConfig;
   } catch (error) {
     if (error instanceof ZodError) {
       const result = explorerSync.search();
@@ -55,6 +56,7 @@ function getConfig() {
     throw error;
   }
 }
+
 export const currentConfig = getConfig();
 const currentDir = process.cwd();
 const jsonPackage = JSON.parse(readFileSync(`${currentDir}/package.json`, 'utf-8'));

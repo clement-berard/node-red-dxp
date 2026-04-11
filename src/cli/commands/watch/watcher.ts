@@ -1,3 +1,6 @@
+import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 // @ts-expect-error TS6 - No types exports in this package
 import browserSync, { type BrowserSyncInstance } from 'browser-sync';
 import chokidar from 'chokidar';
@@ -5,14 +8,31 @@ import { consola } from 'consola';
 import nodemon, { type Nodemon } from 'nodemon';
 import { Builder } from '../../../builder';
 import { currentContext } from '../../../current-context';
+import { installLocalPackage } from '../install-relative-package/install-relative-package.cli';
 
 let nodemonInstance: Nodemon;
 let browserSyncInstance: BrowserSyncInstance;
 
 function runNodemonAndBrowserSync() {
+  const executableConfig = currentContext.config.watcher.nodeRed.executable;
+  const userDirConfig = currentContext.config.watcher.nodeRed.userDir;
+  const isExecutableLocalPackage = executableConfig === 'package';
+
+  const localBin = join(currentContext.currentDir, 'node_modules', '.bin', 'node-red');
+
+  if (isExecutableLocalPackage && !existsSync(localBin)) {
+    consola.error(`Local Node-RED executable not found at: ${localBin}`);
+    consola.info('Did you forget to install it? Install node-red in development mode in your package');
+    consola.info('Your current Node-Red config', currentContext.config.watcher.nodeRed);
+    process.exit(1);
+  }
+
+  const executable = isExecutableLocalPackage ? localBin : executableConfig;
+  const userDir = isExecutableLocalPackage ? join(currentContext.pathLibCacheDir, '.node-red-local') : userDirConfig;
+
   // @ts-expect-error
   nodemonInstance = nodemon({
-    exec: `node-red -u ${currentContext.config.watcher.nodeRed.path}`,
+    exec: `${executable} -u ${userDir}`,
     ignore: ['**/*'],
     ext: 'js,html',
     verbose: true,
@@ -20,6 +40,17 @@ function runNodemonAndBrowserSync() {
 
   nodemon
     .once('start', () => {
+      consola.info('node-red instance', {
+        executable,
+        userDir,
+        nodeRedVersion: execSync(`${executable} --version`).toString(),
+      });
+
+      if (isExecutableLocalPackage) {
+        installLocalPackage({ pathToInstall: currentContext.currentDir, userDir });
+        nodemonInstance.restart();
+      }
+
       browserSyncInstance = browserSync.create();
       browserSyncInstance.init({
         ui: false,
@@ -50,7 +81,7 @@ type RunWatcherParams = {
 };
 
 export function runWatcher(params?: RunWatcherParams) {
-  const hasNodeRedWatcher = currentContext.config.watcher.nodeRed.enabled && currentContext.config.watcher.nodeRed.path;
+  const hasNodeRedWatcher = currentContext.config.watcher.enabled && currentContext.config.watcher.nodeRed.executable;
   const watcher = chokidar.watch(currentContext.pathSrcDir, {});
   const builder = new Builder({ minify: params?.minify ?? false });
   watcher
