@@ -5,8 +5,7 @@ import { promisify } from 'node:util';
 import yaml from 'js-yaml';
 import type { TypeDocOptions } from 'typedoc';
 import type { PluginOptions } from 'typedoc-plugin-markdown';
-import { zod2md } from 'zod2md';
-import { defaultConfig } from './src/default-config';
+import { resolveConfig } from './src/default-config';
 
 const execAsync = promisify(exec);
 
@@ -102,42 +101,8 @@ async function buildTypeDoc(): Promise<void> {
 async function buildConfigDoc(): Promise<void> {
   console.log('🚀 Starting config documentation...\n');
 
-  const markdown = await zod2md({
-    entry: 'src/default-config.ts',
-    title: 'Models reference',
-  });
-
-  let content = markdown.replace(/^.*\n/, '');
-
-  content = content.replace(/<([a-zA-Z0-9_]+)([\s,>[\]])/g, (match: string, p1: string, p2: string): string => {
-    const htmlTags: string[] = [
-      'br',
-      'p',
-      'div',
-      'span',
-      'ul',
-      'li',
-      'a',
-      'b',
-      'i',
-      'strong',
-      'em',
-      'details',
-      'summary',
-      'code',
-      'table',
-      'tr',
-      'td',
-      'th',
-      'tbody',
-      'thead',
-    ];
-    if (htmlTags.includes(p1.toLowerCase())) return match;
-
-    return `&lt;${p1}${p2}`;
-  });
-
-  const yamlConfig = yaml.dump(defaultConfig());
+  const defaultConfig = resolveConfig();
+  const yamlConfig = yaml.dump(defaultConfig);
 
   const final = `
 ## Default configuration / Example
@@ -149,21 +114,19 @@ ${yamlConfig}
 \`\`\`
 == .node-red-dxprc.json
 \`\`\`json
-${JSON.stringify(defaultConfig(), null, 2)}
+${JSON.stringify(defaultConfig, null, 2)}
 \`\`\`
 :::
 
-${content}
-`;
+`.trim();
 
-  writeFileSync('docs/generated-config.md', final.trim(), 'utf-8');
+  writeFileSync('docs/generated-config.md', final, 'utf-8');
   console.log('✅ Config documentation done!\n');
 }
 
 async function main(): Promise<void> {
   try {
     await Promise.all([buildTypeDoc(), buildConfigDoc()]);
-
     console.log('🎉 All documentation successfully built!');
   } catch (error: unknown) {
     console.error('❌ An error occurred while building documentation:');
