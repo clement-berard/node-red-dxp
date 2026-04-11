@@ -58,7 +58,7 @@ describe('getNodesHtml', () => {
 
   it('processes a node using pug when pug file exists', async () => {
     vi.mocked(globSync).mockReturnValue(['/path/to/editor.pug']);
-    // @ts-ignore
+    // @ts-expect-error
     vi.mocked(pug.renderFile).mockReturnValue('<p>Pug Content MOCKED_I18N</p>');
 
     const result = await getNodesHtml({
