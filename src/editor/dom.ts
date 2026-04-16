@@ -3,6 +3,11 @@ import type { EditorDomHelper } from './types';
 import '../index';
 import type { EditorWidgetTypedInputType, EditorWidgetTypedInputTypeDefinition } from 'node-red';
 
+type HTMLElementEventType = keyof HTMLElementEventMap;
+
+const NODE_INPUT_PREFIX = 'node-input';
+const NODE_CONFIG_INPUT_PREFIX = 'node-config-input';
+
 /**
  * Checks if a given selector is a node input selector.
  *
@@ -12,7 +17,8 @@ import type { EditorWidgetTypedInputType, EditorWidgetTypedInputTypeDefinition }
 export function isNodeInput(selector: string) {
   const isNodeIdShortcut = selector.startsWith('$');
   const isNodeConfigIdShortcut = selector.startsWith('$$');
-  const isFullSelector = selector.startsWith('#node-config-input') || selector.startsWith('#node-input');
+  const isFullSelector =
+    selector.startsWith(`#${NODE_CONFIG_INPUT_PREFIX}`) || selector.startsWith(`#${NODE_INPUT_PREFIX}`);
 
   return {
     isNodeIdShortcut,
@@ -51,11 +57,11 @@ export function isNodeInput(selector: string) {
 export function resolveSelector(inSelector: string) {
   const computed = isNodeInput(inSelector);
   if (computed.isNodeConfigIdShortcut) {
-    return `#node-config-input-${inSelector.replace('$$', '')}`;
+    return `#${NODE_CONFIG_INPUT_PREFIX}-${inSelector.replace('$$', '')}`;
   }
 
   if (computed.isNodeIdShortcut) {
-    return `#node-input-${inSelector.replace('$', '')}`;
+    return `#${NODE_INPUT_PREFIX}-${inSelector.replace('$', '')}`;
   }
 
   return inSelector;
@@ -211,11 +217,11 @@ export function applyTypedInput(params: {
 export function watchInput<T = any>(
   selectors: string | string[],
   callback: (values: T[]) => void,
-  opt = { additionalEvents: [] },
+  opt: { additionalEvents: HTMLElementEventType[] } = { additionalEvents: [] },
 ) {
   const selectorsArray = Array.isArray(selectors) ? selectors : [selectors];
   const realSelectors = selectorsArray.map(resolveSelector).join(', ');
-  const events = ['input', ...opt.additionalEvents];
+  const events: HTMLElementEventType[] = ['input', ...opt.additionalEvents];
 
   $(realSelectors).on(events.join(' '), () => {
     const values = $(realSelectors)
@@ -327,9 +333,9 @@ export function isCheckboxChecked(selector: string) {
 export function getFormValues(prefix: string): Record<string, string | boolean> {
   const values: Record<string, string | boolean> = {};
 
-  document.querySelectorAll(`[id^="node-input-${prefix}-"]`).forEach((element) => {
+  document.querySelectorAll(`[id^="${NODE_INPUT_PREFIX}-${prefix}-"]`).forEach((element) => {
     const input = element as HTMLInputElement | HTMLSelectElement;
-    const key = input.id.replace(`node-input-${prefix}-`, '');
+    const key = input.id.replace(`${NODE_INPUT_PREFIX}-${prefix}-`, '');
     if (input.type === 'checkbox') {
       values[key] = input.checked;
     } else {
@@ -369,7 +375,9 @@ export function setFormValues(prefix: string, values: Record<string, unknown | b
   }
 
   Object.entries(values).forEach(([key, value]) => {
-    const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(`#node-input-${prefix}-${key}`);
+    const element = document.querySelector<HTMLInputElement | HTMLSelectElement>(
+      `#${NODE_INPUT_PREFIX}-${prefix}-${key}`,
+    );
 
     if (element) {
       if (element.type === 'checkbox') {
