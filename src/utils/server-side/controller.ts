@@ -200,20 +200,23 @@ export function useControllerNode(node: Node, msg: NodeMessage, opts = { typedSu
    * applying a strict default if the resolved value is empty.
    *
    * @template T - The type of the `bag` object.
+   * @template TDefault - The type of the fallback default value.
    * @param {T} bag - The object containing the property to evaluate.
    * @param {keyof T} term - The key of the property to evaluate.
    * @param {object} [quickOpts] - Additional options for evaluation.
-   * @param {any} [quickOpts.strictDefaultValue=undefined] - A fallback value if the evaluated property is empty.
-   * @returns {Promise<any>} A promise resolving to the evaluated value, or the strict default value if applicable.
+   * @param {TDefault} [quickOpts.strictDefaultValue=undefined] - A fallback value if the evaluated property is empty.
+   * @returns {Promise<unknown>} A promise resolving to the evaluated value, or the strict default value if applicable.
    */
-  async function quickNodePropertyEval<T extends Record<string, unknown>>(
+  async function quickNodePropertyEval<T extends object, TDefault = unknown>(
     bag: T,
     term: keyof T,
-    quickOpts: { strictDefaultValue?: string } = { strictDefaultValue: undefined },
-  ): Promise<any> {
+    quickOpts?: { strictDefaultValue?: TDefault },
+  ): Promise<unknown> {
+    const targetBag = bag as Record<string, unknown>;
+
     const [, data] = await evaluateNodePropertyWithDefaults(
-      bag?.[term] as string,
-      bag?.[`${String(term)}${String(opts.typedSuffix)}`] as string,
+      targetBag[term as string] as string,
+      targetBag[`${String(term)}${String(opts.typedSuffix)}`] as string,
     );
 
     if (quickOpts?.strictDefaultValue !== undefined) {
