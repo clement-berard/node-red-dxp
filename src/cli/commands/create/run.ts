@@ -8,7 +8,10 @@ import { getPackageManager } from './utils';
 const DEV_MODE = process.env.DEV === 'true';
 const PLOP_TEMPLATES_DIR = './create/plop-templates';
 
-export async function handleCreatePackage(targetDir?: string) {
+export async function handleCreatePackage(targetDir?: string): Promise<{
+  changes: { type: string; path: string }[];
+  failures: { type: string; path: string; error: string; message: string }[];
+}> {
   const _CURRENT_DIR = targetDir || process.cwd();
   console.log('WIP COMMAND - DO NOT USE');
   console.log('Creating project in:', _CURRENT_DIR);
