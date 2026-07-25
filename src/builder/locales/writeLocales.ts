@@ -3,7 +3,7 @@ import { currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
 import { createFolderIfNotExists, writeFile } from '../../tools/node-utils';
 import { getGlobalLocales } from './globalLocales';
-import { getScopedNodesLocales } from './scopedNodeLocales';
+import { getScopedNodesLocales } from './scopedNodesLocales';
 
 export async function writeAllLocales() {
   const [globalLocales, scopedLocales] = await Promise.all([getGlobalLocales(), getScopedNodesLocales()]);

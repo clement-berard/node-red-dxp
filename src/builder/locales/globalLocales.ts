@@ -1,5 +1,6 @@
 import fsPromise from 'node:fs/promises';
 import { currentContext } from '../../current-context';
+import { groupAndSerializeLocales } from './serializeLocales';
 
 async function getWithContent(path: string) {
   // biome-ignore lint/style/noNonNullAssertion: OK
@@ -17,22 +18,9 @@ export async function getGlobalLocales() {
   const srcLocales = currentContext.resolvedSrcLocalesPaths;
   const srcLocalesWithContent = await Promise.all(srcLocales.map(getWithContent));
 
-  const grouped: Record<string, string[]> = {};
+  const entries = nodesList.flatMap((nodeName) =>
+    srcLocalesWithContent.map(({ codeLang, content }) => ({ key: nodeName, codeLang, content })),
+  );
 
-  nodesList.forEach((nodeName) => {
-    for (const { codeLang, content } of srcLocalesWithContent) {
-      if (!grouped[codeLang]) {
-        grouped[codeLang] = [];
-      }
-
-      grouped[codeLang].push(`"${nodeName}":${content}`);
-    }
-  });
-
-  const langEntries = Object.entries(grouped).map(([lang, locales]) => {
-    const content = locales.join(',');
-    return `"${lang}":{${content}}`;
-  });
-
-  return `{${langEntries.join(',')}}`;
+  return groupAndSerializeLocales(entries);
 }

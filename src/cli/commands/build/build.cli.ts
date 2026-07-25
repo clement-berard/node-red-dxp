@@ -2,7 +2,7 @@ import { performance } from 'node:perf_hooks';
 import { Command } from 'commander';
 import { consola } from 'consola';
 import ora from 'ora';
-import { Builder } from '../../../builder';
+import { build } from '../../../builder';
 import { currentContext } from '../../../current-context';
 
 type CliOptions = {
@@ -21,10 +21,9 @@ export default function commandHandler(parentCommand: Command) {
       consola.info('node-red-dxp builder');
       const spinner = ora(`Building ${nodesCount} node(s)...`).start();
 
-      const builder = new Builder({
+      await build({
         minify: options.minify,
       });
-      await builder.buildAll();
       const end = performance.now();
       const elapsed = end - start;
       const elapsedSeconds = elapsed > 1000 ? `${(elapsed / 1000).toFixed(2)}s` : `${elapsed.toFixed(2)}ms`;

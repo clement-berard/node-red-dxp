@@ -5,7 +5,7 @@ import browserSync, { type BrowserSyncInstance } from 'browser-sync';
 import chokidar from 'chokidar';
 import { consola } from 'consola';
 import nodemon, { type Nodemon } from 'nodemon';
-import { Builder } from '../../../builder';
+import { build } from '../../../builder';
 import { currentContext } from '../../../current-context';
 import { runCommand } from '../../utils/run-command';
 import { installLocalPackage } from '../install-relative-package/install-relative-package.cli';
@@ -87,11 +87,11 @@ type RunWatcherParams = {
 export function runWatcher(params?: RunWatcherParams) {
   const hasNodeRedWatcher = currentContext.config.watcher.enabled && currentContext.config.watcher.nodeRed.executable;
   const watcher = chokidar.watch(currentContext.pathSrcDir, {});
-  const builder = new Builder({ minify: params?.minify ?? false });
+  const minify = params?.minify ?? false;
   watcher
     .on('ready', async () => {
       consola.info('Initial scan complete. Ready for changes');
-      await builder.buildAll();
+      await build({ minify });
       consola.success('Initial Build completed');
       if (hasNodeRedWatcher) {
         runNodemonAndBrowserSync();
@@ -101,7 +101,7 @@ export function runWatcher(params?: RunWatcherParams) {
     })
     .on('change', async (path: string) => {
       consola.info(`File ${path.replace(currentContext.currentDir, '')} has been changed`);
-      await builder.buildAll();
+      await build({ minify });
       consola.success('Build completed');
       if (hasNodeRedWatcher) {
         restartNodemonAndBrowserSync();
