@@ -37,7 +37,7 @@ export function wrapCssMarkup(srcPath: string, attrs: Record<string, string | bo
   return `<link rel="stylesheet" href="${srcPath}"${attrsStr ? ` ${attrsStr}` : ''}>`;
 }
 
-async function processResources(path: string) {
+function processResources(path: string) {
   const parsed = _path.parse(path);
   const { attrs } = parseFileAttrs(parsed.base);
   const srcPath = getFinalSrcPath(path);
@@ -48,10 +48,9 @@ async function processResources(path: string) {
   return wrapCssMarkup(srcPath, attrs);
 }
 
-export async function getResources(): Promise<string> {
+export function getResources(): string {
   const path = currentContext.pathResourcesDir;
   const files = globSync(`${path}/**/*.{js,css}`, { onlyFiles: true });
-  const result = await Promise.all(files.map(processResources));
 
-  return result.join('');
+  return files.map(processResources).join('');
 }

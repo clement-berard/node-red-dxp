@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { type Entry, globSync } from 'fast-glob';
@@ -68,15 +68,18 @@ const pathLibCacheDir = `${currentDir}/${fixedConfig.libCacheDir}`;
 const currentPackagedDistPath = `${path.resolve(__dirname, '..')}`;
 const packageNameSlug = cleanPkgName(jsonPackage.name);
 
-function listNodeFolders(rawNodes: Entry[] = []) {
+export function listNodeFolders(rawNodes: Entry[] = []) {
   return rawNodes.map((entry) => {
     const fullPath = entry.path;
     const fullEditorPath = `${fullPath}/${fixedConfig.nodes.editor.dirName}`;
     const relativePath = fullPath.replace(currentDir, '').slice(1);
     const relativeEditorPath = `${relativePath}/${fixedConfig.nodes.editor.dirName}`;
-    const scssFiles = globSync(`${fullEditorPath}/${fixedConfig.nodes.editor.stylesName}.scss`);
-    const mdxFiles = globSync(`${fullPath}/docs.mdx`);
-    const mdFiles = globSync(`${fullPath}/docs.md`);
+    const scssPath = `${fullEditorPath}/${fixedConfig.nodes.editor.stylesName}.scss`;
+    const mdxPath = `${fullPath}/docs.mdx`;
+    const mdPath = `${fullPath}/docs.md`;
+    const scssFiles = existsSync(scssPath) ? [scssPath] : [];
+    const mdxFiles = existsSync(mdxPath) ? [mdxPath] : [];
+    const mdFiles = existsSync(mdPath) ? [mdPath] : [];
     const { dashName, pascalName } = computeNodeName(entry.name);
 
     return {

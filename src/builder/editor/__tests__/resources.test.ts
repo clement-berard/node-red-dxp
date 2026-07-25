@@ -1,11 +1,16 @@
+import { globSync } from 'fast-glob';
 import { describe, expect, it, vi } from 'vitest';
-import { getFinalSrcPath, parseFileAttrs, wrapCssMarkup, wrapJsMarkup } from '../resources';
+import { getFinalSrcPath, getResources, parseFileAttrs, wrapCssMarkup, wrapJsMarkup } from '../resources';
 
 vi.mock('../../../current-context', () => ({
   currentContext: {
     pathResourcesDir: '/project/resources',
     packageName: 'my-package',
   },
+}));
+
+vi.mock('fast-glob', () => ({
+  globSync: vi.fn(),
 }));
 
 describe('parseFileAttrs', () => {
@@ -81,5 +86,44 @@ describe('getFinalSrcPath', () => {
 
   it('removes [attrs=...] from filename', () => {
     expect(getFinalSrcPath('/project/resources/ma-lib[attrs=defer].js')).toBe('resources/my-package/ma-lib.js');
+  });
+});
+
+describe('getResources', () => {
+  it('calls globSync with the resources glob pattern and onlyFiles:true', async () => {
+    vi.mocked(globSync).mockReturnValue([]);
+
+    await getResources();
+
+    expect(globSync).toHaveBeenCalledWith('/project/resources/**/*.{js,css}', { onlyFiles: true });
+  });
+
+  it('resolves to "" when globSync returns no files', async () => {
+    vi.mocked(globSync).mockReturnValue([]);
+
+    expect(await getResources()).toBe('');
+  });
+
+  it('wraps and concatenates js and css files found by globSync', async () => {
+    vi.mocked(globSync).mockReturnValue(['/project/resources/lib.js', '/project/resources/styles.css']);
+
+    const result = await getResources();
+
+    const expected =
+      wrapJsMarkup(getFinalSrcPath('/project/resources/lib.js')) +
+      wrapCssMarkup(getFinalSrcPath('/project/resources/styles.css'));
+
+    expect(result).toBe(expected);
+    expect(result).toBe(
+      '<script src="resources/my-package/lib.js"></script><link rel="stylesheet" href="resources/my-package/styles.css">',
+    );
+  });
+
+  it('round-trips a file with [attrs=...] through the full pipeline', async () => {
+    vi.mocked(globSync).mockReturnValue(['/project/resources/lib[attrs=defer].js']);
+
+    const result = await getResources();
+
+    expect(result).toBe('<script src="resources/my-package/lib.js" defer></script>');
   });
 });

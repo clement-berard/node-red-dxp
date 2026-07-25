@@ -1,6 +1,7 @@
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
 import { fixedConfig } from '../../fixed-config';
+import { getEsbuildBaseOptions } from '../../tools/esbuildBaseOptions';
 import { writeFile } from '../../tools/node-utils';
 import { getDocs } from './docs';
 import { getNodesHtml } from './html';
@@ -11,7 +12,7 @@ type BuildEditorParams = {
   minify?: boolean;
 };
 
-async function getEditorIndexContent(): Promise<string> {
+function getEditorIndexContent(): string {
   return `
 import type { NodeAPI } from 'node-red';
 ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nimport ${node.pascalName} from '${node.editor.tsPath}';`).join('\n')}
@@ -24,16 +25,14 @@ ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nwindow.RED.nodes.re
 
 async function getBuiltEditorScript(minify = false): Promise<string> {
   const result = await esbuild.build({
+    ...getEsbuildBaseOptions({ minify }),
     entryPoints: [currentContext.cacheDirFiles.editorIndex],
-    bundle: true,
     platform: 'browser',
     format: 'iife',
     target: 'es6',
     sourcemap: false,
-    minify,
     legalComments: 'none',
     write: false,
-    loader: { '.ts': 'ts' },
   });
 
   return result.outputFiles?.[0]?.text ?? '';
@@ -66,7 +65,7 @@ ${docs}`.trim();
 }
 
 export async function buildEditor({ minify = false }: BuildEditorParams = {}): Promise<void> {
-  const content = await getEditorIndexContent();
+  const content = getEditorIndexContent();
   await writeFile(currentContext.cacheDirFiles.editorIndex, content);
   const contentFinalIndexHtml = await getEditorHtmlContent(minify);
   await writeFile(`${currentContext.pathDist}/${fixedConfig.nodes.editor.htmlName}.html`, contentFinalIndexHtml);

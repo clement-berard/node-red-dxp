@@ -1,8 +1,8 @@
-import fs from 'node:fs';
+import fsPromise from 'node:fs/promises';
 import purgeCss from '@fullhuman/postcss-purgecss';
 import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
-import { globSync } from 'fast-glob';
+import { glob } from 'fast-glob';
 import postcss from 'postcss';
 import * as sass from 'sass';
 import tailwindcss from 'tailwindcss';
@@ -27,39 +27,37 @@ async function processCSS(cssString: string, htmlString: string): Promise<string
   return result.css;
 }
 
-function compileScss(filePath: string): string {
-  const result = sass.compile(filePath, { style: 'expanded' });
+async function compileScss(filePath: string): Promise<string> {
+  const result = await sass.compileAsync(filePath, { style: 'expanded' });
   return result.css;
 }
 
-function buildStyles(files: string[]): Record<string, string> {
-  const styles: Record<string, string> = {};
-  for (let i = 0; i < files.length; i++) {
-    const filePath = files[i];
-    styles[filePath] = compileScss(filePath);
-  }
-  return styles;
+async function buildStyles(files: string[]): Promise<Record<string, string>> {
+  const compiled = await Promise.all(files.map(async (filePath) => [filePath, await compileScss(filePath)] as const));
+  return Object.fromEntries(compiled);
 }
 
-export function getNodesStyles(nodes: ListNodesFull) {
+export async function getNodesStyles(nodes: ListNodesFull) {
   const hasStyles = nodes.some((node) => node.editor.scssFiles.length);
   if (!hasStyles) {
     return [];
   }
-  return nodes
-    .filter((node) => node.editor.scssFiles.length)
-    .map((node) => {
-      const nodeStyles = buildStyles(node.editor.scssFiles);
-      const mergedCompiledStyles = Object.values(nodeStyles).join('');
-      return {
-        name: node.name,
-        mergedCompiledStyles,
-        scssFinal: `
+  return Promise.all(
+    nodes
+      .filter((node) => node.editor.scssFiles.length)
+      .map(async (node) => {
+        const nodeStyles = await buildStyles(node.editor.scssFiles);
+        const mergedCompiledStyles = Object.values(nodeStyles).join('');
+        return {
+          name: node.name,
+          mergedCompiledStyles,
+          scssFinal: `
         #${node.nodeIdentifier}{
           ${mergedCompiledStyles}
         }`,
-      };
-    });
+        };
+      }),
+  );
 }
 
 export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwindConfig: any = {}) {
@@ -70,11 +68,12 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
 
   const finalConfig = { ...defaultConfig, ...tailwindConfig };
 
-  const tailwindScssFilePath = globSync(
+  const tailwindMatches = await glob(
     `${distributionPackagePath}/${fixedConfig.nodes.editor.dirName}/assets/tailwind.scss`,
-  )[0];
+  );
+  const tailwindScssFilePath = tailwindMatches[0];
 
-  const scssString = tailwindScssFilePath.length ? fs.readFileSync(tailwindScssFilePath, 'utf8') : '';
+  const scssString = tailwindScssFilePath.length ? await fsPromise.readFile(tailwindScssFilePath, 'utf8') : '';
 
   const result = await postcss([tailwindcss(finalConfig), require('autoprefixer')]).process(scssString, {
     from: undefined,
@@ -83,12 +82,12 @@ export async function generateCSSFromHTMLWithTailwind(htmlString: string, tailwi
   return result.css;
 }
 
-export function getSrcStyles() {
+export async function getSrcStyles() {
   const srcStyles = currentContext.resolvedSrcPathsScss;
   if (!srcStyles.length) {
     return '';
   }
-  const srcStylesCompiled = buildStyles([...srcStyles]);
+  const srcStylesCompiled = await buildStyles([...srcStyles]);
   return Object.values(srcStylesCompiled).join('');
 }
 
@@ -101,17 +100,19 @@ type GetAllCompiledStylesParams = {
 export async function getAllCompiledStyles(params: GetAllCompiledStylesParams) {
   const getSrcWrapper = (content: string) => `.${currentContext.packageNameSlug}{${content}}`;
   const { rawHtml, minify = false, nodes } = params || {};
-  const srcStyles = getSrcStyles();
-  const nodesStyles = getNodesStyles(nodes);
-  const twCss = await generateCSSFromHTMLWithTailwind(rawHtml);
 
-  const finalTwCss = minify
-    ? await postcss([cssnano({ preset: 'default' })]).process(twCss, { from: undefined })
-    : twCss;
+  const [srcStyles, nodesStyles, twCss] = await Promise.all([
+    getSrcStyles(),
+    getNodesStyles(nodes),
+    generateCSSFromHTMLWithTailwind(rawHtml),
+  ]);
 
   const allNodesStyles = nodesStyles.map((node) => node.scssFinal).join('\n');
-  const otherCss = minify
-    ? await processCSS(`${srcStyles}${allNodesStyles}`, rawHtml)
-    : `${srcStyles}${allNodesStyles}`;
+
+  const [finalTwCss, otherCss] = await Promise.all([
+    minify ? postcss([cssnano({ preset: 'default' })]).process(twCss, { from: undefined }) : twCss,
+    minify ? processCSS(`${srcStyles}${allNodesStyles}`, rawHtml) : `${srcStyles}${allNodesStyles}`,
+  ]);
+
   return getSrcWrapper(`${finalTwCss}${otherCss}`);
 }

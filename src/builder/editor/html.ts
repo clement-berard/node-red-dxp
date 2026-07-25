@@ -1,5 +1,4 @@
-import { readFileSync } from 'node:fs';
-import { globSync } from 'fast-glob';
+import fsPromise from 'node:fs/promises';
 import { minify } from 'html-minifier-terser';
 import pug from 'pug';
 import type { ListNode, ListNodesFull } from '../../current-context';
@@ -29,12 +28,15 @@ function wrapHtml(nodeName: string, html: string) {
 async function processNodeHtml(node: ListNode, packageNameSlug: string, minify = false) {
   let htmlContent = '';
 
-  const hasPug = globSync(node.editor.pugPath, { onlyFiles: true }).at(0);
+  const hasPug = await fsPromise
+    .access(node.editor.pugPath)
+    .then(() => true)
+    .catch(() => false);
 
   if (hasPug) {
-    htmlContent = pug.renderFile(hasPug);
+    htmlContent = pug.renderFile(node.editor.pugPath);
   } else {
-    htmlContent = readFileSync(node.editor.htmlPath, 'utf8');
+    htmlContent = await fsPromise.readFile(node.editor.htmlPath, 'utf8');
   }
 
   const htmlContentWithAdditionalDiv = `
