@@ -1,5 +1,4 @@
-import { readFileSync } from 'node:fs';
-import { globSync } from 'fast-glob';
+import fsPromise from 'node:fs/promises';
 import pug from 'pug';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanSpaces } from '../../../tools/common-utils';
@@ -7,12 +6,11 @@ import { getNodesHtml, minifyHtml } from '../html';
 import { updateI18nAttributes } from '../i18n';
 
 // Mocks
-vi.mock('node:fs', () => ({
-  readFileSync: vi.fn(),
-}));
-
-vi.mock('fast-glob', () => ({
-  globSync: vi.fn(),
+vi.mock('node:fs/promises', () => ({
+  default: {
+    access: vi.fn(),
+    readFile: vi.fn(),
+  },
 }));
 
 vi.mock('pug', () => ({
@@ -57,7 +55,7 @@ describe('getNodesHtml', () => {
   });
 
   it('processes a node using pug when pug file exists', async () => {
-    vi.mocked(globSync).mockReturnValue(['/path/to/editor.pug']);
+    vi.mocked(fsPromise.access).mockResolvedValue(undefined);
     // @ts-expect-error
     vi.mocked(pug.renderFile).mockReturnValue('<p>Pug Content MOCKED_I18N</p>');
 
@@ -68,7 +66,7 @@ describe('getNodesHtml', () => {
     });
 
     expect(pug.renderFile).toHaveBeenCalledWith('/path/to/editor.pug');
-    expect(readFileSync).not.toHaveBeenCalled();
+    expect(fsPromise.readFile).not.toHaveBeenCalled();
     expect(updateI18nAttributes).toHaveBeenCalled();
 
     expect(result.html).toContain('class="my-pkg"');
@@ -80,8 +78,8 @@ describe('getNodesHtml', () => {
   });
 
   it('processes a node using html when pug file does not exist', async () => {
-    vi.mocked(globSync).mockReturnValue([]);
-    vi.mocked(readFileSync).mockReturnValue('<p>HTML Content MOCKED_I18N</p>');
+    vi.mocked(fsPromise.access).mockRejectedValue(new Error('ENOENT'));
+    vi.mocked(fsPromise.readFile).mockResolvedValue('<p>HTML Content MOCKED_I18N</p>');
 
     const result = await getNodesHtml({
       nodes: [mockNode],
@@ -89,16 +87,16 @@ describe('getNodesHtml', () => {
       minify: false,
     });
 
-    expect(globSync).toHaveBeenCalledWith('/path/to/editor.pug', { onlyFiles: true });
+    expect(fsPromise.access).toHaveBeenCalledWith('/path/to/editor.pug');
     expect(pug.renderFile).not.toHaveBeenCalled();
-    expect(readFileSync).toHaveBeenCalledWith('/path/to/editor.html', 'utf8');
+    expect(fsPromise.readFile).toHaveBeenCalledWith('/path/to/editor.html', 'utf8');
 
     expect(result.html).toContain('HTML Content I18N_DONE');
   });
 
   it('minifies HTML when minify is true', async () => {
-    vi.mocked(globSync).mockReturnValue([]);
-    vi.mocked(readFileSync).mockReturnValue('   <p>   HTML   </p>   ');
+    vi.mocked(fsPromise.access).mockRejectedValue(new Error('ENOENT'));
+    vi.mocked(fsPromise.readFile).mockResolvedValue('   <p>   HTML   </p>   ');
 
     const result = await getNodesHtml({
       nodes: [mockNode],
@@ -114,8 +112,8 @@ describe('getNodesHtml', () => {
     const node1 = { ...mockNode, name: 'node1', nodeIdentifier: 'id-1' };
     const node2 = { ...mockNode, name: 'node2', nodeIdentifier: 'id-2' };
 
-    vi.mocked(globSync).mockReturnValue([]);
-    vi.mocked(readFileSync).mockReturnValue('<p>Content</p>');
+    vi.mocked(fsPromise.access).mockRejectedValue(new Error('ENOENT'));
+    vi.mocked(fsPromise.readFile).mockResolvedValue('<p>Content</p>');
 
     const result = await getNodesHtml({
       nodes: [node1, node2],

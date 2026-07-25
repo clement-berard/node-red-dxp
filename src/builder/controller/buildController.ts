@@ -1,6 +1,7 @@
 import fsPromise from 'node:fs/promises';
 import esbuild from 'esbuild';
 import { currentContext } from '../../current-context';
+import { getEsbuildBaseOptions } from '../../tools/esbuildBaseOptions';
 import { writeFile } from '../../tools/node-utils';
 import { addCredentialsExportPlugin } from './esbuild';
 
@@ -10,7 +11,7 @@ type BuildControllerParams = {
 
 const targetPackageJsonFile = `${currentContext.currentDir}/package.json`;
 
-async function getControllerIndexContent() {
+function getControllerIndexContent() {
   return `
 import type { NodeAPI } from 'node-red';
 ${currentContext.listNodesFull.map((node) => `// @ts-ignore\nimport ${node.pascalName}, {credentials as cred${node.pascalName}} from '${node.fullControllerPath}';`).join('\n')}
@@ -25,8 +26,8 @@ ${currentContext.redServerPath.length > 0 ? '  RedServer();' : ''}
 `.trim();
 }
 
-async function buildControllerScript(minify: boolean) {
-  const packageJson = await fsPromise.readFile(targetPackageJsonFile, 'utf8');
+async function buildControllerScript(minify: boolean, packageJsonPromise: Promise<string>) {
+  const packageJson = await packageJsonPromise;
   const parsedPackageJson = JSON.parse(packageJson);
   const toIncludeInBundle = [...currentContext.config.builder.esbuildControllerOptions.includeInBundle];
   const realExternals = Object.keys(parsedPackageJson.dependencies || {}).filter(
@@ -34,14 +35,12 @@ async function buildControllerScript(minify: boolean) {
   );
 
   return esbuild.build({
+    ...getEsbuildBaseOptions({ minify }),
     entryPoints: [currentContext.cacheDirFiles.controllerIndex],
     outfile: `${currentContext.pathDist}/index.js`,
-    bundle: true,
-    minify,
     platform: 'node',
     format: 'cjs',
     target: 'es2018',
-    loader: { '.ts': 'ts' },
     packages: 'bundle',
     plugins: [addCredentialsExportPlugin],
     external: realExternals,
@@ -49,7 +48,8 @@ async function buildControllerScript(minify: boolean) {
 }
 
 export async function buildController({ minify = false }: BuildControllerParams = {}) {
-  const content = await getControllerIndexContent();
+  const packageJsonPromise = fsPromise.readFile(targetPackageJsonFile, 'utf8');
+  const content = getControllerIndexContent();
   await writeFile(currentContext.cacheDirFiles.controllerIndex, content);
-  return buildControllerScript(minify);
+  return buildControllerScript(minify, packageJsonPromise);
 }

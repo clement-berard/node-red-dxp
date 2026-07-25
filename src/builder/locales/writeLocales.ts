@@ -11,11 +11,15 @@ export async function writeAllLocales() {
   const res = toMerged(JSON.parse(globalLocales), JSON.parse(scopedLocales)) as Record<string, unknown>;
 
   const localesBasePath = `${currentContext.pathDist}/${fixedConfig.localesDirName}`;
+  const folderNames = Object.keys(res);
+
+  for (const folderName of folderNames) {
+    createFolderIfNotExists(`${localesBasePath}/${folderName}`);
+  }
 
   await Promise.all(
-    Object.entries(res).map(([folderName, locales]) => {
-      createFolderIfNotExists(`${localesBasePath}/${folderName}`);
-      return writeFile(`${localesBasePath}/${folderName}/index.json`, JSON.stringify(locales));
-    }),
+    Object.entries(res).map(([folderName, locales]) =>
+      writeFile(`${localesBasePath}/${folderName}/index.json`, JSON.stringify(locales)),
+    ),
   );
 }
