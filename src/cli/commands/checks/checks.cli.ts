@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { consola } from 'consola';
 
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('checks')
@@ -6,7 +7,7 @@ export default function commandHandler(parentCommand: Command) {
     .command('nodes-structure')
     .description('[WIP] Verify the structure of the nodes')
     .action(() => {
-      console.log('In construction');
+      consola.info('In construction');
     });
 
   parentCommand.addCommand(cmd);

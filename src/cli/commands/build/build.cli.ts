@@ -1,20 +1,24 @@
 import { performance } from 'node:perf_hooks';
 import { Command } from 'commander';
+import { consola } from 'consola';
 import ora from 'ora';
 import { Builder } from '../../../builder';
 import { currentContext } from '../../../current-context';
 
+type CliOptions = {
+  minify: boolean;
+};
+
 export default function commandHandler(parentCommand: Command) {
   const cmd = new Command('build')
-    .command('build')
     .description(
       'The build script compiles all nodes into a production-ready, optimized format at lightning speed, with the output defaulting to the dist directory.',
     )
     .option('--no-minify', 'No minify the output', true)
-    .action(async (options) => {
+    .action(async (options: CliOptions) => {
       const nodesCount = currentContext.listNodesFull.length;
       const start = performance.now();
-      console.log('node-red-dxp builder');
+      consola.info('node-red-dxp builder');
       const spinner = ora(`Building ${nodesCount} node(s)...`).start();
 
       const builder = new Builder({

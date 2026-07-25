@@ -37,90 +37,93 @@ type CreateNodeScaffoldingOptions = {
   isConfigNode?: boolean;
 };
 
-export class CreateNodeScaffolding {
-  readonly nodePascalName: string;
-  readonly nodeDashName: string;
-  readonly newNodeDistPath: string;
-  readonly newNodeEditorDistPath: string;
-  readonly scaffoldedDistHbs: string;
-  private readonly isConfigNode: boolean;
+export type ScaffoldingContext = {
+  nodePascalName: string;
+  nodeDashName: string;
+  newNodeDistPath: string;
+  newNodeEditorDistPath: string;
+  scaffoldedDistHbs: string;
+  isConfigNode: boolean;
+};
 
-  constructor(options: CreateNodeScaffoldingOptions) {
-    const { pascalName, dashName } = computeNodeName(options.innerNodeName);
-    this.nodePascalName = pascalName;
-    this.nodeDashName = dashName;
-    this.newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
-    this.newNodeEditorDistPath = `${this.newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`;
-    this.scaffoldedDistHbs = `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`;
-    this.isConfigNode = !!options.isConfigNode;
-  }
+export function createScaffoldingContext(options: CreateNodeScaffoldingOptions): ScaffoldingContext {
+  const { pascalName, dashName } = computeNodeName(options.innerNodeName);
+  const newNodeDistPath = `${currentContext.pathSrcNodesDir}/${dashName}`;
 
-  distFolderExist() {
-    return fs.existsSync(this.newNodeDistPath);
-  }
+  return {
+    nodePascalName: pascalName,
+    nodeDashName: dashName,
+    newNodeDistPath,
+    newNodeEditorDistPath: `${newNodeDistPath}/${fixedConfig.nodes.editor.dirName}`,
+    scaffoldedDistHbs: `${currentContext.currentPackagedDistPath}/scaffolding/create-node/hbs`,
+    isConfigNode: !!options.isConfigNode,
+  };
+}
 
-  prepareStructure() {
-    return [
-      {
-        finalPath: `${this.newNodeDistPath}/controller.ts`,
-        templatePath: `${this.scaffoldedDistHbs}/controller${this.isConfigNode ? '-config' : ''}.ts.hbs`,
-        templateData: {
-          nodePascalName: this.nodePascalName,
-          nodeName: this.nodeDashName,
-        },
+export function distFolderExist(context: ScaffoldingContext): boolean {
+  return fs.existsSync(context.newNodeDistPath);
+}
+
+export function prepareStructure(context: ScaffoldingContext) {
+  return [
+    {
+      finalPath: `${context.newNodeDistPath}/controller.ts`,
+      templatePath: `${context.scaffoldedDistHbs}/controller${context.isConfigNode ? '-config' : ''}.ts.hbs`,
+      templateData: {
+        nodePascalName: context.nodePascalName,
+        nodeName: context.nodeDashName,
       },
-      {
-        finalPath: `${this.newNodeDistPath}/types.ts`,
-        templatePath: `${this.scaffoldedDistHbs}/types.ts.hbs`,
-        templateData: {
-          nodePascalName: this.nodePascalName,
-          nodeName: this.nodeDashName,
-        },
+    },
+    {
+      finalPath: `${context.newNodeDistPath}/types.ts`,
+      templatePath: `${context.scaffoldedDistHbs}/types.ts.hbs`,
+      templateData: {
+        nodePascalName: context.nodePascalName,
+        nodeName: context.nodeDashName,
       },
-      {
-        finalPath: `${this.newNodeDistPath}/doc.md`,
-        templatePath: `${this.scaffoldedDistHbs}/doc.md.hbs`,
-        templateData: {},
+    },
+    {
+      finalPath: `${context.newNodeDistPath}/doc.md`,
+      templatePath: `${context.scaffoldedDistHbs}/doc.md.hbs`,
+      templateData: {},
+    },
+    {
+      finalPath: `${context.newNodeEditorDistPath}/${fixedConfig.nodes.editor.tsName}.ts`,
+      templatePath: `${context.scaffoldedDistHbs}/editor/index${context.isConfigNode ? '-config' : ''}.ts.hbs`,
+      templateData: {
+        nodePascalName: context.nodePascalName,
+        nodeName: context.nodeDashName,
       },
-      {
-        finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.tsName}.ts`,
-        templatePath: `${this.scaffoldedDistHbs}/editor/index${this.isConfigNode ? '-config' : ''}.ts.hbs`,
-        templateData: {
-          nodePascalName: this.nodePascalName,
-          nodeName: this.nodeDashName,
-        },
+    },
+    {
+      finalPath: `${context.newNodeEditorDistPath}/styles.scss`,
+      templatePath: `${context.scaffoldedDistHbs}/editor/styles.scss.hbs`,
+      templateData: {
+        nodeName: context.nodeDashName,
       },
-      {
-        finalPath: `${this.newNodeEditorDistPath}/styles.scss`,
-        templatePath: `${this.scaffoldedDistHbs}/editor/styles.scss.hbs`,
-        templateData: {
-          nodeName: this.nodeDashName,
-        },
-      },
-      {
-        finalPath: `${this.newNodeEditorDistPath}/${fixedConfig.nodes.editor.htmlName}.html`,
-        templatePath: `${this.scaffoldedDistHbs}/editor/index${this.isConfigNode ? '-config' : ''}.html.hbs`,
-        templateData: {},
-      },
-    ];
-  }
+    },
+    {
+      finalPath: `${context.newNodeEditorDistPath}/${fixedConfig.nodes.editor.htmlName}.html`,
+      templatePath: `${context.scaffoldedDistHbs}/editor/index${context.isConfigNode ? '-config' : ''}.html.hbs`,
+      templateData: {},
+    },
+  ];
+}
 
-  async renderFilesTemplates() {
-    const prepared = this.prepareStructure().map(async (item) => {
-      return renderTemplate(item.templatePath, item.templateData).then((content) => {
-        return {
-          finalPath: item.finalPath,
-          content,
-        };
-      });
-    });
+export async function renderFilesTemplates(context: ScaffoldingContext) {
+  const prepared = prepareStructure(context).map(async (item) => {
+    const content = await renderTemplate(item.templatePath, item.templateData);
+    return {
+      finalPath: item.finalPath,
+      content,
+    };
+  });
 
-    return await Promise.all(prepared);
-  }
+  return await Promise.all(prepared);
+}
 
-  async writeNewNode() {
-    const files = await this.renderFilesTemplates();
+export async function writeNewNode(context: ScaffoldingContext): Promise<void> {
+  const files = await renderFilesTemplates(context);
 
-    await Promise.all(files.map((file) => writeFile(file.finalPath, file.content)));
-  }
+  await Promise.all(files.map((file) => writeFile(file.finalPath, file.content)));
 }

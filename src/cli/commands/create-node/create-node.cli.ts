@@ -1,8 +1,8 @@
 import { Command, Option } from 'commander';
 import { consola, type PromptOptions } from 'consola';
-import { kebabCase } from 'es-toolkit';
+import { computeNodeName } from '../../../tools/common-utils';
 import { createFolderIfNotExists } from '../../../tools/node-utils';
-import { CreateNodeScaffolding } from './scaffolding';
+import { createScaffoldingContext, distFolderExist, writeNewNode } from './scaffolding';
 
 type CliOptions = {
   name?: string;
@@ -32,7 +32,7 @@ export default function commandHandler(parentCommand: Command) {
       type: 'text',
     });
 
-    const nodeName = kebabCase(inqName);
+    const { dashName: nodeName } = computeNodeName(inqName);
 
     const userIsOkWithName =
       options?.skipConfirm ||
@@ -57,20 +57,20 @@ export default function commandHandler(parentCommand: Command) {
       isConfigNode = false;
     }
 
-    const createNewNodeInstance = new CreateNodeScaffolding({
+    const scaffoldingContext = createScaffoldingContext({
       innerNodeName: nodeName,
       isConfigNode,
     });
 
-    if (createNewNodeInstance.distFolderExist()) {
-      consola.error(`Node ${createNewNodeInstance.nodeDashName} already exists`);
-      consola.info(`In ${createNewNodeInstance.newNodeDistPath}`);
+    if (distFolderExist(scaffoldingContext)) {
+      consola.error(`Node ${scaffoldingContext.nodeDashName} already exists`);
+      consola.info(`In ${scaffoldingContext.newNodeDistPath}`);
       return;
     }
 
-    createFolderIfNotExists(createNewNodeInstance.newNodeEditorDistPath);
+    createFolderIfNotExists(scaffoldingContext.newNodeEditorDistPath);
 
-    await createNewNodeInstance.writeNewNode();
+    await writeNewNode(scaffoldingContext);
   });
 
   parentCommand.addCommand(scaffolding);

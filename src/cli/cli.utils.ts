@@ -1,5 +1,12 @@
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { Command } from 'commander';
+import { consola } from 'consola';
+import packageJson from '../../package.json';
+
+export function createProgram(description: string): Command {
+  return new Command().name('node-red-dxp').description(description).version(packageJson.version);
+}
 
 export function resolveHomePath(path: string): string {
   if (path.startsWith('~')) {
@@ -19,7 +26,7 @@ export async function getLatestNpmPackageVersion(packageName: string) {
     const data = await response.json();
     return data.version as string;
   } catch (error) {
-    console.error(`Error fetching version for ${packageName}:`, error);
+    consola.error(`Error fetching version for ${packageName}:`, error);
     throw error;
   }
 }

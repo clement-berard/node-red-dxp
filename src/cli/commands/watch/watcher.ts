@@ -1,4 +1,3 @@
-import { execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 // @ts-expect-error TS6 - No types exports in this package
@@ -8,6 +7,7 @@ import { consola } from 'consola';
 import nodemon, { type Nodemon } from 'nodemon';
 import { Builder } from '../../../builder';
 import { currentContext } from '../../../current-context';
+import { runCommand } from '../../utils/run-command';
 import { installLocalPackage } from '../install-relative-package/install-relative-package.cli';
 
 let nodemonInstance: Nodemon;
@@ -39,16 +39,20 @@ function runNodemonAndBrowserSync() {
   });
 
   nodemon
-    .once('start', () => {
+    .once('start', async () => {
       consola.info('node-red instance', {
         executable,
         userDir,
-        nodeRedVersion: execSync(`${executable} --version`).toString(),
+        nodeRedVersion: await runCommand(executable, ['--version']),
       });
 
       if (isExecutableLocalPackage) {
-        installLocalPackage({ pathToInstall: currentContext.currentDir, userDir });
-        nodemonInstance.restart();
+        try {
+          await installLocalPackage({ pathToInstall: currentContext.currentDir, userDir });
+          nodemonInstance.restart();
+        } catch (error) {
+          consola.error('Error while installing local package:', error);
+        }
       }
 
       browserSyncInstance = browserSync.create();
