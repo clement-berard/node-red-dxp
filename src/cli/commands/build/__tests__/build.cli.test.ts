@@ -1,11 +1,10 @@
 import { Command } from 'commander';
 import { consola } from 'consola';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Builder } from '../../../../builder';
 import commandHandler from '../build.cli';
 
-const { mockBuildAll, mockSpinnerStart, mockSpinnerSucceed } = vi.hoisted(() => ({
-  mockBuildAll: vi.fn(),
+const { mockBuild, mockSpinnerStart, mockSpinnerSucceed } = vi.hoisted(() => ({
+  mockBuild: vi.fn(),
   mockSpinnerStart: vi.fn(),
   mockSpinnerSucceed: vi.fn(),
 }));
@@ -15,9 +14,7 @@ vi.mock('../../../../current-context', () => ({
 }));
 
 vi.mock('../../../../builder', () => ({
-  Builder: vi.fn().mockImplementation(function Builder() {
-    return { buildAll: mockBuildAll };
-  }),
+  build: mockBuild,
 }));
 
 vi.mock('ora', () => ({
@@ -31,7 +28,7 @@ vi.mock('consola', () => ({
 describe('build.cli', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockBuildAll.mockResolvedValue(undefined);
+    mockBuild.mockResolvedValue(undefined);
     mockSpinnerStart.mockReturnValue({ succeed: mockSpinnerSucceed });
   });
 
@@ -51,8 +48,7 @@ describe('build.cli', () => {
 
     await parent.parseAsync(['build'], { from: 'user' });
 
-    expect(Builder).toHaveBeenCalledWith({ minify: true });
-    expect(mockBuildAll).toHaveBeenCalledTimes(1);
+    expect(mockBuild).toHaveBeenCalledWith({ minify: true });
     expect(mockSpinnerSucceed).toHaveBeenCalledTimes(1);
     expect(consola.info).toHaveBeenCalledWith('node-red-dxp builder');
   });
@@ -63,6 +59,6 @@ describe('build.cli', () => {
 
     await parent.parseAsync(['build', '--no-minify'], { from: 'user' });
 
-    expect(Builder).toHaveBeenCalledWith({ minify: false });
+    expect(mockBuild).toHaveBeenCalledWith({ minify: false });
   });
 });

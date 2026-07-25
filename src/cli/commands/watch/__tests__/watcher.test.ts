@@ -3,7 +3,6 @@ import chokidar from 'chokidar';
 import { consola } from 'consola';
 import nodemon from 'nodemon';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Builder } from '../../../../builder';
 import { runCommand } from '../../../utils/run-command';
 import { installLocalPackage } from '../../install-relative-package/install-relative-package.cli';
 import { runWatcher } from '../watcher';
@@ -18,7 +17,7 @@ const {
   browserSyncCreateMock,
   mockBsInit,
   mockBsReload,
-  mockBuildAll,
+  mockBuild,
 } = vi.hoisted(() => {
   const chokidarHandlers: Record<string, (...args: any[]) => any> = {};
   const chokidarWatcherObj: any = {};
@@ -44,7 +43,7 @@ const {
   const mockBsReload = vi.fn();
   const browserSyncCreateMock = vi.fn(() => ({ init: mockBsInit, reload: mockBsReload }));
 
-  const mockBuildAll = vi.fn();
+  const mockBuild = vi.fn();
 
   const currentContextMock = {
     pathSrcDir: '/project/src',
@@ -78,7 +77,7 @@ const {
     browserSyncCreateMock,
     mockBsInit,
     mockBsReload,
-    mockBuildAll,
+    mockBuild,
   };
 });
 
@@ -99,9 +98,7 @@ vi.mock('browser-sync', () => ({
 }));
 
 vi.mock('../../../../builder', () => ({
-  Builder: vi.fn().mockImplementation(function Builder() {
-    return { buildAll: mockBuildAll };
-  }),
+  build: mockBuild,
 }));
 
 vi.mock('../../../../current-context', () => ({
@@ -138,7 +135,7 @@ describe('runWatcher', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetCurrentContext();
-    mockBuildAll.mockResolvedValue(undefined);
+    mockBuild.mockResolvedValue(undefined);
     vi.mocked(runCommand).mockResolvedValue('v3.1.0');
     vi.mocked(installLocalPackage).mockResolvedValue(undefined);
     vi.mocked(existsSync).mockReturnValue(true);
@@ -156,8 +153,8 @@ describe('runWatcher', () => {
     await chokidarHandlers.ready();
 
     expect(chokidar.watch).toHaveBeenCalledWith('/project/src', {});
-    expect(Builder).toHaveBeenCalledWith({ minify: false });
-    expect(mockBuildAll).toHaveBeenCalledTimes(1);
+    expect(mockBuild).toHaveBeenCalledWith({ minify: false });
+    expect(mockBuild).toHaveBeenCalledTimes(1);
     expect(consola.success).toHaveBeenCalledWith('Initial Build completed');
     expect(consola.warn).toHaveBeenCalledWith('Node-Red watcher is disabled. Please enable it in the config file');
     expect(nodemon).not.toHaveBeenCalled();
@@ -167,7 +164,7 @@ describe('runWatcher', () => {
     runWatcher({ minify: true });
     await chokidarHandlers.ready();
 
-    expect(Builder).toHaveBeenCalledWith({ minify: true });
+    expect(mockBuild).toHaveBeenCalledWith({ minify: true });
     expect(nodemon).toHaveBeenCalledWith(
       expect.objectContaining({ exec: '/usr/local/bin/node-red -u /home/user/.node-red' }),
     );
@@ -182,7 +179,7 @@ describe('runWatcher', () => {
 
     await chokidarHandlers.change('/project/src/nodes/my-node/controller.ts');
 
-    expect(mockBuildAll).toHaveBeenCalledTimes(2);
+    expect(mockBuild).toHaveBeenCalledTimes(2);
     expect(consola.success).toHaveBeenCalledWith('Build completed');
     expect(mockNodemonRestart).toHaveBeenCalledTimes(1);
     expect(mockBsReload).toHaveBeenCalledTimes(1);

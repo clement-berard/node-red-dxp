@@ -27,7 +27,7 @@ async function processMd(path: string, nodeName: string) {
   return wrapInScript(content, nodeName);
 }
 
-export async function handleDocs() {
+export async function getDocs() {
   const allDocsFiles = currentContext.listNodesFull.flatMap((node): DocNode[] => {
     const hasMdxFile = node.doc.mdxFiles.length !== 0;
     const hasMdFile = node.doc.mdFiles.length !== 0;
