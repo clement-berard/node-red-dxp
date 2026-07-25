@@ -115,17 +115,5 @@
   },
   "files": [
     "dist"
-  ],
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@parcel/watcher",
-      "esbuild"
-    ],
-    "updateConfig": {
-      "ignoreDependencies": [
-        "tailwindcss"
-      ]
-    }
-  }
+  ]
 }
