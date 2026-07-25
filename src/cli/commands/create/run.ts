@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { consola } from 'consola';
 import nodePlop from 'node-plop';
 import { getLatestNpmPackageVersion } from '../../cli.utils';
 import { registerActions } from './plop.actions';
@@ -13,8 +14,8 @@ export async function handleCreatePackage(targetDir?: string): Promise<{
   failures: { type: string; path: string; error: string; message: string }[];
 }> {
   const _CURRENT_DIR = targetDir || process.cwd();
-  console.log('WIP COMMAND - DO NOT USE');
-  console.log('Creating project in:', _CURRENT_DIR);
+  consola.warn('WIP COMMAND - DO NOT USE');
+  consola.info('Creating project in:', _CURRENT_DIR);
 
   const originalCwd = process.cwd();
   process.chdir(_CURRENT_DIR);
@@ -114,11 +115,11 @@ export async function handleCreatePackage(targetDir?: string): Promise<{
     const results = await generator.runActions(answers);
 
     if (results.failures.length > 0) {
-      console.error('❌ Failures:', results.failures);
+      consola.error('❌ Failures:', results.failures);
       process.exit(1);
     }
 
-    console.log('✅ Project created successfully!');
+    consola.success('✅ Project created successfully!');
     return results;
   } finally {
     process.chdir(originalCwd);
