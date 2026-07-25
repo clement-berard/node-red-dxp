@@ -1,8 +1,7 @@
 import { exec } from 'node:child_process';
 import { unlinkSync, writeFileSync } from 'node:fs';
 import { promisify } from 'node:util';
-// @ts-expect-error TS6 - No types exports in this package
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import type { TypeDocOptions } from 'typedoc';
 import type { PluginOptions } from 'typedoc-plugin-markdown';
 import { resolveConfig } from './src/default-config';
