@@ -1,4 +1,4 @@
-@tailwind utilities; @tailwind components; @tailwind base;
+@import "tailwindcss";
 
 @layer components {
   .alert {
@@ -31,7 +31,7 @@
     }
 
     input[type="checkbox"] {
-      @apply !w-auto !mt-0;
+      @apply w-auto! mt-0!;
     }
   }
 
@@ -55,7 +55,7 @@
       select,
       textarea,
       .red-ui-typedInput-container{
-        @apply !w-full;
+        @apply w-full!;
       }
 
       .red-ui-typedInput-container {
@@ -72,29 +72,29 @@
           }
 
           .red-ui-typedInput-icon {
-            @apply !ml-[5px];
+            @apply ml-[5px]!;
           }
         }
 
         .red-ui-typedInput-option-trigger {
           .red-ui-typedInput-option-label {
             background-color: transparent !important;
-            @apply !mt-2;
+            @apply mt-2!;
           }
         }
       }
 
       div.checkbox {
-        @apply !mt-[0.35rem];
+        @apply mt-[0.35rem]!;
         input[type="checkbox"] {
-          @apply !w-auto;
+          @apply w-auto!;
         }
       }
 
 
       &.force-w-full {
         > div {
-          @apply !w-full;
+          @apply w-full!;
         }
       }
     }
@@ -132,7 +132,7 @@
         }
 
         label {
-          @apply truncate !mb-0;
+          @apply truncate mb-0!;
         }
       }
 
@@ -154,13 +154,13 @@
           }
 
           .red-ui-typedInput-icon {
-            @apply !ml-[5px];
+            @apply ml-[5px]!;
           }
         }
       }
 
       input[type="checkbox"] {
-        @apply !w-auto !mt-0 flex-shrink-0 flex-grow-0;
+        @apply w-auto! mt-0! flex-shrink-0 flex-grow-0;
       }
     }
 

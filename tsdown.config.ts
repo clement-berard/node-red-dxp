@@ -82,10 +82,10 @@ export default defineConfig([
         'consola',
         'nodemon',
         'tailwindcss',
+        '@tailwindcss/node',
+        '@tailwindcss/oxide',
         'postcss',
-        'cssnano',
         '@fullhuman/postcss-purgecss',
-        'autoprefixer',
         'prettyjson',
         'browser-sync',
       ]

@@ -53,10 +53,21 @@ vi.mock('postcss', () => ({
   })),
 }));
 
-vi.mock('autoprefixer', () => ({ default: vi.fn(() => 'autoprefixer-marker') }));
-vi.mock('cssnano', () => ({ default: vi.fn(() => 'cssnano-marker') }));
-vi.mock('tailwindcss', () => ({ default: vi.fn(() => 'tailwindcss-marker') }));
 vi.mock('@fullhuman/postcss-purgecss', () => ({ default: vi.fn(() => 'purgecss-marker') }));
+
+vi.mock('@tailwindcss/node', () => ({
+  compile: vi.fn(async () => ({
+    build: vi.fn((candidates: string[]) => `built(${candidates.join(',')})`),
+  })),
+  optimize: vi.fn((css: string) => ({ code: `optimized(${css})`, map: undefined })),
+}));
+
+vi.mock('@tailwindcss/oxide', () => {
+  class Scanner {
+    scanFiles = vi.fn((inputs: { content: string; extension: string }[]) => inputs.map((i) => i.content));
+  }
+  return { Scanner: vi.fn(Scanner) };
+});
 
 describe('getNodesStyles', () => {
   beforeEach(() => {
@@ -120,7 +131,7 @@ describe('generateCSSFromHTMLWithTailwind', () => {
     vi.clearAllMocks();
   });
 
-  it('reads the tailwind.scss found by glob and processes it through postcss (default config)', async () => {
+  it('reads the tailwind.scss found by glob, compiles it, and builds CSS from scanned candidates', async () => {
     vi.mocked(glob).mockResolvedValue(['/pkg-dist/editor/assets/tailwind.scss'] as any);
     vi.mocked(fsPromise.readFile).mockResolvedValue('tailwind-scss-content' as any);
 
@@ -128,22 +139,39 @@ describe('generateCSSFromHTMLWithTailwind', () => {
 
     expect(glob).toHaveBeenCalledWith(`/pkg-dist/${fixedConfig.nodes.editor.dirName}/assets/tailwind.scss`);
     expect(fsPromise.readFile).toHaveBeenCalledWith('/pkg-dist/editor/assets/tailwind.scss', 'utf8');
-    expect(result).toBe('processed(tailwind-scss-content)');
+
+    const { compile } = await import('@tailwindcss/node');
+    expect(compile).toHaveBeenCalledWith('tailwind-scss-content', {
+      base: '/pkg-dist/editor/assets',
+      onDependency: expect.any(Function),
+    });
+
+    const { Scanner } = await import('@tailwindcss/oxide');
+    expect(Scanner).toHaveBeenCalledWith({ sources: [] });
+    const scannerInstance = vi.mocked(Scanner).mock.results[0].value;
+    expect(scannerInstance.scanFiles).toHaveBeenCalledWith([
+      { content: '<div>html</div>', extension: 'html' },
+      { content: 'forced-a forced-a!', extension: 'html' },
+    ]);
+
+    // no purge step here (see the NOTE in generateCSSFromHTMLWithTailwind for why
+    // purging it was reverted), but the built CSS still goes through the
+    // restoreFormControlBorderRadiusPlugin postcss pass.
+    expect(result).toBe('processed(built(<div>html</div>,forced-a forced-a!))');
   });
 
-  it('a custom tailwindConfig.content shallow-replaces the default content array entirely (current quirk)', async () => {
-    vi.mocked(glob).mockResolvedValue(['/pkg-dist/editor/assets/tailwind.scss'] as any);
-    vi.mocked(fsPromise.readFile).mockResolvedValue('tailwind-scss-content' as any);
+  it('returns "" without compiling when no tailwind.scss is found', async () => {
+    vi.mocked(glob).mockResolvedValue([] as any);
 
-    await generateCSSFromHTMLWithTailwind('<div>html</div>', { content: ['custom'] });
+    const result = await generateCSSFromHTMLWithTailwind('<div>html</div>');
 
-    const tailwindcssModule = await import('tailwindcss');
-    const calledConfig = vi.mocked(tailwindcssModule.default).mock.calls[0][0] as any;
+    expect(result).toBe('');
+    expect(fsPromise.readFile).not.toHaveBeenCalled();
 
-    // Because generateCSSFromHTMLWithTailwind does `{ ...defaultConfig, ...tailwindConfig }`,
-    // passing a custom `content` key REPLACES the default content array wholesale
-    // (it does NOT merge/append to the html/allClassesIncluded raw entries).
-    expect(calledConfig.content).toEqual(['custom']);
+    const { compile } = await import('@tailwindcss/node');
+    const { Scanner } = await import('@tailwindcss/oxide');
+    expect(compile).not.toHaveBeenCalled();
+    expect(Scanner).not.toHaveBeenCalled();
   });
 });
 
@@ -155,38 +183,50 @@ describe('getAllCompiledStyles', () => {
     vi.mocked(fsPromise.readFile).mockResolvedValue('tailwind-scss-content' as any);
   });
 
-  it('does not run extra postcss steps (minify/purge) when minify is false', async () => {
+  it('does not run extra postcss/optimize steps (minify/purge) when minify is false', async () => {
     const nodes = [{ name: 'node-a', nodeIdentifier: 'id-a', editor: { scssFiles: ['/a/style1.scss'] } }] as any;
 
     const result = await getAllCompiledStyles({ rawHtml: '<div>html</div>', minify: false, nodes });
 
-    // postcss is called exactly once: inside generateCSSFromHTMLWithTailwind (tailwind step).
-    expect(postcss).toHaveBeenCalledTimes(1);
+    // 1: the tailwind step's restoreFormControlBorderRadiusPlugin pass (always runs), 2: the
+    // final scopeThemeSelectors pass over the wrapped CSS (always runs, regardless of minify).
+    expect(postcss).toHaveBeenCalledTimes(2);
+    const { optimize } = await import('@tailwindcss/node');
+    // optimize() now always runs (with minify:false) so Lightning CSS flattens the nesting
+    // even in dev builds; it's the mock's `optimized(...)` wrapper that's now outermost.
+    expect(optimize).toHaveBeenCalledTimes(1);
+    expect(optimize).toHaveBeenCalledWith(expect.any(String), { minify: false });
 
     expect(result).toContain('.my-pkg{');
-    // raw twCss from the mocked tailwind postcss processing
-    expect(result).toContain('processed(tailwind-scss-content)');
+    // twCss from the mocked compile()/Scanner/restoreFormControlBorderRadiusPlugin processing
+    expect(result).toContain('processed(built(<div>html</div>,forced-a forced-a!))');
     // otherCss is raw concatenation of srcStyles + node styles (no minify/purge applied)
     expect(result).toContain('/*/a/style1.scss*/');
   });
 
-  it('runs the extra postcss steps (minify + purge) when minify is true', async () => {
+  it('runs the extra postcss/optimize steps (minify + purge) when minify is true', async () => {
     const nodes = [{ name: 'node-a', nodeIdentifier: 'id-a', editor: { scssFiles: ['/a/style1.scss'] } }] as any;
 
     await getAllCompiledStyles({ rawHtml: '<div>html</div>', minify: true, nodes });
 
-    // 1: tailwind step inside generateCSSFromHTMLWithTailwind
-    // 2: finalTwCss cssnano minify step
-    // 3: otherCss processCSS (purge/autoprefixer/cssnano) step
+    // 1: the tailwind step's restoreFormControlBorderRadiusPlugin pass (always-on), 2: otherCss's
+    // purgeUnusedClasses pass (minify-only), 3: the final scopeThemeSelectors pass
     expect(postcss).toHaveBeenCalledTimes(3);
+
+    const { optimize } = await import('@tailwindcss/node');
+    // a single combined pass over the final wrapped+scoped CSS
+    expect(optimize).toHaveBeenCalledTimes(1);
+    expect(optimize).toHaveBeenCalledWith(expect.any(String), { minify: true });
   });
 
-  it('wraps the final result as .packageNameSlug{finalTwCss+otherCss}', async () => {
+  it('wraps the final result as .packageNameSlug{twCss+otherCss} before scoping', async () => {
     const nodes: any[] = [];
 
     const result = await getAllCompiledStyles({ rawHtml: '<div>html</div>', minify: false, nodes });
 
-    expect(result.startsWith('.my-pkg{')).toBe(true);
-    expect(result.endsWith('}')).toBe(true);
+    // twCss goes through restoreFormControlBorderRadiusPlugin, the whole wrap goes through
+    // scopeThemeSelectors, then the result always goes through optimize(); the mocks wrap
+    // each in a marker string.
+    expect(result).toBe('optimized(processed(.my-pkg{processed(built(<div>html</div>,forced-a forced-a!))}))');
   });
 });
