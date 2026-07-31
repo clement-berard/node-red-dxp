@@ -2,8 +2,6 @@ import { defineConfig } from 'tsdown';
 
 const minifyFlag = true;
 
-const noExternals: string[] = ['deepmerge-ts'];
-
 export default defineConfig([
   {
     entry: {
@@ -32,31 +30,13 @@ export default defineConfig([
     format: ['esm', 'cjs'],
     target: 'es6',
     deps: {
-      alwaysBundle: [...noExternals, 'radash'],
+      alwaysBundle: ['radash'],
+      onlyBundle: ['radash'],
     },
     platform: 'browser',
     onSuccess: `${process.env.CI ? 'cat build.sh && ./build.sh' : '. build.sh'}`,
     fixedExtension: false,
   },
-
-  // {
-  //   entry: {
-  //     'builder/index': 'src/builder/index.ts',
-  //   },
-  //   clean: true,
-  //   bundle: true,
-  //   dts: true,
-  //   minify: minifyFlag,
-  //   minifyWhitespace: minifyFlag,
-  //   minifyIdentifiers: minifyFlag,
-  //   minifySyntax: minifyFlag,
-  //   sourcemap: !minifyFlag,
-  //   treeshake: true,
-  //   format: ['esm', 'cjs'],
-  //   target: 'es6',
-  //   noExternal: [...nodeExternals],
-  //   external: externals,
-  // },
   {
     entry: {
       'cli/index': 'src/cli/index.ts',
@@ -72,7 +52,12 @@ export default defineConfig([
     target: 'node16',
     platform: 'node',
     deps: {
-      alwaysBundle: [...noExternals, 'ora'],
+      alwaysBundle: ['ora'],
+      // ora pulls in a version-dependent tree of its own transitive deps
+      // (chalk, cli-cursor, string-width, ...). Enumerating them in
+      // onlyBundle would break on every ora bump, so bundling them is
+      // intentional and left untracked here.
+      onlyBundle: false,
       neverBundle: [
         'esbuild',
         'fast-glob',
