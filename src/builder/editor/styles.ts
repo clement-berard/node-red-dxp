@@ -1,5 +1,5 @@
-import path from 'node:path';
 import fsPromise from 'node:fs/promises';
+import path from 'node:path';
 import purgeCss from '@fullhuman/postcss-purgecss';
 import { compile, optimize } from '@tailwindcss/node';
 import { Scanner } from '@tailwindcss/oxide';
