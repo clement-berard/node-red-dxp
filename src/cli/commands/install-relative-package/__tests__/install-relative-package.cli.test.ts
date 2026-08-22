@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises';
 import { Command } from 'commander';
 import { consola } from 'consola';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -19,7 +20,11 @@ vi.mock('../../../utils/run-command', () => ({
 }));
 
 vi.mock('consola', () => ({
-  consola: { success: vi.fn(), error: vi.fn() },
+  consola: { success: vi.fn(), error: vi.fn(), info: vi.fn(), start: vi.fn() },
+}));
+
+vi.mock('node:fs/promises', () => ({
+  default: { access: vi.fn() },
 }));
 
 describe('installLocalPackage', () => {
@@ -27,12 +32,14 @@ describe('installLocalPackage', () => {
     vi.clearAllMocks();
     vi.mocked(resolveHomePath).mockReturnValue('/resolved/home/.node-red');
     vi.mocked(runCommand).mockResolvedValue('');
+    vi.mocked(fs.access).mockResolvedValue(undefined);
   });
 
   it('uses currentContext/currentConfig defaults when no params are given', async () => {
     await installLocalPackage();
 
     expect(resolveHomePath).toHaveBeenCalledWith('~/.node-red');
+    expect(fs.access).toHaveBeenCalledWith('/resolved/home/.node-red');
     expect(runCommand).toHaveBeenCalledWith('npm', ['install', '/default/project'], {
       cwd: '/resolved/home/.node-red',
     });
@@ -43,6 +50,7 @@ describe('installLocalPackage', () => {
     await installLocalPackage({ pathToInstall: '/explicit/path', userDir: '/explicit/userDir' });
 
     expect(resolveHomePath).not.toHaveBeenCalled();
+    expect(fs.access).toHaveBeenCalledWith('/explicit/userDir');
     expect(runCommand).toHaveBeenCalledWith('npm', ['install', '/explicit/path'], { cwd: '/explicit/userDir' });
   });
 
@@ -53,12 +61,25 @@ describe('installLocalPackage', () => {
     await expect(installLocalPackage()).rejects.toBe(installError);
     expect(consola.success).not.toHaveBeenCalled();
   });
+
+  it('logs an error and returns early when userDir does not exist', async () => {
+    vi.mocked(fs.access).mockRejectedValue(new Error('ENOENT'));
+
+    await installLocalPackage();
+
+    expect(consola.error).toHaveBeenCalledWith(
+      'Node-RED userDir does not exist: /resolved/home/.node-red (run dev command to create it)',
+    );
+    expect(runCommand).not.toHaveBeenCalled();
+    expect(consola.success).not.toHaveBeenCalled();
+  });
 });
 
 describe('install-relative-package.cli commandHandler', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(resolveHomePath).mockReturnValue('/resolved/home/.node-red');
+    vi.mocked(fs.access).mockResolvedValue(undefined);
     vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
   });
 
