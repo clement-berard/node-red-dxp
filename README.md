@@ -52,6 +52,11 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 - [node-red-contrib-happy-http-client](https://www.npmjs.com/package/@keload/node-red-contrib-happy-http-client)
 - [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav) 🏗️
 
+## Upgrading from v1
+
+v2 has a few breaking changes: see the [migration guide](https://clement-berard.github.io/node-red-dxp/migration-v1-to-v2).
+v1 is kept in maintenance on the [`v1` branch](https://github.com/clement-berard/node-red-dxp/tree/v1) (`npm i @keload/node-red-dxp@v1`).
+
 ## License
 
 MIT

@@ -57,6 +57,7 @@ export default defineConfig({
     sidebar: [
       { text: 'Overview', link: '/overview.md' },
       { text: 'Get Started', link: '/get-started.md' },
+      { text: 'Migration v1 → v2', link: '/migration-v1-to-v2.md' },
       { text: 'Configuration file', link: '/config-file.md' },
       {
         text: 'CLI',
