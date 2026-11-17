@@ -126,6 +126,10 @@
     .red-ui-typedInput-container {
       display: flex;
       flex: 1 1 0%;
+      /* The widget copies the width of its input as an inline style. The editor tray is as wide as the content
+         wants to be, so let the flex row decide the width instead of the inline one */
+      width: 0 !important;
+      min-width: 0;
       min-height: auto;
       border: 1px solid var(--red-ui-form-input-border-color);
     }
