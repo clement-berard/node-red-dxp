@@ -34,6 +34,7 @@ include ../../../../.node-red-dxp/pug/helper
 | `+dxpFormRowInputText`           | Input text (or other text type like password) |
 | `+dxpFormRowSelect`              | Input Select                                  |
 | `+dxpFormRowCheckbox`            | Input Checkbox                                |
+| `+dxpFormRowEditableList`        | Label + list host for `initEditableList`      |
 | `+dxpFormRowSelectConfigNode`    | Select for a config node                      |
 | `+dxpHint`                       | Hint container                                |
 | `+simpleButton`                  | Simple button                                 |

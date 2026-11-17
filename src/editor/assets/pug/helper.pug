@@ -73,6 +73,19 @@ mixin dxpFormRowSelect(params)
             if block
                 block
 
+mixin dxpFormRowEditableList(params)
+    - var listId = generateInputId(params.id + '-container', params.isConfig)
+    - var i18nKey = params.i18nKey || params.id
+    - var capitalizedLabel = capitalizeFirst(params.label || '')
+    //- Same markup as the core change/switch nodes: a full width label, then the list (see initEditableList)
+    div(class=params.rowClasses)
+        .form-row
+            label(for=listId style='width:100%')
+                +iconFontAwesome(params.icon)(class='mr-1')
+                span(data-i18n=`${i18nKey};[title]${i18nKey}` title=capitalizedLabel)= capitalizedLabel
+        .form-row(style='margin-bottom:0;width:100%;')
+            ol(id=listId)
+
 mixin dxpFormRowSelectConfigNode(params)
     - var inputId = generateInputId(params.id, params.isConfig)
     - var i18nKey = params.i18nKey || params.id

@@ -5,8 +5,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   addClassesOnSelectors,
   applyTypedInput,
+  getEditableListItems,
   getFormValues,
   handleAddRemoveClassesOnSelectors,
+  initEditableList,
   initSelect,
   initTabs,
   isCheckboxChecked,
@@ -314,5 +316,73 @@ describe('initTabs', () => {
 
     expect(document.querySelector('#tab-a')?.classList.contains('hidden')).toBe(true);
     expect(document.querySelector('#tab-b')?.classList.contains('hidden')).toBe(false);
+  });
+});
+
+describe('editable list', () => {
+  const editableList = vi.fn();
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    ($.fn as any).editableList = function (...args: unknown[]) {
+      editableList(...args);
+      return this;
+    };
+    document.body.innerHTML = '<div id="box"><ol id="node-input-rules-container"></ol></div>';
+  });
+
+  it('creates the list with the given options and adds one row per item', () => {
+    initEditableList({ selector: '$rules-container', items: [{ name: 'a' }, { name: 'b' }], addItem: vi.fn() });
+
+    expect(editableList).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ addButton: true, removable: true, sortable: true, scrollOnAdd: false }),
+    );
+    expect(editableList).toHaveBeenNthCalledWith(2, 'addItem', { name: 'a' });
+    expect(editableList).toHaveBeenNthCalledWith(3, 'addItem', { name: 'b' });
+  });
+
+  it('lets a list be non sortable, non removable and without add button', () => {
+    initEditableList({
+      selector: '$rules-container',
+      addItem: vi.fn(),
+      addButton: false,
+      removable: false,
+      sortable: false,
+    });
+
+    expect(editableList).toHaveBeenCalledWith(
+      expect.objectContaining({ addButton: false, removable: false, sortable: false }),
+    );
+  });
+
+  it('builds a row through addItem, then lets the box follow the height of its rows', () => {
+    const addItem = vi.fn();
+    initEditableList({ selector: '$rules-container', addItem });
+    const options = editableList.mock.calls[0][0];
+    const row = $('<div/>');
+    $('#box').css('height', '26px');
+
+    options.addItem(row, 2, { name: 'a' });
+    vi.runAllTimers();
+
+    expect(addItem).toHaveBeenCalledWith(row, { name: 'a' }, 2);
+    expect($('#node-input-rules-container').parent().get(0)?.style.height).toBe('auto');
+  });
+
+  it('keeps the box fitted after a row is removed', () => {
+    initEditableList({ selector: '$rules-container', addItem: vi.fn() });
+    $('#box').css('height', '26px');
+
+    editableList.mock.calls[0][0].removeItem({});
+    vi.runAllTimers();
+
+    expect($('#box').get(0)?.style.height).toBe('auto');
+  });
+
+  it('reads the rows in their displayed order', () => {
+    ($.fn as any).editableList = () => $('<li data-v="1"></li><li data-v="2"></li>');
+
+    expect(getEditableListItems('$rules-container', (row) => row.data('v'))).toEqual([1, 2]);
   });
 });
