@@ -120,6 +120,44 @@
     }
   }
 
+  /* The Tailwind reset flattens the native look of the typedInput widget (line height, box sizing, button
+     background). Restore it inside an editableList, values measured on the core change node. */
+  .red-ui-editableList {
+    .red-ui-typedInput-container {
+      display: flex;
+      flex: 1 1 0%;
+      /* The widget copies the width of its input as an inline style. The editor tray is as wide as the content
+         wants to be, so let the flex row decide the width instead of the inline one */
+      width: 0 !important;
+      min-width: 0;
+      min-height: auto;
+      border: 1px solid var(--red-ui-form-input-border-color);
+    }
+
+    .red-ui-typedInput-type-select,
+    .red-ui-typedInput-option-trigger,
+    .red-ui-typedInput-option-expand {
+      background-color: var(--red-ui-form-button-background);
+      line-height: 30px;
+    }
+
+    .red-ui-typedInput-option-trigger,
+    .red-ui-typedInput-option-trigger * {
+      line-height: 32px;
+    }
+
+    .red-ui-typedInput-type-label {
+      line-height: 30px;
+    }
+
+    .red-ui-typedInput-type-select *,
+    .red-ui-typedInput-option-trigger *,
+    .red-ui-typedInput-option-expand *,
+    .red-ui-typedInput-input-wrap {
+      box-sizing: content-box;
+    }
+  }
+
   .dxp-form-row {
     @apply mb-4;
     div.main {
