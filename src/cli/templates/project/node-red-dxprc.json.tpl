@@ -1,0 +1,7 @@
+{
+  "watcher": {
+    "nodeRed": {
+      "executable": "package"
+    }
+  }
+}

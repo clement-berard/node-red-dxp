@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import chokidar from 'chokidar';
-import { consola } from 'consola';
 import nodemon from 'nodemon';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { log } from '../../../ui';
 import { runCommand } from '../../../utils/run-command';
 import { installLocalPackage } from '../../install-relative-package/install-relative-package.cli';
 import { runWatcher } from '../watcher';
@@ -113,8 +113,8 @@ vi.mock('../../install-relative-package/install-relative-package.cli', () => ({
   installLocalPackage: vi.fn(),
 }));
 
-vi.mock('consola', () => ({
-  consola: { info: vi.fn(), success: vi.fn(), warn: vi.fn(), error: vi.fn() },
+vi.mock('../../../ui', () => ({
+  log: { info: vi.fn(), success: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
 function resetCurrentContext() {
@@ -155,8 +155,8 @@ describe('runWatcher', () => {
     expect(chokidar.watch).toHaveBeenCalledWith('/project/src', {});
     expect(mockBuild).toHaveBeenCalledWith({ minify: false });
     expect(mockBuild).toHaveBeenCalledTimes(1);
-    expect(consola.success).toHaveBeenCalledWith('Initial Build completed');
-    expect(consola.warn).toHaveBeenCalledWith('Node-Red watcher is disabled. Please enable it in the config file');
+    expect(log.success).toHaveBeenCalledWith('Initial Build completed');
+    expect(log.warn).toHaveBeenCalledWith('Node-Red watcher is disabled. Please enable it in the config file');
     expect(nodemon).not.toHaveBeenCalled();
   });
 
@@ -180,7 +180,7 @@ describe('runWatcher', () => {
     await chokidarHandlers.change('/project/src/nodes/my-node/controller.ts');
 
     expect(mockBuild).toHaveBeenCalledTimes(2);
-    expect(consola.success).toHaveBeenCalledWith('Build completed');
+    expect(log.success).toHaveBeenCalledWith('Build completed');
     expect(mockNodemonRestart).toHaveBeenCalledTimes(1);
     expect(mockBsReload).toHaveBeenCalledTimes(1);
   });
@@ -192,7 +192,7 @@ describe('runWatcher', () => {
     runWatcher();
 
     await expect(chokidarHandlers.ready()).rejects.toThrow('process.exit(1)');
-    expect(consola.error).toHaveBeenCalledWith(expect.stringContaining('Local Node-RED executable not found at:'));
+    expect(log.error).toHaveBeenCalledWith(expect.stringContaining('Local Node-RED executable not found at:'));
     expect(nodemon).not.toHaveBeenCalled();
   });
 
@@ -202,11 +202,7 @@ describe('runWatcher', () => {
     await nodemonHandlers.start();
 
     expect(runCommand).toHaveBeenCalledWith('/usr/local/bin/node-red', ['--version']);
-    expect(consola.info).toHaveBeenCalledWith('node-red instance', {
-      executable: '/usr/local/bin/node-red',
-      userDir: '/home/user/.node-red',
-      nodeRedVersion: 'v3.1.0',
-    });
+    expect(log.info).toHaveBeenCalledWith('node-red v3.1.0 (/usr/local/bin/node-red), userDir: /home/user/.node-red');
     expect(mockBsInit).toHaveBeenCalledWith(
       expect.objectContaining({
         proxy: { target: 'http://localhost:1880', ws: true },
@@ -228,7 +224,7 @@ describe('runWatcher', () => {
       userDir: '/project/.node-red-dxp/.node-red-local',
     });
     expect(mockNodemonRestart).toHaveBeenCalledTimes(1);
-    expect(consola.error).not.toHaveBeenCalled();
+    expect(log.error).not.toHaveBeenCalled();
   });
 
   it('logs the error and does not restart nodemon when the local package install fails', async () => {
@@ -240,7 +236,7 @@ describe('runWatcher', () => {
     await chokidarHandlers.ready();
     await nodemonHandlers.start();
 
-    expect(consola.error).toHaveBeenCalledWith('Error while installing local package:', installError);
+    expect(log.error).toHaveBeenCalledWith('Error while installing local package: npm install failed');
     expect(mockNodemonRestart).not.toHaveBeenCalled();
     expect(mockBsInit).toHaveBeenCalledTimes(1);
   });
@@ -250,6 +246,6 @@ describe('runWatcher', () => {
     await chokidarHandlers.ready();
 
     expect(() => nodemonHandlers.quit()).toThrow('process.exit(0)');
-    expect(consola.info).toHaveBeenCalledWith('Nodemon has quit');
+    expect(log.info).toHaveBeenCalledWith('Nodemon has quit');
   });
 });

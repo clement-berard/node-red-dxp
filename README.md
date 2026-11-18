@@ -41,6 +41,11 @@ With **node-red-dxp**, you get everything you need to build, style, and document
     - Optional and zero setup: classic nodes (pug + TypeScript) keep working side by side. [Read more »](https://clement-berard.github.io/node-red-dxp/svelte/)
 
 
+- **🤖 Wizard and AI-ready**:
+    - `npx @keload/node-red-dxp create` scaffolds a package (Svelte or classic editor), installs and builds it.
+    - Ships guides for AI coding agents (`AGENTS.md` / `CLAUDE.md`) that always match the installed version. [Read more »](https://clement-berard.github.io/node-red-dxp/ai) · Start from zero with an agent: [llms.txt](https://clement-berard.github.io/node-red-dxp/llms.txt)
+
+
 - **🛠️ Development Helpers**:
     - Utility functions to streamline building custom node editors.
     - Hassle-free configuration for common Node-RED workflows.

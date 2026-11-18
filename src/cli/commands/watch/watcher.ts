@@ -3,10 +3,10 @@ import { join } from 'node:path';
 // @ts-expect-error TS6 - No types exports in this package
 import browserSync, { type BrowserSyncInstance } from 'browser-sync';
 import chokidar from 'chokidar';
-import { consola } from 'consola';
 import nodemon, { type Nodemon } from 'nodemon';
 import { build } from '../../../builder';
 import { currentContext } from '../../../current-context';
+import { log } from '../../ui';
 import { runCommand } from '../../utils/run-command';
 import { installLocalPackage } from '../install-relative-package/install-relative-package.cli';
 
@@ -21,9 +21,9 @@ function runNodemonAndBrowserSync() {
   const localBin = join(currentContext.currentDir, 'node_modules', '.bin', 'node-red');
 
   if (isExecutableLocalPackage && !existsSync(localBin)) {
-    consola.error(`Local Node-RED executable not found at: ${localBin}`);
-    consola.info('Did you forget to install it? Install node-red in development mode in your package');
-    consola.info('Your current Node-Red config', currentContext.config.watcher.nodeRed);
+    log.error(`Local Node-RED executable not found at: ${localBin}`);
+    log.info('Did you forget to install it? Install node-red in development mode in your package');
+    log.info(`Your current Node-Red config: ${JSON.stringify(currentContext.config.watcher.nodeRed)}`);
     process.exit(1);
   }
 
@@ -40,18 +40,15 @@ function runNodemonAndBrowserSync() {
 
   nodemon
     .once('start', async () => {
-      consola.info('node-red instance', {
-        executable,
-        userDir,
-        nodeRedVersion: await runCommand(executable, ['--version']),
-      });
+      const nodeRedVersion = (await runCommand(executable, ['--version'])).trim();
+      log.info(`node-red ${nodeRedVersion} (${executable}), userDir: ${userDir}`);
 
       if (isExecutableLocalPackage) {
         try {
           await installLocalPackage({ pathToInstall: currentContext.currentDir, userDir });
           nodemonInstance.restart();
         } catch (error) {
-          consola.error('Error while installing local package:', error);
+          log.error(`Error while installing local package: ${error instanceof Error ? error.message : error}`);
         }
       }
 
@@ -70,7 +67,7 @@ function runNodemonAndBrowserSync() {
       });
     })
     .on('quit', () => {
-      consola.info('Nodemon has quit');
+      log.info('Nodemon has quit');
       process.exit(0);
     });
 }
@@ -90,19 +87,25 @@ export function runWatcher(params?: RunWatcherParams) {
   const minify = params?.minify ?? false;
   watcher
     .on('ready', async () => {
-      consola.info('Initial scan complete. Ready for changes');
+      log.info('Initial scan complete. Ready for changes');
       await build({ minify });
-      consola.success('Initial Build completed');
+      log.success('Initial Build completed');
       if (hasNodeRedWatcher) {
         runNodemonAndBrowserSync();
       } else {
-        consola.warn('Node-Red watcher is disabled. Please enable it in the config file');
+        log.warn('Node-Red watcher is disabled. Please enable it in the config file');
       }
     })
     .on('change', async (path: string) => {
-      consola.info(`File ${path.replace(currentContext.currentDir, '')} has been changed`);
-      await build({ minify });
-      consola.success('Build completed');
+      log.info(`File ${path.replace(currentContext.currentDir, '')} has been changed`);
+      try {
+        await build({ minify });
+      } catch (error) {
+        // a broken file must not stop the watch: fix it and save again
+        log.error(`Build failed: ${error instanceof Error ? error.message : error}`);
+        return;
+      }
+      log.success('Build completed');
       if (hasNodeRedWatcher) {
         restartNodemonAndBrowserSync();
       }

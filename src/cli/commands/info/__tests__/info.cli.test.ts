@@ -1,7 +1,7 @@
 import { Command } from 'commander';
-import { consola } from 'consola';
 import prettyJson from 'prettyjson';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { log } from '../../../ui';
 import commandHandler from '../info.cli';
 
 vi.mock('../../../../current-context', () => ({
@@ -13,13 +13,12 @@ vi.mock('prettyjson', () => ({
   default: { render: vi.fn() },
 }));
 
-vi.mock('consola', () => ({
-  consola: { log: vi.fn() },
-}));
+vi.mock('../../../ui', () => ({ log: { info: vi.fn() } }));
 
 describe('info.cli', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.spyOn(console, 'log').mockImplementation(() => {});
     vi.mocked(prettyJson.render).mockImplementation((value) => `rendered:${JSON.stringify(value)}`);
   });
 
@@ -30,8 +29,8 @@ describe('info.cli', () => {
     await parent.parseAsync(['info'], { from: 'user' });
 
     expect(prettyJson.render).toHaveBeenCalledWith({ marker: 'context' });
-    expect(consola.log).toHaveBeenCalledWith('rendered:{"marker":"context"}');
-    expect(consola.log).not.toHaveBeenCalledWith('Configuration information:');
+    expect(console.log).toHaveBeenCalledWith('rendered:{"marker":"context"}');
+    expect(log.info).not.toHaveBeenCalled();
   });
 
   it('renders currentConfig with a header when --config is passed', async () => {
@@ -40,7 +39,7 @@ describe('info.cli', () => {
 
     await parent.parseAsync(['info', '--config'], { from: 'user' });
 
-    expect(consola.log).toHaveBeenCalledWith('Configuration information:');
+    expect(log.info).toHaveBeenCalledWith('Configuration information:');
     expect(prettyJson.render).toHaveBeenCalledWith({ marker: 'config' });
   });
 });

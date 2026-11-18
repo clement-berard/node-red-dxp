@@ -1,25 +1,19 @@
-import { getUserAgent } from 'package-manager-detector/detect';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPackageManager } from '../utils';
+import { describe, expect, it } from 'vitest';
+import { getProjectDirName, validatePackageName } from '../utils';
 
-vi.mock('package-manager-detector/detect', () => ({
-  getUserAgent: vi.fn(),
-}));
-
-describe('getPackageManager', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+describe('validatePackageName', () => {
+  it.each(['node-red-contrib-foo', '@scope/node-red-contrib-foo', 'a.b_c~d'])('accepts %s', (name) => {
+    expect(validatePackageName(name)).toBeUndefined();
   });
 
-  it('returns the detected package manager agent', () => {
-    vi.mocked(getUserAgent).mockReturnValue('pnpm');
-
-    expect(getPackageManager()).toBe('pnpm');
+  it.each(['', '  ', 'Upper', 'with space', '@scope/', '/x', 'a'.repeat(215)])('rejects "%s"', (name) => {
+    expect(validatePackageName(name)).toBeDefined();
   });
+});
 
-  it('falls back to npm when no agent is detected', () => {
-    vi.mocked(getUserAgent).mockReturnValue(null);
-
-    expect(getPackageManager()).toBe('npm');
+describe('getProjectDirName', () => {
+  it('drops the scope', () => {
+    expect(getProjectDirName('@scope/node-red-contrib-foo')).toBe('node-red-contrib-foo');
+    expect(getProjectDirName('plain')).toBe('plain');
   });
 });

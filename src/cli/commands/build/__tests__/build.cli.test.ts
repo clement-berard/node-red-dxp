@@ -1,12 +1,12 @@
 import { Command } from 'commander';
-import { consola } from 'consola';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import commandHandler from '../build.cli';
 
-const { mockBuild, mockSpinnerStart, mockSpinnerSucceed } = vi.hoisted(() => ({
+const { mockBuild, mockSpinnerStart, mockSpinnerStop, mockIntro } = vi.hoisted(() => ({
   mockBuild: vi.fn(),
   mockSpinnerStart: vi.fn(),
-  mockSpinnerSucceed: vi.fn(),
+  mockSpinnerStop: vi.fn(),
+  mockIntro: vi.fn(),
 }));
 
 vi.mock('../../../../current-context', () => ({
@@ -17,19 +17,16 @@ vi.mock('../../../../builder', () => ({
   build: mockBuild,
 }));
 
-vi.mock('ora', () => ({
-  default: vi.fn(() => ({ start: mockSpinnerStart })),
-}));
-
-vi.mock('consola', () => ({
-  consola: { info: vi.fn() },
+vi.mock('../../../ui', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../../ui')>()),
+  intro: mockIntro,
+  spinner: () => ({ start: mockSpinnerStart, stop: mockSpinnerStop, error: vi.fn() }),
 }));
 
 describe('build.cli', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockBuild.mockResolvedValue(undefined);
-    mockSpinnerStart.mockReturnValue({ succeed: mockSpinnerSucceed });
   });
 
   it('registers the build command with the --no-minify option', () => {
@@ -49,8 +46,8 @@ describe('build.cli', () => {
     await parent.parseAsync(['build'], { from: 'user' });
 
     expect(mockBuild).toHaveBeenCalledWith({ minify: true });
-    expect(mockSpinnerSucceed).toHaveBeenCalledTimes(1);
-    expect(consola.info).toHaveBeenCalledWith('node-red-dxp builder');
+    expect(mockSpinnerStop).toHaveBeenCalledTimes(1);
+    expect(mockIntro).toHaveBeenCalledWith('node-red-dxp builder');
   });
 
   it('disables minify when --no-minify is passed', async () => {

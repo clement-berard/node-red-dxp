@@ -1,117 +1,119 @@
 import { Command } from 'commander';
-import { consola } from 'consola';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createFolderIfNotExists } from '../../../../tools/node-utils';
-import commandHandler from '../create-node.cli';
-import { createScaffoldingContext, distFolderExist, writeNewNode } from '../scaffolding';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import commandHandler, { resolveAnswers, validateNodeName } from '../create-node.cli';
 
-const fakeContext = {
-  nodePascalName: 'TestNode',
-  nodeDashName: 'test-node',
-  newNodeDistPath: '/project/src/nodes/test-node',
-  newNodeEditorDistPath: '/project/src/nodes/test-node/editor',
-  scaffoldedDistHbs: '/project/dist/scaffolding/create-node/hbs',
-  isConfigNode: false,
-};
+const { mockCreateNode, mockNodeExists } = vi.hoisted(() => ({
+  mockCreateNode: vi.fn(),
+  mockNodeExists: vi.fn(),
+}));
+
+vi.mock('../../../../current-context', () => ({
+  currentContext: { pathSrcNodesDir: '/project/src/nodes', currentDir: '/project', packageName: '@me/pkg' },
+}));
 
 vi.mock('../scaffolding', () => ({
-  createScaffoldingContext: vi.fn(),
-  distFolderExist: vi.fn(),
-  writeNewNode: vi.fn(),
+  createNode: mockCreateNode,
+  nodeExists: mockNodeExists,
+  getDefaultCategory: () => 'pkg',
 }));
 
-vi.mock('../../../../tools/node-utils', () => ({
-  createFolderIfNotExists: vi.fn(),
+vi.mock('../../../ui', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../../ui')>()),
+  intro: vi.fn(),
+  outro: vi.fn(),
+  log: { success: vi.fn(), message: vi.fn(), error: vi.fn() },
+  canPrompt: () => false,
 }));
 
-vi.mock('consola', () => ({
-  consola: { prompt: vi.fn(), info: vi.fn(), error: vi.fn() },
-}));
+describe('validateNodeName', () => {
+  it('requires a name that gives a folder name', () => {
+    expect(validateNodeName(undefined)).toBeDefined();
+    expect(validateNodeName('   ')).toBeDefined();
+    expect(validateNodeName('---')).toBeDefined();
+    expect(validateNodeName('my node')).toBeUndefined();
+  });
+});
 
-describe('create-node.cli', () => {
+describe('resolveAnswers without a terminal', () => {
+  it('defaults to a regular svelte node', async () => {
+    expect(await resolveAnswers({ name: 'a' }, '/n')).toEqual({
+      name: 'a',
+      isConfigNode: false,
+      editor: 'svelte',
+      category: undefined,
+    });
+  });
+
+  it('keeps what is given', async () => {
+    expect(await resolveAnswers({ name: 'a', configNode: true, editor: 'classic' }, '/n')).toEqual({
+      name: 'a',
+      isConfigNode: true,
+      editor: 'classic',
+      category: undefined,
+      color: undefined,
+    });
+  });
+
+  it('rejects an invalid color', async () => {
+    await expect(resolveAnswers({ name: 'a', color: 'red' }, '/n')).rejects.toThrow('Invalid color');
+  });
+
+  it('asks for the name when it cannot prompt', async () => {
+    await expect(resolveAnswers({}, '/n')).rejects.toThrow('Missing node name');
+  });
+
+  it('rejects an invalid name', async () => {
+    await expect(resolveAnswers({ name: '---' }, '/n')).rejects.toThrow('Invalid node name');
+  });
+});
+
+describe('create-node command', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(createScaffoldingContext).mockReturnValue(fakeContext);
-    vi.mocked(distFolderExist).mockReturnValue(false);
-    vi.mocked(writeNewNode).mockResolvedValue(undefined);
+    mockCreateNode.mockResolvedValue([{ path: '/project/src/nodes/my-node/controller.ts', content: '' }]);
   });
 
-  it('skips both prompts when name and node type are given as flags', async () => {
+  afterEach(() => {
+    process.exitCode = undefined;
+  });
+
+  const run = async (args: string[]) => {
     const parent = new Command();
     commandHandler(parent);
+    await parent.parseAsync(['create-node', ...args], { from: 'user' });
+  };
 
-    await parent.parseAsync(['create-node', '--name', 'My Node', '--skip-confirm', '--regular-node'], {
-      from: 'user',
+  it('creates the node in src/nodes', async () => {
+    await run(['--name', 'My Node', '--config-node', '--editor', 'classic']);
+
+    expect(mockCreateNode).toHaveBeenCalledWith({
+      nodesDir: '/project/src/nodes',
+      name: 'My Node',
+      packageName: '@me/pkg',
+      isConfigNode: true,
+      editor: 'classic',
+      category: undefined,
+      color: undefined,
     });
-
-    expect(consola.prompt).not.toHaveBeenCalled();
-    expect(createScaffoldingContext).toHaveBeenCalledWith({ innerNodeName: 'my-node', isConfigNode: false });
-    expect(createFolderIfNotExists).toHaveBeenCalledWith(fakeContext.newNodeEditorDistPath);
-    expect(writeNewNode).toHaveBeenCalledWith(fakeContext);
   });
 
-  it('resolves isConfigNode to true from --config-node without prompting', async () => {
-    const parent = new Command();
-    commandHandler(parent);
+  it('passes the category given on the command line', async () => {
+    await run(['--name', 'x', '--category', 'mine']);
 
-    await parent.parseAsync(['create-node', '--name', 'my-node', '--skip-confirm', '--config-node'], {
-      from: 'user',
-    });
-
-    expect(createScaffoldingContext).toHaveBeenCalledWith({ innerNodeName: 'my-node', isConfigNode: true });
+    expect(mockCreateNode).toHaveBeenCalledWith(expect.objectContaining({ category: 'mine' }));
   });
 
-  it('prompts for the node name when --name is not provided', async () => {
-    vi.mocked(consola.prompt).mockResolvedValueOnce('typed name');
+  it('accepts the former --skip-confirm flag', async () => {
+    await run(['--name', 'x', '--regular-node', '--skip-confirm']);
 
-    const parent = new Command();
-    commandHandler(parent);
-
-    await parent.parseAsync(['create-node', '--skip-confirm', '--regular-node'], { from: 'user' });
-
-    expect(consola.prompt).toHaveBeenCalledWith('Enter node name:', { type: 'text' });
-    expect(createScaffoldingContext).toHaveBeenCalledWith({ innerNodeName: 'typed-name', isConfigNode: false });
+    expect(mockCreateNode).toHaveBeenCalledWith(expect.objectContaining({ name: 'x', editor: 'svelte' }));
   });
 
-  it('exits without scaffolding when the user rejects the confirmation prompt', async () => {
-    vi.mocked(consola.prompt).mockResolvedValueOnce(false);
+  it('sets the error status when the node cannot be created', async () => {
+    mockCreateNode.mockRejectedValue(new Error('Node x already exists'));
 
-    const parent = new Command();
-    commandHandler(parent);
+    await run(['--name', 'x']);
 
-    await parent.parseAsync(['create-node', '--name', 'test-node'], { from: 'user' });
-
-    expect(consola.info).toHaveBeenCalledWith('👌 OK. Exiting...');
-    expect(createScaffoldingContext).not.toHaveBeenCalled();
-    expect(writeNewNode).not.toHaveBeenCalled();
-  });
-
-  it('prompts for the node type when neither --config-node nor --regular-node is given', async () => {
-    vi.mocked(consola.prompt).mockResolvedValueOnce(true).mockResolvedValueOnce(true);
-
-    const parent = new Command();
-    commandHandler(parent);
-
-    await parent.parseAsync(['create-node', '--name', 'test-node'], { from: 'user' });
-
-    expect(consola.prompt).toHaveBeenCalledWith(`This name is OK for you 'test-node'?`, { type: 'confirm' });
-    expect(consola.prompt).toHaveBeenCalledWith('Is this a config node?', { type: 'confirm' });
-    expect(createScaffoldingContext).toHaveBeenCalledWith({ innerNodeName: 'test-node', isConfigNode: true });
-  });
-
-  it('reports an error and does not scaffold when the dist folder already exists', async () => {
-    vi.mocked(distFolderExist).mockReturnValue(true);
-
-    const parent = new Command();
-    commandHandler(parent);
-
-    await parent.parseAsync(['create-node', '--name', 'test-node', '--skip-confirm', '--regular-node'], {
-      from: 'user',
-    });
-
-    expect(consola.error).toHaveBeenCalledWith(`Node ${fakeContext.nodeDashName} already exists`);
-    expect(consola.info).toHaveBeenCalledWith(`In ${fakeContext.newNodeDistPath}`);
-    expect(createFolderIfNotExists).not.toHaveBeenCalled();
-    expect(writeNewNode).not.toHaveBeenCalled();
+    expect(process.exitCode).toBe(1);
   });
 });

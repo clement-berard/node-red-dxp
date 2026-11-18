@@ -1,11 +1,9 @@
 import { Command } from 'commander';
-import { consola } from 'consola';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { log } from '../../../ui';
 import commandHandler from '../checks.cli';
 
-vi.mock('consola', () => ({
-  consola: { info: vi.fn() },
-}));
+vi.mock('../../../ui', () => ({ log: { info: vi.fn() } }));
 
 describe('checks.cli', () => {
   beforeEach(() => {
@@ -21,6 +19,6 @@ describe('checks.cli', () => {
     // to parentCommand — 'nodes-structure' ends up as a top-level command.
     await parent.parseAsync(['nodes-structure'], { from: 'user' });
 
-    expect(consola.info).toHaveBeenCalledWith('In construction');
+    expect(log.info).toHaveBeenCalledWith('In construction');
   });
 });

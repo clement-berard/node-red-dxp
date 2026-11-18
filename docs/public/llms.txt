@@ -1,0 +1,37 @@
+# node-red-dxp (@keload/node-red-dxp)
+
+> Build Node-RED node packages: one folder per node, compiled by esbuild. The editor of a node is one Svelte 5 file
+> (`<node>.svelte`) or the classic html/pug + TypeScript. Docs: https://clement-berard.github.io/node-red-dxp/
+
+## Create a new package (no prompt, for an AI agent)
+
+Requires Node >= 22.22. Run from the parent folder; the project is created in `./<name without scope>`.
+
+    npx @keload/node-red-dxp create @scope/node-red-contrib-my-lib \
+      --description "What it does" --editor svelte --node my-node --yes
+
+- `--editor svelte|classic` (default svelte), `--node <first node name>`, `--pm npm|pnpm|yarn|bun`
+- `--no-install` skips install and build, `--no-ai` skips AGENTS.md/CLAUDE.md
+- Without `--yes` the command asks questions; in CI or without a terminal it never asks.
+- The folder must be missing or empty. The result installs, builds, and is ready.
+
+## Then read the project guides
+
+Created by `create` in `AGENTS.md`, pointing to:
+
+- node_modules/@keload/node-red-dxp/dist/ai/overview.md (layout, commands, rules: read first)
+- node_modules/@keload/node-red-dxp/dist/ai/svelte-node.md (write a Svelte node)
+- node_modules/@keload/node-red-dxp/dist/ai/classic-node.md (classic node)
+- node_modules/@keload/node-red-dxp/dist/ai/migrate-to-svelte.md (pug -> Svelte)
+
+## In an existing project
+
+    npm install -D @keload/node-red-dxp@latest
+    npx node-red-dxp ai                 # writes the AI block in AGENTS.md (+ CLAUDE.md)
+    npx node-red-dxp create-node --name my-node --regular-node --editor svelte --yes   # add --category <palette name>
+    npm run build                       # node-red-dxp build -> dist/
+
+## Rules
+
+- Do not edit `dist/` or `.node-red-dxp/`. Do not add svelte/svelte-check to a node package (Svelte ships with dxp).
+- Saved node properties are the keys of `defaults`: never rename them, nodes already in flows would break.

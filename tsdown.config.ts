@@ -53,11 +53,9 @@ export default defineConfig([
     target: 'node16',
     platform: 'node',
     deps: {
-      alwaysBundle: ['ora'],
-      // ora pulls in a version-dependent tree of its own transitive deps
-      // (chalk, cli-cursor, string-width, ...). Enumerating them in
-      // onlyBundle would break on every ora bump, so bundling them is
-      // intentional and left untracked here.
+      alwaysBundle: ['@clack/prompts'],
+      // @clack/prompts is ESM-only and pulls in its own transitive deps (@clack/core, picocolors...).
+      // Enumerating them in onlyBundle would break on every bump, so bundling them is intentional.
       onlyBundle: false,
       neverBundle: [
         'esbuild',
@@ -67,7 +65,6 @@ export default defineConfig([
         'sass',
         'html-minifier-terser',
         'chokidar',
-        'consola',
         'nodemon',
         'tailwindcss',
         '@tailwindcss/node',
