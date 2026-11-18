@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createProgram } from '../cli.utils';
+import registerAiCommands from '../commands/ai/ai.cli';
 import registerBuildCommands from '../commands/build/build.cli';
 import registerChecksCommands from '../commands/checks/checks.cli';
+import registerCreateCommands from '../commands/create';
 import registerScaffoldingCommands from '../commands/create-node/create-node.cli';
 import registerInfoCommands from '../commands/info/info.cli';
 import registerInstallRelativePackageCommands from '../commands/install-relative-package/install-relative-package.cli';
@@ -11,6 +13,8 @@ vi.mock('../cli.utils', () => ({
   createProgram: vi.fn(),
 }));
 
+vi.mock('../commands/ai/ai.cli', () => ({ default: vi.fn() }));
+vi.mock('../commands/create', () => ({ default: vi.fn() }));
 vi.mock('../commands/build/build.cli', () => ({ default: vi.fn() }));
 vi.mock('../commands/checks/checks.cli', () => ({ default: vi.fn() }));
 vi.mock('../commands/create-node/create-node.cli', () => ({ default: vi.fn() }));
@@ -43,6 +47,8 @@ describe('cli-with-project entrypoint', () => {
     expect(registerInfoCommands).toHaveBeenCalledWith(fakeProgram);
     expect(registerChecksCommands).toHaveBeenCalledWith(fakeProgram);
     expect(registerScaffoldingCommands).toHaveBeenCalledWith(fakeProgram);
+    expect(registerCreateCommands).toHaveBeenCalledWith(fakeProgram);
+    expect(registerAiCommands).toHaveBeenCalledWith(fakeProgram);
     expect(registerInstallRelativePackageCommands).toHaveBeenCalledWith(fakeProgram);
     expect(fakeProgram.parse).toHaveBeenCalledWith(process.argv);
   });

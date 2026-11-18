@@ -1,7 +1,7 @@
 import { Command } from 'commander';
-import { consola } from 'consola';
 import prettyJson from 'prettyjson';
 import { currentConfig, currentContext } from '../../../current-context';
+import { log } from '../../ui';
 
 type CliOptions = {
   config?: boolean;
@@ -13,10 +13,10 @@ export default function commandHandler(parentCommand: Command) {
     .option('--config', 'Show relative configuration information')
     .action((options: CliOptions) => {
       if (options.config) {
-        consola.log('Configuration information:');
-        consola.log(prettyJson.render(currentConfig));
+        log.info('Configuration information:');
+        console.log(prettyJson.render(currentConfig));
       } else {
-        consola.log(prettyJson.render(currentContext));
+        console.log(prettyJson.render(currentContext));
       }
     });
 

@@ -1,6 +1,8 @@
 # Get Started
 
 You can scaffold a new application instantly using the CLI or set it up manually.
+The wizard creates the package, a first node (Svelte or classic), installs the dependencies and writes the
+[instructions for AI agents](./ai.md). See [`create`](./cli/create.md).
 
 ## Quick Start (Recommended)
 
@@ -36,7 +38,8 @@ npm install @keload/node-red-dxp --dev // [!=npm auto]
 
 ### Create the structure
 
-Set up your project files following the structure below:
+Set up your project files following the structure below (a node is either **Svelte**, with `<node>.svelte`, or
+**classic**, with an `editor/` folder; `node-red-dxp create-node` generates either):
 
 ```sh
 ├── src/
@@ -47,7 +50,8 @@ Set up your project files following the structure below:
 │   │   ├── my-node-1/
 │   │   │   ├── controller.ts # Your node controller (mandatory)
 │   │   │   ├── docs.md(x) # Your node documentation (optional)
-│   │   │   ├── editor/ # Your node editor folder (mandatory)
+│   │   │   ├── my-node-1.svelte # Your node editor, Svelte (instead of editor/)
+│   │   │   ├── editor/ # Your node editor folder (classic nodes)
 │   │   │   │   ├── index.{html,pug} # Your node editor HTML/Pug (mandatory)
 │   │   │   │   └── index.ts # Your node editor script (mandatory)
 │   │   │   │   └── styles.scss # Your node editor styles (optional)
@@ -66,9 +70,10 @@ Set up your project files following the structure below:
 | :--- | :--- | :--- |
 | `src/nodes` | **Mandatory** | This folder contains all of your nodes. |
 | `src/nodes/<node_name>/controller.ts` | **Mandatory** | This file contains the logic of your node (server-side). |
-| `src/nodes/<node_name>/editor` | **Mandatory** | This folder contains the editor of your node. |
-| `src/nodes/<node_name>/editor/index.{html,pug}` | **Mandatory** | This file contains the HTML or Pug of your node editor. Pug file is prioritized over HTML file. |
-| `src/nodes/<node_name>/editor/index.ts` | **Mandatory** | This file contains the script of your node editor. |
+| `src/nodes/<node_name>/<node_name>.svelte` | **Mandatory*** | The editor of a [Svelte node](./svelte/index.md): definition and form in one file. |
+| `src/nodes/<node_name>/editor` | **Mandatory*** | The editor of a classic node. *One of the two, per node. |
+| `src/nodes/<node_name>/editor/index.{html,pug}` | *Classic* | This file contains the HTML or Pug of your node editor. Pug file is prioritized over HTML file. |
+| `src/nodes/<node_name>/editor/index.ts` | *Classic* | This file contains the script of your node editor. |
 | `src/nodes/<node_name>/editor/styles.scss` | *Optional* | This file contains the styles of your node editor. |
 | `src/locales` | *Optional* | This folder contains global translations for your nodes. Each file should be named according to the language code it represents (example: `en-US.json`). |
 | `src/red-server.ts` | *Optional* | This file is used to interact with the Node-RED backend. |

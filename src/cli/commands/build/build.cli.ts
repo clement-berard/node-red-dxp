@@ -1,9 +1,8 @@
 import { performance } from 'node:perf_hooks';
 import { Command } from 'commander';
-import { consola } from 'consola';
-import ora from 'ora';
 import { build } from '../../../builder';
 import { currentContext } from '../../../current-context';
+import { intro, runAction, spinner } from '../../ui';
 
 type CliOptions = {
   minify: boolean;
@@ -15,20 +14,26 @@ export default function commandHandler(parentCommand: Command) {
       'The build script compiles all nodes into a production-ready, optimized format at lightning speed, with the output defaulting to the dist directory.',
     )
     .option('--no-minify', 'No minify the output', true)
-    .action(async (options: CliOptions) => {
-      const nodesCount = currentContext.listNodesFull.length;
-      const start = performance.now();
-      consola.info('node-red-dxp builder');
-      const spinner = ora(`Building ${nodesCount} node(s)...`).start();
+    .action((options: CliOptions) =>
+      runAction(async () => {
+        const nodesCount = currentContext.listNodesFull.length;
+        const start = performance.now();
+        intro('node-red-dxp builder');
+        const spin = spinner();
+        spin.start(`Building ${nodesCount} node(s)...`);
 
-      await build({
-        minify: options.minify,
-      });
-      const end = performance.now();
-      const elapsed = end - start;
-      const elapsedSeconds = elapsed > 1000 ? `${(elapsed / 1000).toFixed(2)}s` : `${elapsed.toFixed(2)}ms`;
-      spinner.succeed(`Build completed in ${elapsedSeconds} for ${nodesCount} nodes(s)`);
-    });
+        try {
+          await build({ minify: options.minify });
+        } catch (error) {
+          spin.error('Build failed');
+          throw error;
+        }
+
+        const elapsed = performance.now() - start;
+        const elapsedSeconds = elapsed > 1000 ? `${(elapsed / 1000).toFixed(2)}s` : `${elapsed.toFixed(2)}ms`;
+        spin.stop(`Build completed in ${elapsedSeconds} for ${nodesCount} nodes(s)`);
+      }),
+    );
 
   parentCommand.addCommand(cmd);
 }

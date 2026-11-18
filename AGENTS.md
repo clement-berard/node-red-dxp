@@ -69,6 +69,26 @@ the classic `editor/` folder (pug + ts) is used. User docs: `docs/svelte/`.
   `globalThis.jQuery`); `data-i18n` does not apply to rendered DOM (`useT()`).
 - Known issue: no prop autocompletion for the `ui` components in WebStorm.
 
+## CLI (`src/cli`)
+
+- Commander parses the commands; **@clack/prompts** does every prompt, log and spinner, through `src/cli/ui.ts`
+  (`ask` turns a cancel into `CancelledError`, `runAction` wraps an action: cancel → exit 0, error → message + exit
+  code 1, `withSpinner`, `canPrompt` false without a TTY or in CI). Do not import `consola`/`ora` (removed).
+- `src/cli/index.ts` loads `cli-with-project` (build, watch, info, create-node, create, ai...) when a parent
+  `package.json` depends on dxp, `cli-without-project` (`create` only) otherwise. Only `cli-with-project` may import
+  `current-context` (it reads the `package.json` of the cwd at import time).
+- Generated files come from `src/cli/templates/**/*.tpl` (`{{var}}` replaced by `utils/render.ts`, an unknown variable
+  throws) and the AI guides from `src/cli/ai/*.md`. `build.sh` copies both to `dist/templates` and `dist/ai`;
+  `utils/paths.ts#getCliAssetsDir` finds them from the bundle (`dist/cli`) and from the sources.
+- `commands/create-node/scaffolding.ts` takes the `nodesDir`, it never reads `currentContext`: `create` reuses it for
+  the first node of a new project.
+- `commands/ai/instructions.ts` owns the block between `<!-- node-red-dxp:start/end -->` in `AGENTS.md`: keep the
+  guides in `src/cli/ai/` accurate when the Svelte API, the components or the CLI flags change (they are what agents
+  read).
+- Try the wizard on the local build: `node dist/cli/index.cjs create @me/node-red-contrib-x --yes --pm pnpm
+  --dxp-version link:/path/to/node-red-dxp` (hidden flag, default is `^<this version>`).
+- A generated project must build and pass `tsc` and Biome: check it after changing a template.
+
 ## Tests
 
 - Vitest, colocated under `__tests__/` next to the source it covers, no global config file.

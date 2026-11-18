@@ -57,6 +57,7 @@ export default defineConfig({
     sidebar: [
       { text: 'Overview', link: '/overview.md' },
       { text: 'Get Started', link: '/get-started.md' },
+      { text: 'AI instructions', link: '/ai.md' },
       { text: 'Migration v1 → v2', link: '/migration-v1-to-v2.md' },
       { text: 'Configuration file', link: '/config-file.md' },
       {
@@ -64,7 +65,9 @@ export default defineConfig({
         items: [
           { text: 'build', link: '/cli/build.md' },
           { text: 'watch', link: '/cli/watch.md' },
+          { text: 'create', link: '/cli/create.md' },
           { text: 'create-node', link: '/cli/create-node.md' },
+          { text: 'ai', link: '/cli/ai.md' },
         ],
       },
       {

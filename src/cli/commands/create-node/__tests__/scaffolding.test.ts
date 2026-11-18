@@ -1,213 +1,154 @@
-import path from 'node:path';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { computeNodeName } from '../../../../tools/common-utils';
-import { writeFile } from '../../../../tools/node-utils';
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, relative } from 'node:path';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  createScaffoldingContext,
-  distFolderExist,
-  prepareStructure,
-  renderFilesTemplates,
-  renderTemplate,
-  type ScaffoldingContext,
-  writeNewNode,
+  categoryFromPackageName,
+  colorFromName,
+  createNode,
+  getDefaultCategory,
+  getDefaultColor,
+  getNodeDir,
+  listUsedCategories,
+  nodeExists,
+  renderNodeFiles,
 } from '../scaffolding';
 
-const { mockReadFile, mockExistsSync } = vi.hoisted(() => ({
-  mockReadFile: vi.fn(),
-  mockExistsSync: vi.fn(),
-}));
+describe('create-node scaffolding', () => {
+  let nodesDir: string;
 
-vi.mock('node:fs/promises', () => ({
-  default: { readFile: mockReadFile },
-  readFile: mockReadFile,
-}));
-
-vi.mock('node:fs', () => ({
-  default: { existsSync: mockExistsSync },
-  existsSync: mockExistsSync,
-}));
-
-vi.mock('../../../../current-context', () => ({
-  currentContext: {
-    pathSrcNodesDir: '/project/src/nodes',
-    currentPackagedDistPath: '/project/dist',
-  },
-}));
-
-vi.mock('../../../../tools/node-utils', () => ({
-  writeFile: vi.fn(),
-}));
-
-describe('renderTemplate', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    nodesDir = mkdtempSync(join(tmpdir(), 'dxp-nodes-'));
   });
 
-  it('reads the template file and renders it with handlebars', async () => {
-    mockReadFile.mockResolvedValue('Hello {{name}}!');
-
-    const result = await renderTemplate('/templates/greeting.hbs', { name: 'World' });
-
-    expect(result).toBe('Hello World!');
+  afterEach(() => {
+    rmSync(nodesDir, { recursive: true, force: true });
   });
 
-  it('wraps a file read Error with a descriptive message', async () => {
-    mockReadFile.mockRejectedValue(new Error('ENOENT: no such file'));
+  const relativeFiles = async (options: Parameters<typeof renderNodeFiles>[0]) =>
+    (await renderNodeFiles(options)).map((file) => relative(nodesDir, file.path)).sort();
 
-    await expect(renderTemplate('/templates/missing.hbs', {})).rejects.toThrow(
-      'Failed to load file: ENOENT: no such file',
-    );
-  });
-
-  it('propagates a non-Error rejection as-is', async () => {
-    mockReadFile.mockRejectedValue('not-an-error');
-
-    await expect(renderTemplate('/templates/missing.hbs', {})).rejects.toBe('not-an-error');
-  });
-});
-
-describe('createScaffoldingContext', () => {
-  it('computes context paths for a regular node', () => {
-    const { pascalName, dashName } = computeNodeName('my-node');
-
-    const context = createScaffoldingContext({ innerNodeName: 'my-node' });
-
-    expect(context).toEqual({
-      nodePascalName: pascalName,
-      nodeDashName: dashName,
-      newNodeDistPath: `/project/src/nodes/${dashName}`,
-      newNodeEditorDistPath: `/project/src/nodes/${dashName}/editor`,
-      scaffoldedDistHbs: '/project/dist/scaffolding/create-node/hbs',
-      isConfigNode: false,
-    });
-  });
-
-  it('marks the context as a config node when requested', () => {
-    const context = createScaffoldingContext({ innerNodeName: 'my-config', isConfigNode: true });
-
-    expect(context.isConfigNode).toBe(true);
-  });
-});
-
-describe('distFolderExist', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('delegates to fs.existsSync with the context dist path', () => {
-    mockExistsSync.mockReturnValue(true);
-    const context: ScaffoldingContext = {
-      nodePascalName: 'MyNode',
-      nodeDashName: 'my-node',
-      newNodeDistPath: '/project/src/nodes/my-node',
-      newNodeEditorDistPath: '/project/src/nodes/my-node/editor',
-      scaffoldedDistHbs: '/project/dist/scaffolding/create-node/hbs',
-      isConfigNode: false,
-    };
-
-    expect(distFolderExist(context)).toBe(true);
-    expect(mockExistsSync).toHaveBeenCalledWith('/project/src/nodes/my-node');
-  });
-});
-
-function buildContext(isConfigNode: boolean): ScaffoldingContext {
-  return {
-    nodePascalName: 'MyNode',
-    nodeDashName: 'my-node',
-    newNodeDistPath: '/project/src/nodes/my-node',
-    newNodeEditorDistPath: '/project/src/nodes/my-node/editor',
-    scaffoldedDistHbs: '/project/dist/scaffolding/create-node/hbs',
-    isConfigNode,
-  };
-}
-
-describe('prepareStructure', () => {
-  it('returns the 6 files to scaffold for a regular node', () => {
-    const structure = prepareStructure(buildContext(false));
-
-    expect(structure).toHaveLength(6);
-    expect(structure.map((item) => item.finalPath)).toEqual([
-      '/project/src/nodes/my-node/controller.ts',
-      '/project/src/nodes/my-node/types.ts',
-      '/project/src/nodes/my-node/doc.md',
-      '/project/src/nodes/my-node/editor/index.ts',
-      '/project/src/nodes/my-node/editor/styles.scss',
-      '/project/src/nodes/my-node/editor/index.html',
+  it('renders a svelte node by default', async () => {
+    expect(await relativeFiles({ nodesDir, name: 'My Node' })).toEqual([
+      'my-node/controller.ts',
+      'my-node/docs.md',
+      'my-node/locales/en-US.json',
+      'my-node/my-node.svelte',
+      'my-node/types.ts',
     ]);
-    expect(structure[0].templatePath).toBe('/project/dist/scaffolding/create-node/hbs/controller.ts.hbs');
-    expect(structure[3].templatePath).toBe('/project/dist/scaffolding/create-node/hbs/editor/index.ts.hbs');
-    expect(structure[5].templatePath).toBe('/project/dist/scaffolding/create-node/hbs/editor/index.html.hbs');
   });
 
-  it('uses the -config template suffix for config nodes', () => {
-    const structure = prepareStructure(buildContext(true));
-
-    expect(structure[0].templatePath).toBe('/project/dist/scaffolding/create-node/hbs/controller-config.ts.hbs');
-    expect(structure[3].templatePath).toBe('/project/dist/scaffolding/create-node/hbs/editor/index-config.ts.hbs');
-    expect(structure[5].templatePath).toBe('/project/dist/scaffolding/create-node/hbs/editor/index-config.html.hbs');
-  });
-});
-
-describe('renderFilesTemplates / writeNewNode', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockReadFile.mockImplementation((templatePath: string) => Promise.resolve(`TEMPLATE:${templatePath}`));
+  it('renders a classic node with the editor folder', async () => {
+    expect(await relativeFiles({ nodesDir, name: 'old', editor: 'classic' })).toEqual([
+      'old/controller.ts',
+      'old/docs.md',
+      'old/editor/index.html',
+      'old/editor/index.ts',
+      'old/editor/styles.scss',
+      'old/types.ts',
+    ]);
   });
 
-  it('renders every file of the structure', async () => {
-    const context = buildContext(false);
+  it('renders the config variant with credentials', async () => {
+    const files = await renderNodeFiles({ nodesDir, name: 'my-server', isConfigNode: true });
+    const byName = Object.fromEntries(files.map((file) => [relative(nodesDir, file.path), file.content]));
 
-    const files = await renderFilesTemplates(context);
+    expect(byName['my-server/my-server.svelte']).toContain("category: 'config'");
+    expect(byName['my-server/controller.ts']).toContain('export const credentials');
+    expect(byName['my-server/types.ts']).toContain('host: string');
+  });
 
-    expect(files).toHaveLength(6);
-    expect(files[0]).toEqual({
-      finalPath: '/project/src/nodes/my-node/controller.ts',
-      content: 'TEMPLATE:/project/dist/scaffolding/create-node/hbs/controller.ts.hbs',
+  it('puts the names in the files and leaves no variable behind', async () => {
+    const files = await renderNodeFiles({ nodesDir, name: 'hello world' });
+    const svelte = files.find((file) => file.path.endsWith('.svelte'));
+
+    expect(svelte?.content).toContain('NodeHelloWorldProps');
+    expect(svelte?.content).toContain("'hello-world'");
+    for (const file of files) {
+      expect(file.content).not.toContain('{{');
+    }
+  });
+
+  it('ids of the classic html follow the Node-RED convention', async () => {
+    const regular = await renderNodeFiles({ nodesDir, name: 'a', editor: 'classic' });
+    const config = await renderNodeFiles({ nodesDir, name: 'b', editor: 'classic', isConfigNode: true });
+
+    expect(regular.find((file) => file.path.endsWith('.html'))?.content).toContain('id="node-input-name"');
+    expect(config.find((file) => file.path.endsWith('.html'))?.content).toContain('id="node-config-input-name"');
+  });
+
+  it('writes the files, creating the folders', async () => {
+    await createNode({ nodesDir, name: 'written' });
+
+    expect(existsSync(join(getNodeDir(nodesDir, 'written'), 'locales', 'en-US.json'))).toBe(true);
+    expect(readFileSync(join(nodesDir, 'written', 'controller.ts'), 'utf-8')).toContain('NodeWrittenProps');
+  });
+
+  it('refuses to overwrite an existing node', async () => {
+    await createNode({ nodesDir, name: 'twice' });
+
+    expect(nodeExists(nodesDir, 'Twice')).toBe(true);
+    await expect(createNode({ nodesDir, name: 'twice' })).rejects.toThrow('Node twice already exists');
+  });
+
+  describe('category', () => {
+    const svelteOf = async (options: Parameters<typeof renderNodeFiles>[0]) =>
+      (await renderNodeFiles(options)).find((file) => file.path.endsWith('.svelte'))?.content;
+
+    it('is derived from the package name', () => {
+      expect(categoryFromPackageName('@me/node-red-contrib-ultimate-toolkit')).toBe('ultimate-toolkit');
+      expect(categoryFromPackageName('node-red-foo')).toBe('foo');
+      expect(categoryFromPackageName('plain')).toBe('plain');
+      expect(categoryFromPackageName(undefined)).toBe('custom');
+    });
+
+    it('names a first node after the package', async () => {
+      expect(await svelteOf({ nodesDir, name: 'a', packageName: '@me/node-red-contrib-demo' })).toContain(
+        "category: 'demo'",
+      );
+    });
+
+    it('reuses the category of the existing nodes, the most used first', async () => {
+      await createNode({ nodesDir, name: 'one', category: 'shared' });
+      await createNode({ nodesDir, name: 'two', category: 'shared', editor: 'classic' });
+      await createNode({ nodesDir, name: 'three', category: 'rare' });
+      await createNode({ nodesDir, name: 'cfg', isConfigNode: true });
+
+      expect(listUsedCategories(nodesDir)).toEqual(['shared', 'rare']);
+      expect(getDefaultCategory(nodesDir, '@me/node-red-contrib-demo')).toBe('shared');
+      expect(await svelteOf({ nodesDir, name: 'four', packageName: 'x' })).toContain("category: 'shared'");
+    });
+
+    it('prefers an explicit category', async () => {
+      expect(await svelteOf({ nodesDir, name: 'a', category: 'chosen', packageName: 'x' })).toContain(
+        "category: 'chosen'",
+      );
     });
   });
+  describe('color', () => {
+    const svelteOf = async (options: Parameters<typeof renderNodeFiles>[0]) =>
+      (await renderNodeFiles(options)).find((file) => file.path.endsWith('.svelte'))?.content;
 
-  it('writes every rendered file to disk', async () => {
-    const context = buildContext(false);
+    it('is the same hex color for a given name, and differs between names', () => {
+      expect(colorFromName('demo')).toMatch(/^#[0-9a-f]{6}$/);
+      expect(colorFromName('demo')).toBe(colorFromName('demo'));
+      expect(colorFromName('demo')).not.toBe(colorFromName('other'));
+    });
 
-    await writeNewNode(context);
+    it('reuses the color of the nodes of the same category', async () => {
+      await createNode({ nodesDir, name: 'one', category: 'shared', color: '#112233' });
 
-    expect(writeFile).toHaveBeenCalledTimes(6);
-    expect(writeFile).toHaveBeenCalledWith(
-      '/project/src/nodes/my-node/controller.ts',
-      'TEMPLATE:/project/dist/scaffolding/create-node/hbs/controller.ts.hbs',
-    );
-    expect(writeFile).toHaveBeenCalledWith(
-      '/project/src/nodes/my-node/editor/index.html',
-      'TEMPLATE:/project/dist/scaffolding/create-node/hbs/editor/index.html.hbs',
-    );
-  });
-});
+      expect(getDefaultColor(nodesDir, 'shared')).toBe('#112233');
+      expect(await svelteOf({ nodesDir, name: 'two', category: 'shared' })).toContain("color: '#112233'");
+    });
 
-describe('real .hbs templates on disk', () => {
-  it('renders every real template file without throwing', async () => {
-    const { readFile: actualReadFile } = await vi.importActual<typeof import('node:fs/promises')>('node:fs/promises');
-    mockReadFile.mockImplementation((filePath: string) => actualReadFile(filePath, 'utf-8'));
-
-    const hbsDir = path.resolve(process.cwd(), 'src/cli/commands/create-node/hbs');
-    const templates = [
-      'controller.ts.hbs',
-      'controller-config.ts.hbs',
-      'types.ts.hbs',
-      'doc.md.hbs',
-      'editor/index.ts.hbs',
-      'editor/index-config.ts.hbs',
-      'editor/index.html.hbs',
-      'editor/index-config.html.hbs',
-      'editor/styles.scss.hbs',
-    ];
-
-    for (const template of templates) {
-      const rendered = await renderTemplate(path.join(hbsDir, template), {
-        nodePascalName: 'MyNode',
-        nodeName: 'my-node',
-      });
-      expect(typeof rendered).toBe('string');
-      expect(rendered.length).toBeGreaterThan(0);
-    }
+    it('derives a color from a new category and honours an explicit one', async () => {
+      expect(await svelteOf({ nodesDir, name: 'a', category: 'fresh' })).toContain(
+        `color: '${colorFromName('fresh')}'`,
+      );
+      expect(await svelteOf({ nodesDir, name: 'b', category: 'fresh', color: '#abcdef' })).toContain(
+        "color: '#abcdef'",
+      );
+    });
   });
 });
