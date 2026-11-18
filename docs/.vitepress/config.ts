@@ -99,6 +99,21 @@ export default defineConfig({
         ],
       },
       {
+        text: 'Svelte editor',
+        items: [
+          { text: 'Overview', link: '/svelte/' },
+          { text: 'The node file', link: '/svelte/node-file' },
+          { text: 'Components', link: '/svelte/components' },
+          { text: 'Credentials', link: '/svelte/credentials' },
+          { text: 'Config node', link: '/svelte/config-node' },
+          { text: 'Help and i18n', link: '/svelte/help-and-i18n' },
+          { text: 'Styling', link: '/svelte/styling' },
+          { text: 'TypeScript and IDE', link: '/svelte/typescript' },
+          { text: 'Migrate from pug', link: '/svelte/migration' },
+          { text: 'Troubleshooting', link: '/svelte/troubleshooting' },
+        ],
+      },
+      {
         text: 'Editor',
         items: [
           {

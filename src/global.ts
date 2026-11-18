@@ -7,4 +7,13 @@ import type { NodeAPI } from 'node-red';
 // import graph, not the whole tsconfig project.
 declare global {
   var RED: NodeAPI;
+
+  // Svelte 5 runes, typed here so that a node package does not have to install svelte to use them in `.svelte` files
+  function $props<T = any>(): T;
+  function $bindable<T = any>(initial?: T): T;
+  function $state<T>(initial: T): T;
+  function $state<T>(): T | undefined;
+  function $derived<T>(expression: T): T;
+  // biome-ignore lint/suspicious/noConfusingVoidType: same signature as the `$effect` of svelte
+  function $effect(fn: () => void | (() => void)): void;
 }

@@ -4,7 +4,11 @@ import { getDocs } from '../docs';
 const mocks = vi.hoisted(() => ({
   readFile: vi.fn(),
   mdxToMd: vi.fn(),
-  listNodesFull: [] as Array<{ name: string; doc: { mdxFiles: string[]; mdFiles: string[] } }>,
+  listNodesFull: [] as Array<{
+    name: string;
+    editor: { hasSvelte: boolean };
+    doc: { mdxFiles: string[]; mdFiles: string[] };
+  }>,
 }));
 
 vi.mock('../../../current-context', () => ({
@@ -34,7 +38,7 @@ beforeEach(() => {
 
 describe('getDocs', () => {
   it('excludes nodes with no mdx and no md files, returning "" when it is the only node', async () => {
-    mocks.listNodesFull = [{ name: 'foo-node', doc: { mdxFiles: [], mdFiles: [] } }];
+    mocks.listNodesFull = [{ name: 'foo-node', editor: { hasSvelte: false }, doc: { mdxFiles: [], mdFiles: [] } }];
 
     const result = await getDocs();
 
@@ -44,7 +48,9 @@ describe('getDocs', () => {
   });
 
   it('reads a .md file via fsPromise.readFile and wraps it in a script tag', async () => {
-    mocks.listNodesFull = [{ name: 'foo-node', doc: { mdxFiles: [], mdFiles: ['/path/docs.md'] } }];
+    mocks.listNodesFull = [
+      { name: 'foo-node', editor: { hasSvelte: false }, doc: { mdxFiles: [], mdFiles: ['/path/docs.md'] } },
+    ];
     mocks.readFile.mockResolvedValue('# Foo docs');
 
     const result = await getDocs();
@@ -54,7 +60,9 @@ describe('getDocs', () => {
   });
 
   it('processes a .mdx file via mdxToMd instead of readFile', async () => {
-    mocks.listNodesFull = [{ name: 'foo-node', doc: { mdxFiles: ['/path/docs.mdx'], mdFiles: [] } }];
+    mocks.listNodesFull = [
+      { name: 'foo-node', editor: { hasSvelte: false }, doc: { mdxFiles: ['/path/docs.mdx'], mdFiles: [] } },
+    ];
     mocks.mdxToMd.mockResolvedValue('# Foo mdx docs');
 
     const result = await getDocs();
@@ -65,7 +73,13 @@ describe('getDocs', () => {
   });
 
   it('prefers .mdx over .md when both are present', async () => {
-    mocks.listNodesFull = [{ name: 'foo-node', doc: { mdxFiles: ['/path/docs.mdx'], mdFiles: ['/path/docs.md'] } }];
+    mocks.listNodesFull = [
+      {
+        name: 'foo-node',
+        editor: { hasSvelte: false },
+        doc: { mdxFiles: ['/path/docs.mdx'], mdFiles: ['/path/docs.md'] },
+      },
+    ];
     mocks.mdxToMd.mockResolvedValue('# Foo mdx docs');
 
     await getDocs();
@@ -76,8 +90,8 @@ describe('getDocs', () => {
 
   it('joins multiple qualifying doc nodes with a newline, preserving order', async () => {
     mocks.listNodesFull = [
-      { name: 'foo-node', doc: { mdxFiles: [], mdFiles: ['/path/foo.md'] } },
-      { name: 'bar-node', doc: { mdxFiles: ['/path/bar.mdx'], mdFiles: [] } },
+      { name: 'foo-node', editor: { hasSvelte: false }, doc: { mdxFiles: [], mdFiles: ['/path/foo.md'] } },
+      { name: 'bar-node', editor: { hasSvelte: false }, doc: { mdxFiles: ['/path/bar.mdx'], mdFiles: [] } },
     ];
     mocks.readFile.mockResolvedValue('foo content');
     mocks.mdxToMd.mockResolvedValue('bar content');

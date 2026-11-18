@@ -21,6 +21,10 @@ features:
     details: Leveraging esbuild for ultra-fast JavaScript and TypeScript builds. Support for SCSS and automated Markdown-to-HTML conversion.
   - title: 🎨 Modern Styling
     details: Built-in Tailwind CSS and SCSS support designed for Node-RED editor components.
+  - title: 🧩 Svelte Editor
+    details: Build the whole editor of a node in a single reactive .svelte file, with ready-made components for the Node-RED widgets. Optional, and it works next to classic nodes.
+    link: /svelte/
+    linkText: Discover the Svelte editor
   - title: 🛠️ Developer Experience (DX)
     details: Professional utility functions and hassle-free configuration for modern Node-RED workflows.
 ---
@@ -37,6 +41,7 @@ features:
   <img src="./images/esbuild-logo.svg" alt="esbuild logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="Sass logo" width="50"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte logo" width="40"/>
 </div>
 
 ## 🚀 Why Choose Node-RED DXP for your Nodes?
@@ -44,6 +49,7 @@ features:
 - **Blazing Speed with esbuild**: Stop waiting for slow builds. Get instant feedback with ultra-fast watch modes.
 - **TypeScript First**: Native support for **TypeScript**, providing better type safety and DX for Node-RED node development.
 - **All-in-One Toolkit**: Everything is handled—bundling, CSS processing, and Node-RED help file generation.
+- **Svelte Support**: Write the editor of a node as one reactive `.svelte` file, see the [Svelte editor](/svelte/).
 
 ## 💪 Trusted by Community Projects
 

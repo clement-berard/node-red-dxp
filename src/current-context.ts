@@ -77,6 +77,7 @@ export function listNodeFolders(rawNodes: Entry[] = []) {
     const scssPath = `${fullEditorPath}/${fixedConfig.nodes.editor.stylesName}.scss`;
     const mdxPath = `${fullPath}/docs.mdx`;
     const mdPath = `${fullPath}/docs.md`;
+    const sveltePath = `${fullPath}/${entry.name}.svelte`;
     const scssFiles = existsSync(scssPath) ? [scssPath] : [];
     const mdxFiles = existsSync(mdxPath) ? [mdxPath] : [];
     const mdFiles = existsSync(mdPath) ? [mdPath] : [];
@@ -97,6 +98,9 @@ export function listNodeFolders(rawNodes: Entry[] = []) {
         htmlPath: `${fullEditorPath}/${fixedConfig.nodes.editor.htmlName}.html`,
         pugPath: `${fullEditorPath}/${fixedConfig.nodes.editor.htmlName}.pug`,
         scssFiles,
+        // `<node>/<node>.svelte` replaces the editor folder: UI, node config and help in one file
+        sveltePath,
+        hasSvelte: existsSync(sveltePath),
       },
       doc: {
         mdxFiles,
