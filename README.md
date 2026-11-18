@@ -1,65 +1,99 @@
-# Node-Red Developer eXPerience (node-red-dxp)
+<div align="center">
 
-Effortless Node Creation for Node-RED, really fast and easy.
+# Node-RED DXP
 
-Build faster with modern tools and seamless workflows 🚀
+**Build Node-RED nodes the way you build a modern web app.**<br/>
+One command to scaffold, one file per editor, instant rebuilds.
 
-Welcome to **node-red-dxp**, a comprehensive library designed to simplify and accelerate the development of custom nodes for Node-RED. 🚀
+[![npm](https://img.shields.io/npm/v/@keload/node-red-dxp?color=a6bbcf)](https://www.npmjs.com/package/@keload/node-red-dxp)
+[![license](https://img.shields.io/npm/l/@keload/node-red-dxp?color=a6bbcf)](./LICENSE)
+[![docs](https://img.shields.io/badge/docs-VitePress-a6bbcf)](https://clement-berard.github.io/node-red-dxp/)
 
-With **node-red-dxp**, you get everything you need to build, style, and document your nodes—all in one package!
-
-[Explore the docs »](https://clement-berard.github.io/node-red-dxp/)
+[**Get started**](https://clement-berard.github.io/node-red-dxp/get-started) ·
+[Documentation](https://clement-berard.github.io/node-red-dxp/) ·
+[Svelte editor](https://clement-berard.github.io/node-red-dxp/svelte/) ·
+[AI guides](https://clement-berard.github.io/node-red-dxp/ai)
 
 <br/>
-<div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem; flex-wrap: wrap;">
-  <img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="Node-RED logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript logo" width="40"/>
-  <img src="./docs/images/esbuild-logo.svg" alt="esbuild logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="Sass logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte logo" width="40"/>
+
+<img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="Node-RED logo" width="50"/>&nbsp;&nbsp;
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript logo" width="40"/>&nbsp;&nbsp;
+<img src="./docs/images/esbuild-logo.svg" alt="esbuild logo" width="50"/>&nbsp;&nbsp;
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS logo" width="50"/>&nbsp;&nbsp;
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="Sass logo" width="50"/>&nbsp;&nbsp;
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte logo" width="40"/>
+
 </div>
 
+## Why
 
-## ✨ Key Features
+Writing a Node-RED node means juggling a runtime, an editor form, styles, help pages and translations, each with its
+own tooling. **node-red-dxp** replaces that setup with one CLI and one toolchain:
 
-- **⚡ Powerful and fast Builder**:
-    - Leverages **esbuild** for lightning-fast JavaScript builds (controller & editor).
-    - Supports SCSS styles for polished, modern editor UIs.
-    - Automatically render Markdown documentation into Node-RED compatible HTML.
+- **Fast.** esbuild bundles the runtime and the editor, and `watch` rebuilds on every save.
+- **All-in-one.** TypeScript, SCSS, Tailwind, Markdown help and i18n are handled for you.
+- **Pleasant.** Write your editor as a reactive Svelte component, not as hand-wired DOM and ids.
+- **Agent-ready.** Generated projects ship guides that AI coding agents can follow.
 
+## Start in one command
 
-- **🎨 Effortless Styling**:
-    - Built-in support for **Tailwind CSS**.
-    - Includes clean, minimal CSS styles tailored for Node-RED.
-    - Fully customizable SCSS for editor components.
+```bash
+npx @keload/node-red-dxp create
+```
 
+The wizard scaffolds your package (Svelte or classic editor), installs the dependencies and runs a first build.
+Then:
 
-- **🧩 Svelte editor** (new):
-    - Describe the whole editor of a node in **one `.svelte` file**: reactive form, Node-RED definition and translations.
-    - Ready-made components for Node-RED widgets (typed input, config node select, code editor, lists...).
-    - Optional and zero setup: classic nodes (pug + TypeScript) keep working side by side. [Read more »](https://clement-berard.github.io/node-red-dxp/svelte/)
+```bash
+pnpm dev   # rebuild on every change
+```
 
+## One file per editor
 
-- **🤖 Wizard and AI-ready**:
-    - `npx @keload/node-red-dxp create` scaffolds a package (Svelte or classic editor), installs and builds it.
-    - Ships guides for AI coding agents (`AGENTS.md` / `CLAUDE.md`) that always match the installed version. [Read more »](https://clement-berard.github.io/node-red-dxp/ai) · Start from zero with an agent: [llms.txt](https://clement-berard.github.io/node-red-dxp/llms.txt)
+With the Svelte editor, the whole editor of a node lives in `src/nodes/<node>/<node>.svelte`: the Node-RED
+definition on top, a reactive form below. No show/hide code, no ids, no `getFormValues`.
 
+```svelte
+<script module lang="ts">
+  export const definition = { category: 'my category', color: '#a6bbcf', icon: 'font-awesome/fa-flask' };
+  export const defaults = { name: { value: '' }, mode: { value: 'simple' }, delay: { value: '0' } };
+</script>
 
-- **🛠️ Development Helpers**:
-    - Utility functions to streamline building custom node editors.
-    - Hassle-free configuration for common Node-RED workflows.
+<script lang="ts">
+  import { Input, Row, Select, Spinner, useT } from '@keload/node-red-dxp/ui';
 
+  let { node } = $props();
+  const t = useT();
+</script>
 
-## 🚀 Why Choose node-red-dxp?
+<Row label={t('name')}><Input bind:value={node.name} /></Row>
+<Row label={t('mode')}><Select bind:value={node.mode} options={['simple', 'advanced']} /></Row>
 
-- **Blazing Speed**: Thanks to **esbuild**, both builds and watches are ultra-fast, letting you focus on development, not waiting.
-- **All-in-One Toolkit**: No need to juggle multiple tools—**node-red-dxp** handles everything from JavaScript bundling to CSS and Markdown processing.
-- **Developer-Centric**: Designed with developer experience (DX) at its core, making custom node creation as seamless as possible.
+{#if node.mode === 'advanced'}
+  <Row label={t('delay')}><Spinner bind:value={node.delay} min={0} /></Row>
+{/if}
+```
 
-## 💪 Who’s Building with Node-RED DXP?
+Svelte is optional: classic nodes (pug + TypeScript) keep working side by side.
+[Read more »](https://clement-berard.github.io/node-red-dxp/svelte/)
 
-- [node-red-contrib-ultimate-toolkit](https://www.npmjs.com/package/@keload/node-red-contrib-ultimate-toolkit)️
+## Features
+
+- **⚡ Fast builder**: esbuild for the controller and the editor, SCSS for the editor UI, Markdown help rendered
+  into Node-RED compatible HTML.
+- **🎨 Styling**: built-in Tailwind CSS, plus clean minimal CSS tailored for Node-RED and fully customizable SCSS.
+- **🧩 Svelte editor**: ready-made components for Node-RED widgets (typed input, config node select, code editor,
+  lists...).
+- **🤖 Wizard and AI-ready**: `create` scaffolds a package and ships guides for AI coding agents
+  (`AGENTS.md` / `CLAUDE.md`) that always match the installed version.
+  [Read more »](https://clement-berard.github.io/node-red-dxp/ai) · Start from zero with an agent:
+  [llms.txt](https://clement-berard.github.io/node-red-dxp/llms.txt)
+- **🛠️ Development helpers**: utilities to streamline custom node editors and hassle-free configuration for common
+  Node-RED workflows.
+
+## Built with node-red-dxp
+
+- [node-red-contrib-ultimate-toolkit](https://www.npmjs.com/package/@keload/node-red-contrib-ultimate-toolkit)
 - [node-red-contrib-js-philips-tv-control](https://www.npmjs.com/package/@keload/node-red-contrib-js-philips-tv-control)
 - [node-red-contrib-happy-http-client](https://www.npmjs.com/package/@keload/node-red-contrib-happy-http-client)
 - [node-red-contrib-better-webdav](https://www.npmjs.com/package/@keload/node-red-contrib-better-webdav) 🏗️
@@ -67,7 +101,8 @@ With **node-red-dxp**, you get everything you need to build, style, and document
 ## Upgrading from v1
 
 v2 has a few breaking changes: see the [migration guide](https://clement-berard.github.io/node-red-dxp/migration-v1-to-v2).
-v1 is kept in maintenance on the [`v1` branch](https://github.com/clement-berard/node-red-dxp/tree/v1) (`npm i @keload/node-red-dxp@v1`).
+v1 is kept in maintenance on the [`v1` branch](https://github.com/clement-berard/node-red-dxp/tree/v1)
+(`npm i @keload/node-red-dxp@v1`).
 
 ## License
 
