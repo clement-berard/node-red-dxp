@@ -28,6 +28,10 @@ If you need to pass specific attributes to the generated `<script>` or `<link>` 
 
 *Note: Boolean attributes (like `defer` or `async`) can be passed without a value. The `[attrs=...]` syntax is automatically stripped out in the final `src` and `href` paths.*
 
+## Other assets (images, icons...)
+
+Only `.js` and `.css` files are injected. Any other file (images, icons, fonts...) is not added to `dist/index.html`: Node-RED serves it natively from your `resources` folder, so reference it yourself from your editor HTML.
+
 ## Using Resources in Node-RED
 
 Thanks to the automatic global injection, any exposed function or style is instantly available across all your nodes' editors.
