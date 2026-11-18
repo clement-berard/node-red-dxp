@@ -54,6 +54,16 @@ describe('getNodesHtml', () => {
     vi.clearAllMocks();
   });
 
+  it('emits only an empty mount point for a svelte node: the component renders the form', async () => {
+    const svelteNode = { ...mockNode, editor: { ...mockNode.editor, hasSvelte: true } };
+
+    const result = await getNodesHtml({ nodes: [svelteNode], packageNameSlug: 'my-pkg', minify: false });
+
+    expect(pug.renderFile).not.toHaveBeenCalled();
+    expect(fsPromise.readFile).not.toHaveBeenCalled();
+    expect(result.html).toContain('<div id="node-123"></div>');
+  });
+
   it('processes a node using pug when pug file exists', async () => {
     vi.mocked(fsPromise.access).mockResolvedValue(undefined);
     // @ts-expect-error

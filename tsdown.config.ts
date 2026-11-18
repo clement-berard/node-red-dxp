@@ -22,6 +22,7 @@ export default defineConfig([
       index: 'src/index.ts',
       'utils/index': 'src/utils/index.ts',
       'editor/dom-helper/index': 'src/editor/dom.ts',
+      'editor/svelte/index': 'src/editor/svelte/define.ts',
     },
     dts: true,
     minify: minifyFlag,
@@ -60,6 +61,8 @@ export default defineConfig([
       onlyBundle: false,
       neverBundle: [
         'esbuild',
+        'esbuild-svelte',
+        'svelte',
         'fast-glob',
         'sass',
         'html-minifier-terser',

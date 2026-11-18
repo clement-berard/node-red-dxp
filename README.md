@@ -17,6 +17,7 @@ With **node-red-dxp**, you get everything you need to build, style, and document
   <img src="./docs/images/esbuild-logo.svg" alt="esbuild logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS logo" width="50"/>
   <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="Sass logo" width="50"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte logo" width="40"/>
 </div>
 
 
@@ -32,6 +33,12 @@ With **node-red-dxp**, you get everything you need to build, style, and document
     - Built-in support for **Tailwind CSS**.
     - Includes clean, minimal CSS styles tailored for Node-RED.
     - Fully customizable SCSS for editor components.
+
+
+- **🧩 Svelte editor** (new):
+    - Describe the whole editor of a node in **one `.svelte` file**: reactive form, Node-RED definition and translations.
+    - Ready-made components for Node-RED widgets (typed input, config node select, code editor, lists...).
+    - Optional and zero setup: classic nodes (pug + TypeScript) keep working side by side. [Read more »](https://clement-berard.github.io/node-red-dxp/svelte/)
 
 
 - **🛠️ Development Helpers**:

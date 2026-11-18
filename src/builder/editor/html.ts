@@ -28,15 +28,14 @@ function wrapHtml(nodeName: string, html: string) {
 async function processNodeHtml(node: ListNode, packageNameSlug: string, minify = false) {
   let htmlContent = '';
 
-  const hasPug = await fsPromise
-    .access(node.editor.pugPath)
-    .then(() => true)
-    .catch(() => false);
+  // a svelte node only needs its mount point: the component renders the form
+  if (!node.editor.hasSvelte) {
+    const hasPug = await fsPromise
+      .access(node.editor.pugPath)
+      .then(() => true)
+      .catch(() => false);
 
-  if (hasPug) {
-    htmlContent = pug.renderFile(node.editor.pugPath);
-  } else {
-    htmlContent = await fsPromise.readFile(node.editor.htmlPath, 'utf8');
+    htmlContent = hasPug ? pug.renderFile(node.editor.pugPath) : await fsPromise.readFile(node.editor.htmlPath, 'utf8');
   }
 
   const htmlContentWithAdditionalDiv = `

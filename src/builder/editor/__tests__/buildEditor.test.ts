@@ -1,5 +1,6 @@
 import esbuild from 'esbuild';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { currentContext } from '../../../current-context';
 import { fixedConfig } from '../../../fixed-config';
 import { writeFile } from '../../../tools/node-utils';
 import { buildEditor } from '../buildEditor';
@@ -7,6 +8,7 @@ import { getDocs } from '../docs';
 import { getNodesHtml } from '../html';
 import { getResources } from '../resources';
 import { getAllCompiledStyles } from '../styles';
+import { getSveltePlugins, getSvelteSources } from '../svelte';
 
 const { mockNodeA, mockNodeB } = vi.hoisted(() => ({
   mockNodeA: {
@@ -54,6 +56,11 @@ vi.mock('../resources', () => ({
   getResources: vi.fn(),
 }));
 
+vi.mock('../svelte', () => ({
+  getSveltePlugins: vi.fn(),
+  getSvelteSources: vi.fn(),
+}));
+
 vi.mock('../styles', () => ({
   getAllCompiledStyles: vi.fn(),
 }));
@@ -66,6 +73,8 @@ describe('buildEditor', () => {
     vi.mocked(getResources).mockResolvedValue('RESOURCES');
     vi.mocked(getNodesHtml).mockResolvedValue({ html: 'RAWHTML', allWrappedHtml: 'WRAPPEDHTML' } as any);
     vi.mocked(getAllCompiledStyles).mockResolvedValue('CSS');
+    vi.mocked(getSveltePlugins).mockResolvedValue([{ name: 'svelte-plugin' }] as any);
+    vi.mocked(getSvelteSources).mockResolvedValue('');
   });
 
   it('generates one import + one registerType line per node in the editor index content', async () => {
@@ -137,5 +146,65 @@ describe('buildEditor', () => {
 
     expect(getAllCompiledStyles).toHaveBeenCalledWith(expect.objectContaining({ rawHtml: 'RAWHTML' }));
     expect(getAllCompiledStyles).not.toHaveBeenCalledWith(expect.objectContaining({ rawHtml: 'WRAPPEDHTML' }));
+  });
+
+  it('loads no svelte plugin when no node is a svelte node', async () => {
+    await buildEditor();
+
+    expect(getSveltePlugins).not.toHaveBeenCalled();
+    expect(esbuild.build).toHaveBeenCalledWith(expect.objectContaining({ plugins: [] }));
+    expect(vi.mocked(writeFile).mock.calls[0][1]).not.toContain('defineSvelteNode');
+  });
+
+  describe('with a svelte node', () => {
+    const svelteNode = {
+      name: 'node-s',
+      pascalName: 'NodeS',
+      nodeIdentifier: 'my-pkg-node-s',
+      editor: {
+        tsPath: '/src/nodes/node-s/editor/index.ts',
+        sveltePath: '/src/nodes/node-s/node-s.svelte',
+        hasSvelte: true,
+      },
+    } as any;
+    const original = currentContext.listNodesFull;
+
+    beforeEach(() => {
+      (currentContext as any).listNodesFull = [...original, svelteNode];
+    });
+
+    afterEach(() => {
+      (currentContext as any).listNodesFull = original;
+    });
+
+    it('registers it through defineSvelteNode with the module of the svelte file', async () => {
+      await buildEditor();
+
+      const content = vi.mocked(writeFile).mock.calls[0][1];
+      expect(content).toContain("import { defineSvelteNode } from '@keload/node-red-dxp/editor/svelte';");
+      expect(content).toContain("import SvelteRoot from '@keload/node-red-dxp/editor/svelte/Root.svelte';");
+      expect(content).toContain("import * as NodeS from '/src/nodes/node-s/node-s.svelte';");
+      expect(content).toContain(
+        "window.RED.nodes.registerType('node-s', defineSvelteNode({ name: 'node-s', identifier: 'my-pkg-node-s', root: SvelteRoot, module: NodeS }));",
+      );
+    });
+
+    it('keeps the classic nodes registered as before', async () => {
+      await buildEditor();
+
+      const content = vi.mocked(writeFile).mock.calls[0][1];
+      expect(content).toContain("window.RED.nodes.registerType('node-a', NodeA);");
+    });
+
+    it('gives esbuild the svelte plugins and the svelte sources to tailwind', async () => {
+      vi.mocked(getSvelteSources).mockResolvedValue('SVELTE SOURCES');
+
+      await buildEditor();
+
+      expect(esbuild.build).toHaveBeenCalledWith(expect.objectContaining({ plugins: [{ name: 'svelte-plugin' }] }));
+      expect(getAllCompiledStyles).toHaveBeenCalledWith(
+        expect.objectContaining({ rawHtml: 'RAWHTML\nSVELTE SOURCES' }),
+      );
+    });
   });
 });

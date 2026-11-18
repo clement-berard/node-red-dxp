@@ -50,6 +50,16 @@
       "import": "./dist/utils/controller.js",
       "require": "./dist/utils/controller.cjs"
     },
+    "./editor/svelte": {
+      "types": "./dist/editor/svelte/index.d.ts",
+      "import": "./dist/editor/svelte/index.js",
+      "require": "./dist/editor/svelte/index.cjs"
+    },
+    "./editor/svelte/Root.svelte": "./dist/editor/svelte/Root.svelte",
+    "./ui": {
+      "default": "./dist/ui/index.js"
+    },
+    "./ui/*": "./dist/ui/*",
     "./package.json": "./package.json"
   },
   "keywords": [],
@@ -72,6 +82,7 @@
     "jsdom": "^31.0.1",
     "plop": "^4.0.5",
     "release-it": "21.1.2",
+    "svelte2tsx": "^0.7.63",
     "tsdown": "^0.23.7",
     "tsx": "4.23.15",
     "typedoc": "0.28.20",
@@ -99,6 +110,7 @@
     "cosmiconfig": "10.0.1",
     "es-toolkit": "^1.53.2",
     "esbuild": "0.28.2",
+    "esbuild-svelte": "^0.9.5",
     "fast-glob": "3.3.3",
     "handlebars": "4.7.10",
     "html-minifier-terser": "7.2.0",
@@ -112,6 +124,7 @@
     "pug": "3.0.4",
     "radash": "12.1.1",
     "sass": "1.108.2",
+    "svelte": "^5.58.0",
     "tailwindcss": "^4",
     "zod": "^4.6.7"
   },
