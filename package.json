@@ -1,7 +1,7 @@
 {
   "name": "@keload/node-red-dxp",
   "version": "2.3.1",
-  "description": "",
+  "description": "CLI and library to build and watch Node-RED node packages (controller, editor, locales, docs).",
   "type": "module",
   "scripts": {
     "prebuild": "pnpm tsc --noEmit",
