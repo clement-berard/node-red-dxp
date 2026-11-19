@@ -59,7 +59,7 @@ markup). `controller.ts`, `docs.md(x)` and `locales/` stay separate files.
 | `Select` | `bind:value`, `options` (`string[]` or `{value,text}[]`), `empty`, `onchange` |
 | `Checkbox` | `bind:checked`, `text` |
 | `TypedInput` | `bind:value`, `bind:type`, `types` (array: `['msg','json']`, custom `{value,label,hasValue}`), other props = widget options |
-| `TypedField` | whole line for `<field>` + `<field>Type`: `node`, `field`, `label`, `icon`, `valueType`, `inherit` (`{value,label}`, choice without value), `readonly`, `extraTypes`, `hint`, `placeholder`. Defaults: `typedFieldDefaults(field, { value, valueType, type })` from `@keload/node-red-dxp/editor/svelte` |
+| `TypedField` | whole line for `<field>` + `<field>Type`: `node`, `field`, `label`, `icon`, `valueType`, `inherit` (`{value,label}`, choice without value), `readonly`, `extraTypes`, `allowEmpty` (default true: an empty value is not outlined in red), `hint`, `placeholder`. Defaults: `typedFieldDefaults(field, { value, valueType, type })` from `@keload/node-red-dxp/editor/svelte` |
 | `ConfigSelect` | `bind:value`, `type` (config node type), `property` (key in `defaults`, declared with `type`), `filter` |
 | `CodeEditor` | `bind:value`, `mode` (`json`, `javascript`...), `height`, `options`, `expand` (full screen button) |
 | `Tabs` | `tabs` (labels), snippet `children(activeTab)`: render the content of the active tab only |
