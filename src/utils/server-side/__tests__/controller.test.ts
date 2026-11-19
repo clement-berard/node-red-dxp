@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
-import { evaluateNodeProperty, getREDNode, splitBooleanOutputs, useControllerNode } from '../controller';
+import { evaluateNodeProperty, getREDNode, splitBooleanOutputs, useControllerNode, useNodeStatus } from '../controller';
 
 // Mock global RED object
 const mockRED = {
@@ -306,6 +306,66 @@ describe('controller', () => {
           expect.any(Function),
         );
       });
+    });
+  });
+
+  describe('evalProps', () => {
+    it('should evaluate every field and apply the strict defaults', async () => {
+      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, type, _node, _msg, callback) =>
+        callback(null, type === 'num' ? Number(value) : value),
+      );
+      const { evalProps } = useControllerNode({} as any, {} as any);
+
+      const result = await evalProps({ timeout: '10', timeoutType: 'num', name: '' }, { timeout: 5000, name: 'none' });
+
+      expect(result).toEqual({ timeout: 10, name: 'none' });
+    });
+  });
+
+  describe('resolveInherited', () => {
+    beforeEach(() => {
+      (mockRED.util.evaluateNodeProperty as Mock).mockImplementation((value, _type, _node, _msg, callback) =>
+        callback(null, value),
+      );
+    });
+
+    const run = (node: object, parent: object | null) =>
+      useControllerNode({} as any, {} as any).resolveInherited({
+        node,
+        parent,
+        inheritType: 'from_client',
+        fields: { timeout: 5000 },
+      });
+
+    it('should take the parent value when the node inherits', async () => {
+      const { timeout } = await run({ timeout: '1', timeoutType: 'from_client' }, { timeout: '2' });
+
+      expect(timeout).toEqual({ value: '2', own: '1', parent: '2' });
+    });
+
+    it('should keep the node value when it does not inherit', async () => {
+      const { timeout } = await run({ timeout: '1', timeoutType: 'num' }, { timeout: '2' });
+
+      expect(timeout.value).toBe('1');
+    });
+
+    it('should keep the node value when there is no parent value', async () => {
+      expect((await run({ timeout: '1', timeoutType: 'from_client' }, null)).timeout.value).toBe('1');
+    });
+  });
+
+  describe('useNodeStatus', () => {
+    it('should set the fill, the text and the time', () => {
+      const node = { status: vi.fn() } as any;
+      const status = useNodeStatus(node);
+
+      status.success('Success');
+      status.error('Boom');
+      status.reset();
+
+      expect(node.status).toHaveBeenNthCalledWith(1, { fill: 'green', text: expect.stringMatching(/^Success at /) });
+      expect(node.status).toHaveBeenNthCalledWith(2, { fill: 'red', text: expect.stringMatching(/^Boom at /) });
+      expect(node.status).toHaveBeenNthCalledWith(3, {});
     });
   });
 });

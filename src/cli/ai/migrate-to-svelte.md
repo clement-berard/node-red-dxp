@@ -36,6 +36,10 @@ A classic node (`editor/index.ts` + `editor/index.{pug,html}`) and a Svelte node
 | `watchInput(['$a'], ...)` | `$derived`, or `onchange` on the component |
 | config node select | `<ConfigSelect bind:value={node.x} type="..." property="x" />` |
 | `data-i18n` | `t('key')` |
+| tabs (`initTabs`) | `<Tabs tabs={[...]}>{#snippet children(tab)}...{/snippet}</Tabs>` |
+| hint / title separator | `<Hint>` inside the `Row` / `<Separator label />` |
+| code editor | `<CodeEditor bind:value mode expand />` |
+| pug mixin used by several nodes | shared `.svelte` component (or a spec in `.ts` for config → node fields) |
 
 ## Keep saved nodes working
 

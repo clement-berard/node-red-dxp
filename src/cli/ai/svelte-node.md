@@ -54,13 +54,17 @@ markup). `controller.ts`, `docs.md(x)` and `locales/` stay separate files.
 
 | Component | Props |
 |---|---|
-| `Row` | `label`, `icon` (Font Awesome 4 name without `fa-`), `class`; wraps one field |
+| `Row` | `label`, `icon` (Font Awesome 4 name without `fa-`), `field` (property name: red outline when it breaks its `required`/`validate` rule in `defaults`), `class`; wraps one field |
 | `Input` | `bind:value` (always a string), any `<input>` attribute (`type`, `min`, `placeholder`...) |
 | `Select` | `bind:value`, `options` (`string[]` or `{value,text}[]`), `empty`, `onchange` |
 | `Checkbox` | `bind:checked`, `text` |
 | `TypedInput` | `bind:value`, `bind:type`, `types` (array: `['msg','json']`, custom `{value,label,hasValue}`), other props = widget options |
+| `TypedField` | whole line for `<field>` + `<field>Type`: `node`, `field`, `label`, `icon`, `valueType`, `inherit` (`{value,label}`, choice without value), `readonly`, `extraTypes`, `hint`, `placeholder`. Defaults: `typedFieldDefaults(field, { value, valueType, type })` from `@keload/node-red-dxp/editor/svelte` |
 | `ConfigSelect` | `bind:value`, `type` (config node type), `property` (key in `defaults`, declared with `type`), `filter` |
-| `CodeEditor` | `bind:value`, `mode` (`json`, `javascript`...), `height`, `options` |
+| `CodeEditor` | `bind:value`, `mode` (`json`, `javascript`...), `height`, `options`, `expand` (full screen button) |
+| `Tabs` | `tabs` (labels), snippet `children(activeTab)`: render the content of the active tab only |
+| `Hint` | `state`, `icon`, `fullWidth`; small text under a field |
+| `Separator` | `label`; a titled line between groups of rows |
 | `Spinner` | `bind:value`, `min`, `max`, `step` |
 | `SearchBox` | `bind:value`, `delay` |
 | `List` | `bind:items` (array declared in `defaults`), `create`, snippet `row(item, index)`, `sortable` |
@@ -69,7 +73,7 @@ markup). `controller.ts`, `docs.md(x)` and `locales/` stay separate files.
 Other widgets: use `globalThis.jQuery` (`$` is reserved in Svelte) inside `$effect`, with `bind:this`, and clean up in
 the returned function.
 
-Gotchas: `TypedInput` `types` is an array, never `'msg,json'`; a `typedInput` whose type is not in `types` falls back
+Gotchas: a `{` in an attribute text is an expression (`hint="{ a }"` leaves the form empty): write `hint={'{ a }'}`; `TypedInput` `types` is an array, never `'msg,json'`; a `typedInput` whose type is not in `types` falls back
 to the first one; `data-i18n` does not work, use `t()`.
 
 ## Config node
@@ -91,3 +95,17 @@ to the first one; `data-i18n` does not work, use `t()`.
 1. Edit `<node>.svelte` (+ `types.ts`, `controller.ts`, locales, docs).
 2. `build` must pass; `tsc --noEmit` covers `.ts` only.
 3. Check in Node-RED (`dev`): open, edit, Done, reopen (values kept), Cancel (nothing changed), old saved nodes still open.
+
+## Fields shared by several nodes
+
+Do not copy rows between nodes: put them in a `.svelte` component (relative import) taking `node`, and when a config node
+and its nodes have the same settings describe them once in a `.ts` spec that generates both the rows and the
+`defaults` (docs: guide "Config nodes and shared settings").
+
+## Controller helpers (`@keload/node-red-dxp/utils/controller`)
+
+Before writing resolution code in `controller.ts`, use: `useControllerNode(node, msg)` → `evalProps(bag, { key: default })`
+(typed properties), `resolveInherited({ node, parent, inheritType, fields })` (value taken from the config node when
+`<key>Type === inheritType`; gives `value`, `own`, `parent`), `useNodeStatus(node)` (`success`/`warning`/`error`/`reset`
+with the time), `runUserScript(body, argNames, argValues)` (scripts written in a `CodeEditor`), `getREDNode(id)`,
+`splitBooleanOutputs`.

@@ -53,71 +53,90 @@ export default defineConfig({
     },
   },
   themeConfig: {
-    nav: [{ text: 'Home', link: '/' }],
+    nav: [
+      { text: 'Guides', link: '/guide/' },
+      { text: 'Reference', link: '/svelte/' },
+      { text: 'CLI', link: '/cli/create' },
+    ],
     sidebar: [
-      { text: 'Overview', link: '/overview.md' },
-      { text: 'Get Started', link: '/get-started.md' },
-      { text: 'AI instructions', link: '/ai.md' },
-      { text: 'Migration v1 → v2', link: '/migration-v1-to-v2.md' },
-      { text: 'Configuration file', link: '/config-file.md' },
       {
-        text: 'CLI',
+        text: 'Getting started',
         items: [
-          { text: 'build', link: '/cli/build.md' },
-          { text: 'watch', link: '/cli/watch.md' },
-          { text: 'create', link: '/cli/create.md' },
-          { text: 'create-node', link: '/cli/create-node.md' },
-          { text: 'ai', link: '/cli/ai.md' },
+          { text: 'Introduction', link: '/overview' },
+          { text: 'Your first node', link: '/guide/first-node' },
+          { text: 'Manual setup', link: '/get-started' },
         ],
       },
       {
-        text: 'Features',
+        text: 'Guides',
         items: [
-          { text: 'Node Documentation', link: '/documentation.md' },
-          { text: 'Server-side', link: '/server-side.md' },
-          { text: 'Resources', link: '/resources.md' },
-          { text: 'Internationalisation', link: '/i18n.md' },
-          {
-            text: 'Utils',
-            collapsed: true,
-            items: [
-              {
-                text: 'Full stack',
-                collapsed: true,
-                items: [
-                  { link: '/utils/utils-full-stack', text: 'Overview' },
-                  ...getGeneratedPages('./docs/utils', '/utils'),
-                ],
-              },
-              {
-                text: 'Controller',
-                collapsed: true,
-                items: [
-                  { link: '/utils/controller/utils-controller', text: 'Overview' },
-                  ...getGeneratedPages('./docs/utils/controller', '/utils/controller'),
-                ],
-              },
-            ],
-          },
+          { text: 'Build the form', link: '/guide/form-recipes' },
+          { text: 'Write the runtime', link: '/guide/runtime' },
+          { text: 'Config nodes and shared settings', link: '/guide/config-node' },
+          { text: 'Test and publish', link: '/guide/test-and-publish' },
+          { text: 'Migrate from pug to Svelte', link: '/svelte/migration' },
         ],
       },
       {
-        text: 'Svelte editor',
+        text: 'Svelte editor reference',
         items: [
           { text: 'Overview', link: '/svelte/' },
           { text: 'The node file', link: '/svelte/node-file' },
           { text: 'Components', link: '/svelte/components' },
           { text: 'Credentials', link: '/svelte/credentials' },
-          { text: 'Config node', link: '/svelte/config-node' },
           { text: 'Help and i18n', link: '/svelte/help-and-i18n' },
           { text: 'Styling', link: '/svelte/styling' },
           { text: 'TypeScript and IDE', link: '/svelte/typescript' },
-          { text: 'Migrate from pug', link: '/svelte/migration' },
           { text: 'Troubleshooting', link: '/svelte/troubleshooting' },
         ],
       },
       {
-        text: 'Editor',
+        text: 'Project',
+        items: [
+          { text: 'Node documentation', link: '/documentation.md' },
+          { text: 'Server-side', link: '/server-side.md' },
+          { text: 'Resources', link: '/resources.md' },
+          { text: 'Internationalisation', link: '/i18n.md' },
+          { text: 'Configuration file', link: '/config-file.md' },
+          { text: 'AI instructions', link: '/ai.md' },
+        ],
+      },
+      {
+        text: 'CLI',
+        collapsed: true,
+        items: [
+          { text: 'create', link: '/cli/create.md' },
+          { text: 'create-node', link: '/cli/create-node.md' },
+          { text: 'build', link: '/cli/build.md' },
+          { text: 'watch', link: '/cli/watch.md' },
+          { text: 'ai', link: '/cli/ai.md' },
+        ],
+      },
+      {
+        text: 'API reference',
+        collapsed: true,
+        items: [
+          {
+            text: 'Utils (full stack)',
+            collapsed: true,
+            items: [
+              { link: '/utils/utils-full-stack', text: 'Overview' },
+              ...getGeneratedPages('./docs/utils', '/utils'),
+            ],
+          },
+          {
+            text: 'Utils (controller)',
+            collapsed: true,
+            items: [
+              { link: '/utils/controller/utils-controller', text: 'Overview' },
+              ...getGeneratedPages('./docs/utils/controller', '/utils/controller'),
+            ],
+          },
+        ],
+      },
+      {
+        text: 'Classic editor (pug / HTML)',
+        collapsed: true,
         items: [
           {
             text: 'DOM Helper',

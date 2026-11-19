@@ -1,10 +1,26 @@
 # Components
 
+## Which component?
+
+| I need... | Use |
+|---|---|
+| a line of the form (label + field) | [`Row`](#row) |
+| a text, number, time or password | [`Input`](#input) |
+| a choice among a list | [`Select`](#select) |
+| a yes/no | [`Checkbox`](#checkbox) |
+| a value that can be a message, a variable, a string, JSON... | [`TypedInput`](#typedinput), or [`TypedField`](#typedfield) for the whole line |
+| the select of a config node | [`ConfigSelect`](#configselect) |
+| a script or a JSON text | [`CodeEditor`](#codeeditor) |
+| sections of a long form | [`Tabs`](#tabs), [`Separator`](#separator) |
+| a help text under a field | [`Hint`](#hint) |
+| rows the user can add, remove and sort | [`List`](#list) |
+| translated labels | [`useT`](#uset) |
+
 All the components come from `@keload/node-red-dxp/ui` and work on the `node` prop (see [The node file](./node-file)).
 
 ```svelte
 <script lang="ts">
-  import { Checkbox, CodeEditor, ConfigSelect, Input, List, Row, SearchBox, Select, Spinner, TypedInput, useT } from '@keload/node-red-dxp/ui';
+  import { Checkbox, CodeEditor, ConfigSelect, Hint, Input, List, Row, SearchBox, Select, Separator, Spinner, Tabs, TypedField, TypedInput, useT } from '@keload/node-red-dxp/ui';
 </script>
 ```
 
@@ -18,6 +34,7 @@ A line of the form: label on the left, content on the right.
 | Prop | Type | Description |
 |---|---|---|
 | `label` | `string` | Text of the label |
+| `field` | `string` | Property shown by the row: outlined in red when it breaks its `required` / `validate` rule, see [Validating a field](./node-file#validating-a-field) |
 | `icon` | `string` | [Font Awesome](https://fontawesome.com/v4/icons/) 4 name without `fa-` (`tag`, `clock-o`...) |
 | `class` | `string` | Extra classes on the row |
 
@@ -82,6 +99,37 @@ The Node-RED `typedInput` widget. `value` and `type` are bindable; **every other
 - If the current `type` is not in `types` (a node saved before you restricted them), the **first allowed type** is used
   and written to the bound `type`. Without that, the widget breaks its layout.
 
+## `TypedField`
+
+A whole line for a property that holds a value **and** its type (`<field>` and `<field>Type`): label, `TypedInput`,
+hint and validation in one component. It is the one to use for the settings a node shares with its config node.
+
+| Prop | Type | Description |
+|---|---|---|
+| `node` | `object` | The `node` prop of your component |
+| `field` | `string` | Property of the value; its type is `<field>Type`. Both go in `defaults` |
+| `label`, `icon`, `hint`, `placeholder` | `string` | As in `Row` and `Hint` |
+| `valueType` | `string` | Main type: `str` (default), `num`, `bool`, `json`... |
+| `inherit` | `{ value, label }` | Adds a choice without value, such as `{ value: 'from_client', label: 'Inherit from client' }` |
+| `readonly` | `string[]` | Choices without value, listed first (HTTP methods...) |
+| `extraTypes` | `boolean` | Adds `jsonata`, `msg`, `flow`, `global`, `env` (default `true`) |
+
+```svelte
+<TypedField {node} field="timeout" label="Timeout" valueType="num" hint="In ms"
+  inherit={{ value: 'from_server', label: 'Inherit from the server' }} />
+```
+
+The matching `defaults` come from `typedFieldDefaults` (`@keload/node-red-dxp/editor/svelte`):
+
+```ts
+import { typedFieldDefaults } from '@keload/node-red-dxp/editor/svelte';
+
+export const defaults = {
+  ...typedFieldDefaults('timeout', { value: 5000, valueType: 'num', type: 'from_server' }),
+  // { timeout: { value: 5000 }, timeoutType: { value: 'from_server' } }
+};
+```
+
 ## `ConfigSelect`
 
 The select of a config node (MQTT broker, server...) with the edit and add buttons of Node-RED.
@@ -112,7 +160,8 @@ The Node-RED code editor (Monaco).
 | `value` | `string` | Bindable |
 | `mode` | `string` | Language: `text` (default), `json`, `javascript`, `markdown`, `html`... |
 | `height` | `string` | Default `200px` |
-| `options` | `object` | Extra options passed to `RED.editor.createEditor` |
+| `options` | `object` | Extra options passed to `RED.editor.createEditor` (`globals`...) |
+| `expand` | `boolean` | Adds a button opening the code in the full screen editor of Node-RED |
 
 ```svelte
 <Row label="Payload"><CodeEditor bind:value={node.template} mode="json" height="300px" /></Row>
@@ -156,6 +205,36 @@ Rows that can be added, removed and reordered (drag and drop).
 ```
 
 The array must exist: declare it in `defaults` (`rules: { value: [] }`).
+
+## `Tabs`
+
+Node-RED tabs. Only the active tab is rendered (a code editor mounts when its tab is shown). `tabs` is the list of
+labels, the `children` snippet receives the active one.
+
+```svelte
+<Tabs tabs={['Request', 'Auth']}>
+  {#snippet children(tab)}
+    {#if tab === 'Request'}...{:else}...{/if}
+  {/snippet}
+</Tabs>
+```
+
+## `Hint`
+
+Small text under a field, inside a `Row`. Props: `state` (`info`, `warning`, `danger`, `success`), `icon`,
+`fullWidth` (no width limit).
+
+```svelte
+<Row label="Timeout"><Input bind:value={node.timeout} /><Hint>Must be a number in ms</Hint></Row>
+```
+
+## `Separator`
+
+A line with an optional `label`, to split a long form.
+
+```svelte
+<Separator label="Advanced" />
+```
 
 ## `useT`
 

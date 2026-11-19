@@ -3,6 +3,14 @@
 > Build Node-RED node packages: one folder per node, compiled by esbuild. The editor of a node is one Svelte 5 file
 > (`<node>.svelte`) or the classic html/pug + TypeScript. Docs: https://clement-berard.github.io/node-red-dxp/
 
+## Guides (read these to learn the workflow)
+
+- https://clement-berard.github.io/node-red-dxp/guide/first-node
+- https://clement-berard.github.io/node-red-dxp/guide/form-recipes
+- https://clement-berard.github.io/node-red-dxp/guide/runtime
+- https://clement-berard.github.io/node-red-dxp/guide/config-node
+- https://clement-berard.github.io/node-red-dxp/guide/test-and-publish
+
 ## Create a new package (no prompt, for an AI agent)
 
 Requires Node >= 22.22. Run from the parent folder; the project is created in `./<name without scope>`.

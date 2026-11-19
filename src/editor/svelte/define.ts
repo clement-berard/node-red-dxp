@@ -1,5 +1,7 @@
 import { mount, unmount } from 'svelte';
 
+export { typedFieldDefaults } from './fields';
+
 type NodeProps = Record<string, any>;
 
 /** Config exported by a `<node>.svelte` file (usually re-exported from a typed `.ts` file next to it). */
@@ -84,7 +86,7 @@ export function defineSvelteNode({ name, identifier, root, module }: DefineSvelt
         this._ ? this._(`${name}.${key}`, { defaultValue: fallback }) : fallback;
       instance = mount(root as any, {
         target,
-        props: { component: module.default, initial, translate },
+        props: { component: module.default, initial, translate, defaults },
       }) as any;
     },
     oneditsave(this: NodeProps) {

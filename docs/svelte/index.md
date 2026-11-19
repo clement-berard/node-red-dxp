@@ -1,14 +1,18 @@
 # Svelte editor
 
 Describe the whole editor of a node in **one file**: `src/nodes/<node>/<node>.svelte`. The form is a reactive
-component (fields that depend on each other, lists, conditional blocks...) and the Node-RED definition of the node sits
-at the top of the same file.
+component and the Node-RED definition of the node sits at the top of the same file.
+
+::: tip New to it?
+Start with [Your first node](/guide/first-node), then the [form recipes](/guide/form-recipes). This section is the
+reference.
+:::
 
 ```
 src/nodes/my-node/
-├── my-node.svelte   # node config + editor form
-├── controller.ts    # runtime (unchanged)
-└── docs.mdx         # help (unchanged)
+├── my-node.svelte   # definition + form
+├── controller.ts    # runtime
+└── docs.md          # help
 ```
 
 ```svelte
@@ -18,22 +22,20 @@ src/nodes/my-node/
 </script>
 
 <script lang="ts">
-  import { Input, Row, Select, Spinner, useT } from '@keload/node-red-dxp/ui';
-
+  import { Input, Row, Select, Spinner } from '@keload/node-red-dxp/ui';
   let { node } = $props();
-  const t = useT();
 </script>
 
-<Row label={t('name')}><Input bind:value={node.name} /></Row>
-<Row label={t('mode')}><Select bind:value={node.mode} options={['simple', 'advanced']} /></Row>
+<Row label="Name"><Input bind:value={node.name} /></Row>
+<Row label="Mode"><Select bind:value={node.mode} options={['simple', 'advanced']} /></Row>
 
 {#if node.mode === 'advanced'}
-  <Row label={t('delay')}><Spinner bind:value={node.delay} min={0} /></Row>
+  <Row label="Delay"><Spinner bind:value={node.delay} min={0} /></Row>
 {/if}
 ```
 
-No `show/hide` code, no `getFormValues`, no ids: `bind:value` reads and writes the property of the node, and the
-`{#if}` block follows it.
+`bind:value` reads and writes the property of the node, and the `{#if}` follows it: no show/hide code, no ids, no
+`getFormValues`.
 
 ## How it works
 
@@ -67,7 +69,7 @@ Both styles live together: a package can have classic nodes and Svelte nodes. A 
 - [The node file](./node-file): `definition`, `defaults`, `label`, `onsave`, lifecycle.
 - [Components](./components): every component of `@keload/node-red-dxp/ui`.
 - [Credentials](./credentials)
-- [Config node](./config-node)
+- [Config nodes and shared settings](/guide/config-node)
 - [Help and i18n](./help-and-i18n)
 - [Styling](./styling)
 - [TypeScript and IDE](./typescript)

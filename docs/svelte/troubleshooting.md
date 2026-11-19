@@ -28,6 +28,11 @@ Do not give `node-input-<property>` ids to your fields: Node-RED reads them itse
 
 It is built at runtime (string concatenation) and cannot be found by the scan, see [Styling](./styling).
 
+## The form is empty and the console says `x is not defined`
+
+A `{` in the text of an attribute is an expression (`hint="{ url }"`). Use a JavaScript string:
+`hint={'{ url }'}`.
+
 ## `$` is an illegal variable name
 
 Svelte reserves `$` for runes. Reach jQuery with `globalThis.jQuery` (the components of dxp do):

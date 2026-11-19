@@ -1,4 +1,9 @@
-# Get Started
+# Manual setup
+
+::: tip New project?
+[Your first node](/guide/first-node) walks through the scaffolded project. This page is for adding dxp to an existing
+package by hand.
+:::
 
 You can scaffold a new application instantly using the CLI or set it up manually.
 The wizard creates the package, a first node (Svelte or classic), installs the dependencies and writes the

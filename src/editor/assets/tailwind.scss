@@ -99,6 +99,14 @@
       }
     }
 
+    &.dxp-invalid .content {
+      input,
+      select,
+      .red-ui-typedInput-container {
+        border-color: var(--red-ui-form-input-border-error-color) !important;
+      }
+    }
+
     .hint {
       @apply text-sm text-gray-500 mt-1;
 

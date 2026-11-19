@@ -2,6 +2,8 @@
 import '../../global';
 import type { Node, NodeMessage } from 'node-red';
 
+export { runUserScript } from './userScript';
+
 /**
  * Splits a message into two outputs based on a boolean condition.
  *
@@ -227,8 +229,86 @@ export function useControllerNode(node: Node, msg: NodeMessage, opts = { typedSu
     return data;
   }
 
+  /**
+   * Evaluates several properties of a bag at once. `fields` maps each property to its strict default value (used when
+   * the evaluated value is an empty string).
+   *
+   * @example
+   * const { timeout, headers } = await evalProps(config, { timeout: 5000, headers: {} });
+   */
+  async function evalProps<TFields extends Record<string, unknown>>(
+    bag: object,
+    fields: TFields,
+  ): Promise<{ [K in keyof TFields]: unknown }> {
+    const entries = await Promise.all(
+      Object.entries(fields).map(async ([key, defaultValue]) => [
+        key,
+        await quickNodePropertyEval(bag, key as never, { strictDefaultValue: defaultValue }),
+      ]),
+    );
+    return Object.fromEntries(entries);
+  }
+
+  /**
+   * Resolves properties of a node that can inherit them from a parent node (a config node, a client...). A property
+   * is inherited when its type (`<property>Type`) is `inheritType` and the parent has a value for it.
+   *
+   * Returns, for each property, the resolved `value` and the evaluated `own` and `parent` values (to merge them, for
+   * instance).
+   *
+   * @example
+   * const { timeout } = await resolveInherited({
+   *   node: config,
+   *   parent: client,
+   *   inheritType: 'from_client',
+   *   fields: { timeout: 5000 },
+   * });
+   * timeout.value; // the client timeout when `config.timeoutType === 'from_client'`, otherwise the node one
+   */
+  async function resolveInherited<TFields extends Record<string, unknown>>(params: {
+    node: object;
+    parent?: object | null;
+    inheritType: string;
+    fields: TFields;
+  }): Promise<{ [K in keyof TFields]: { value: unknown; own: unknown; parent: unknown } }> {
+    const { node: ownBag, parent: parentBag, inheritType, fields } = params;
+    const [own, parent] = await Promise.all([evalProps(ownBag, fields), evalProps(parentBag ?? {}, fields)]);
+    return Object.fromEntries(
+      Object.keys(fields).map((key) => {
+        const inherits = (ownBag as Record<string, unknown>)[`${key}${opts.typedSuffix}`] === inheritType;
+        return [
+          key,
+          { value: inherits && parent[key] !== undefined ? parent[key] : own[key], own: own[key], parent: parent[key] },
+        ];
+      }),
+    ) as any;
+  }
+
   return {
     evaluateNodeProperty: evaluateNodePropertyWithDefaults,
     quickNodePropertyEval,
+    evalProps,
+    resolveInherited,
+  };
+}
+
+/**
+ * Node status helper: the text is followed by the time of the event, the fill is the one of the method.
+ *
+ * @example
+ * const status = useNodeStatus(node);
+ * status.success('Success'); // green "Success at 1/2/2026, 10:00:00 AM"
+ * status.error('Invalid URL');
+ * status.reset();
+ */
+export function useNodeStatus(node: Node) {
+  const set = (fill: 'green' | 'red' | 'yellow', text: string) =>
+    node.status({ fill, text: `${text} at ${new Date().toLocaleString()}` });
+
+  return {
+    success: (text: string) => set('green', text),
+    warning: (text: string) => set('yellow', text),
+    error: (text: string) => set('red', text),
+    reset: () => node.status({}),
   };
 }

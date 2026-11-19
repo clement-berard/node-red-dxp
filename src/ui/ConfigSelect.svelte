@@ -27,4 +27,5 @@
   });
 </script>
 
-<div bind:this={host} style="width: 100%"><input id="node-input-{property}" type="text" /></div>
+<!-- Node-RED sizes its select from the style of the input (70% without) -->
+<div bind:this={host} style="width: 100%"><input id="node-input-{property}" type="text" style="width: 100%" /></div>

@@ -29,6 +29,12 @@ node.
 | `.extra-field` + `revealClasses` + `handleShowDivs` | `{#if ...}` |
 | `watchInput(['$a'], ...)` | `$derived` / `onchange` |
 | `data-i18n` | `t('key')` |
+| `+dxpTabs` + `initTabs` | `<Tabs tabs={[...]}>{#snippet children(tab)}{#if tab === '...'}...{/if}{/snippet}</Tabs>` |
+| `+dxpHint` | `<Hint>...</Hint>` (inside the `Row`) |
+| `+dxpFormTitleSeparator` | `<Separator label="..." />` |
+| `+dxpFormRowSelectConfigNode` | `<ConfigSelect bind:value={node.x} type="..." property="x" />` |
+| code editor (`RED.editor.createEditor`) | `<CodeEditor bind:value={node.x} mode="javascript" expand />` |
+| pug mixin shared by several nodes | a `.svelte` component, see [Config nodes and shared settings](../guide/config-node#_4-write-each-setting-once) |
 | `docs.md(x)` | unchanged |
 
 ## Example
