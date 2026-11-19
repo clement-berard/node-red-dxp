@@ -71,6 +71,32 @@ To reset a field when another one changes, use the `onchange` of the component:
 <Select bind:value={node.category} options={categories} onchange={() => (node.function = '')} />
 ```
 
+## Validating a field
+
+`required` and `validate` in `defaults` work as in any Node-RED node: the node is flagged invalid when a value breaks
+its rule. To outline the field in the form as the user types, give its property to the `Row`:
+
+```svelte
+<script module lang="ts">
+  import { isUrl } from '@keload/node-red-dxp/utils';
+
+  export const defaults = {
+    baseUrl: { value: '', validate: (value: string) => !value || isUrl(value) },
+    name: { value: '', required: true },
+  };
+</script>
+
+<Row label="Base URL" field="baseUrl"><Input bind:value={node.baseUrl} /></Row>
+```
+
+- The row is outlined in red while the value is invalid. If `validate` returns a **string**, it is shown under the
+  field as the error message.
+- The rules are the ones of Node-RED (`required`, `validate`, and `required: false` accepting an empty value; an
+  environment variable such as `${URL}` is always valid).
+- `isUrl` and `isValidIP` come with dxp, see the [utils](/utils/utils-full-stack).
+- To read the result in your own markup, use `useValidation()`: `const valid = useValidation(); valid('baseUrl')`
+  is `true`, `false` or the message.
+
 ## Lifecycle
 
 | Node-RED hook | What dxp does |

@@ -1,24 +1,39 @@
-# Overview
+# Introduction
 
-<div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem; flex-wrap: wrap;">
-  <img src="https://nodered.org/about/resources/media/node-red-icon-2.svg" alt="Node-RED logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript logo" width="40"/>
-  <img src="./images/esbuild-logo.svg" alt="esbuild logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind CSS logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Sass_Logo_Color.svg" alt="Sass logo" width="50"/>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte logo" width="40"/>
-</div>
+**node-red-dxp** is a toolchain to build packages of Node-RED nodes: a CLI that scaffolds and builds, a Svelte toolkit
+for the editor, and helpers for the runtime.
 
-<div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap:2rem; flex-wrap: wrap;">
-Build Node-RED nodes effortlessly with node-red-dxp 🚀
-</div>
+Writing a node by hand means juggling a runtime, an editor form, styles, a help page and translations, each with its
+own tooling. dxp compiles all of it from one folder per node.
 
-**Prerequisites: Project Structure**
-To utilize the zero-config features of this tool, your project must adhere to a specific folder structure. This convention allows `node-red-dxp` to streamline the build and bundling process without complex configuration files.
+## How it fits together
 
-## Quick Start
+```sh
+my-package/
+└── src/nodes/my-node/
+    ├── my-node.svelte   # editor: definition + form          → bundled into dist/index.html
+    ├── controller.ts    # runtime: what happens on a message → bundled into dist/index.js
+    ├── docs.md          # help in the Node-RED sidebar
+    └── locales/         # translations
+```
 
-Run the creation command directly:
+| You write | dxp builds |
+|---|---|
+| `controller.ts` | the runtime of the node (Node.js, CommonJS) |
+| `<node>.svelte` (or `editor/`) | the editor of the node (browser, one script, scoped CSS) |
+| `docs.md` | the help of the node |
+| `locales/*.json` | the translations |
+
+## Where to go
+
+- **New here?** [Build your first node](/guide/first-node) (10 minutes).
+- **Making the form:** [recipes](/guide/form-recipes) and the [components](/svelte/components).
+- **Making the runtime:** [runtime guide](/guide/runtime).
+- **Sharing a server or an account between nodes:** [config nodes](/guide/config-node).
+- **Shipping:** [test and publish](/guide/test-and-publish).
+- **Existing pug nodes:** [migrate to Svelte](/svelte/migration), one node at a time.
+
+## Quick start
 
 :::tabs
 == pnpx
@@ -31,21 +46,19 @@ npx @keload/node-red-dxp create
 ```
 :::
 
-## Bundling Strategy
+See [`create`](/cli/create), or the [manual setup](/get-started) for an existing package.
 
-`node-red-dxp` is primarily a development dependency used for building and bundling. However, it handles production artifacts differently depending on the context:
+## Bundling strategy
 
-### 🎨 Editor (Frontend)
-* **Format:** IIFE (Immediately Invoked Function Expression).
-* **Behavior:** All frontend JavaScript is bundled directly. This ensures all UI utilities are available in the final build with no runtime dependency management required.
+dxp is a development dependency: only `dist/` is published.
 
-### 🖥️ Controller (Backend)
-* **Dependencies:** By default, external libraries are treated as **externals** (imported via `require`).
-    * *Customization:* You can explicitly configure specific libraries to be included in the bundle (see [configuration documentation](config-file.md)).
-* **Core Exception:** The `@keload/node-red-dxp` core library is **always bundled** into the final package and is never treated as an external dependency.
+**Editor (browser).** One script (IIFE) with everything it needs, so nothing is resolved at runtime.
 
-## 💪 Trusted by Community Projects
+**Controller (Node.js).** Dependencies are **externals** (`require`d from the installed package). To bundle a library
+anyway, list it in the [configuration file](/config-file). The `@keload/node-red-dxp` helpers are always bundled.
 
-💡 Some [packages](https://github.com/topics/node-red-dxp) already use `@keload/node-red-dxp` as a dependency. You can check them out:
+## Trusted by community projects
+
+Packages built with dxp: [see the list](https://github.com/topics/node-red-dxp).
 
 <!--@include: ./partials/trusted-projects.md-->

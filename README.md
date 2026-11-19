@@ -9,8 +9,8 @@ One command to scaffold, one file per editor, instant rebuilds.
 [![license](https://img.shields.io/npm/l/@keload/node-red-dxp?color=a6bbcf)](./LICENSE)
 [![docs](https://img.shields.io/badge/docs-VitePress-a6bbcf)](https://clement-berard.github.io/node-red-dxp/)
 
-[**Get started**](https://clement-berard.github.io/node-red-dxp/get-started) ·
-[Documentation](https://clement-berard.github.io/node-red-dxp/) ·
+[**Build your first node**](https://clement-berard.github.io/node-red-dxp/guide/first-node) ·
+[Guides](https://clement-berard.github.io/node-red-dxp/guide/) ·
 [Svelte editor](https://clement-berard.github.io/node-red-dxp/svelte/) ·
 [AI guides](https://clement-berard.github.io/node-red-dxp/ai)
 

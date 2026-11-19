@@ -6,27 +6,44 @@ description: Build custom Node-RED nodes faster with Node-RED DXP. An all-in-one
 
 hero:
   name: Node-RED DXP ⚡
-  text: Fast & Effortless Node Creation Toolkit
-  tagline: Build custom Node-RED nodes faster with Node-RED DXP. An all-in-one toolkit featuring ultra-fast esbuild, TypeScript support, and automated documentation for a superior developer experience.
+  text: Build Node-RED nodes, the modern way
+  tagline: Build Node-RED nodes like a modern web app. One command to start, one Svelte file per editor, instant rebuilds.
   actions:
     - theme: brand
-      text: Get Started
-      link: /overview
+      text: Build your first node
+      link: /guide/first-node
     - theme: alt
-      text: View on GitHub
+      text: Read the guides
+      link: /guide/
+    - theme: alt
+      text: GitHub
       link: https://github.com/clement-berard/node-red-dxp
 
 features:
-  - title: ⚡ Powerful & Fast Builder
-    details: Leveraging esbuild for ultra-fast JavaScript and TypeScript builds. Support for SCSS and automated Markdown-to-HTML conversion.
-  - title: 🎨 Modern Styling
-    details: Built-in Tailwind CSS and SCSS support designed for Node-RED editor components.
-  - title: 🧩 Svelte Editor
-    details: Build the whole editor of a node in a single reactive .svelte file, with ready-made components for the Node-RED widgets. Optional, and it works next to classic nodes.
-    link: /svelte/
-    linkText: Discover the Svelte editor
-  - title: 🛠️ Developer Experience (DX)
-    details: Professional utility functions and hassle-free configuration for modern Node-RED workflows.
+  - title: ⚡ Fast builds
+    details: esbuild compiles the runtime and the editor, and rebuilds on every save. TypeScript out of the box.
+    link: /cli/watch
+    linkText: The dev loop
+  - title: 🧩 One Svelte file per editor
+    details: The form of a node is a reactive component with ready-made Node-RED widgets. Dependent fields, lists, tabs and code editors without show/hide code or ids.
+    link: /guide/form-recipes
+    linkText: See the recipes
+  - title: 🔌 A runtime toolkit
+    details: Evaluate typed properties, inherit settings from a config node, set the status, run user scripts. The helpers you would write anyway, tested.
+    link: /guide/runtime
+    linkText: Write the runtime
+  - title: 🎨 Modern styling
+    details: Tailwind and SCSS, scoped to your package so nothing leaks into the rest of Node-RED, dark mode included.
+    link: /svelte/styling
+    linkText: Styling
+  - title: 📚 Help and translations
+    details: Write the help of a node in Markdown, translate the form with a JSON file per language.
+    link: /svelte/help-and-i18n
+    linkText: Help and i18n
+  - title: 🤖 Agent ready
+    details: Generated projects ship guides that AI coding agents follow, so they know the project before they touch it.
+    link: /ai
+    linkText: AI instructions
 ---
 <br />
 <div style="display: flex; justify-content: center; gap: 10px; margin-top: 1rem;">
@@ -44,12 +61,46 @@ features:
   <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte logo" width="40"/>
 </div>
 
-## 🚀 Why Choose Node-RED DXP for your Nodes?
+## Start in one command
 
-- **Blazing Speed with esbuild**: Stop waiting for slow builds. Get instant feedback with ultra-fast watch modes.
-- **TypeScript First**: Native support for **TypeScript**, providing better type safety and DX for Node-RED node development.
-- **All-in-One Toolkit**: Everything is handled—bundling, CSS processing, and Node-RED help file generation.
-- **Svelte Support**: Write the editor of a node as one reactive `.svelte` file, see the [Svelte editor](/svelte/).
+```sh
+npx @keload/node-red-dxp create
+cd node-red-contrib-my-awesome-lib && pnpm dev
+```
+
+A package, a first node, a local Node-RED with live reload. [Follow the first guide »](/guide/first-node)
+
+## The editor of a node, in one file
+
+```svelte
+<script module lang="ts">
+  export const definition = { category: 'my category', color: '#a6bbcf', icon: 'font-awesome/fa-flask' };
+  export const defaults = { name: { value: '' }, mode: { value: 'simple' }, delay: { value: '0' } };
+</script>
+
+<script lang="ts">
+  import { Input, Row, Select, Spinner } from '@keload/node-red-dxp/ui';
+  let { node } = $props();
+</script>
+
+<Row label="Name"><Input bind:value={node.name} /></Row>
+<Row label="Mode"><Select bind:value={node.mode} options={['simple', 'advanced']} /></Row>
+
+{#if node.mode === 'advanced'}
+  <Row label="Delay"><Spinner bind:value={node.delay} min={0} /></Row>
+{/if}
+```
+
+## What you get
+
+| | |
+|---|---|
+| ⚡ **Fast builds** | esbuild for the runtime and the editor, rebuild on every save |
+| 🧩 **Svelte 5 editor** | one file per node, or keep the classic pug/HTML editor: both live together |
+| 🔌 **Runtime helpers** | typed properties, inheritance from a config node, status, user scripts |
+| 📚 **Help and i18n** | Markdown help in the sidebar, translations per node |
+| 🎨 **Styling** | Tailwind and SCSS scoped to your package |
+| 🤖 **Agent ready** | generated projects ship guides for AI coding agents |
 
 ## 💪 Trusted by Community Projects
 
