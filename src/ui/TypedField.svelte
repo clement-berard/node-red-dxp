@@ -15,6 +15,7 @@
     inherit,
     readonly = [],
     extraTypes = true,
+    allowEmpty = true,
     hint = '',
     placeholder = '',
   }: {
@@ -32,6 +33,8 @@
     readonly?: string[];
     /** Adds `jsonata`, `msg`, `flow`, `global` and `env` (default). */
     extraTypes?: boolean;
+    /** An empty value is valid (the setting is optional). Use `required` in `defaults` to refuse it. */
+    allowEmpty?: boolean;
     hint?: string;
     placeholder?: string;
   } = $props();
@@ -47,6 +50,6 @@
 </script>
 
 <Row {label} {icon} {field}>
-  <TypedInput bind:value={node[field]} bind:type={node[`${field}Type`]} {types} {placeholder} />
+  <TypedInput bind:value={node[field]} bind:type={node[`${field}Type`]} {types} {placeholder} {allowEmpty} />
   {#if hint}<Hint>{hint}</Hint>{/if}
 </Row>

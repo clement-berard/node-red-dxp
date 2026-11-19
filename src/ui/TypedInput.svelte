@@ -8,12 +8,30 @@
     value = $bindable(),
     type = $bindable(),
     types = ['msg', 'flow', 'global', 'str', 'json', 'jsonata', 'env'],
+    allowEmpty = false,
     ...options
-  }: { value?: string; type?: string } & Omit<EditorWidgetTypedInputOptions, 'default'> = $props();
+  }: {
+    value?: string;
+    type?: string;
+    /** An empty value is valid whatever the type (Node-RED refuses an empty `json`, `msg`...). */
+    allowEmpty?: boolean
+  } & Omit<EditorWidgetTypedInputOptions, 'default'> = $props();
 
   // `$` is reserved by svelte: reach jQuery through the global object
   const jq = (globalThis as any).jQuery;
   let input: HTMLInputElement;
+
+  // the widget validates per type: wrap each validator of this instance so that an empty value passes
+  function acceptEmpty(field: any) {
+    const widget = field.typedInput('instance');
+    for (const [name, definition] of Object.entries<any>(widget.typeMap)) {
+      const validate = definition.validate;
+      if (typeof validate === 'function') {
+        widget.typeMap[name] = { ...definition, validate: (v: string, o: object) => v === '' || validate(v, o) };
+      }
+    }
+    widget.validate();
+  }
 
   $effect(() => {
     const field = jq(input);
@@ -23,6 +41,7 @@
       if (!allowed.includes(type)) type = allowed[0];
       field.typedInput({ ...options, types, default: type });
       field.typedInput('value', value ?? '');
+      if (allowEmpty) acceptEmpty(field);
     });
     const sync = () => {
       value = field.typedInput('value');

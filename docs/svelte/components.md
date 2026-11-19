@@ -96,6 +96,7 @@ The Node-RED `typedInput` widget. `value` and `type` are bindable; **every other
 
 - `types` is an **array**, one entry per type (`['msg', 'json']`, not `'msg,json'`).
 - Default `types`: `msg`, `flow`, `global`, `str`, `json`, `jsonata`, `env`.
+- `allowEmpty` makes an empty value valid whatever the type (default `false` here, `true` in [`TypedField`](#typedfield)).
 - If the current `type` is not in `types` (a node saved before you restricted them), the **first allowed type** is used
   and written to the bound `type`. Without that, the widget breaks its layout.
 
@@ -113,6 +114,7 @@ hint and validation in one component. It is the one to use for the settings a no
 | `inherit` | `{ value, label }` | Adds a choice without value, such as `{ value: 'from_client', label: 'Inherit from client' }` |
 | `readonly` | `string[]` | Choices without value, listed first (HTTP methods...) |
 | `extraTypes` | `boolean` | Adds `jsonata`, `msg`, `flow`, `global`, `env` (default `true`) |
+| `allowEmpty` | `boolean` | An empty value is valid (default `true`): Node-RED would otherwise outline an empty `json` in red. Use `required` in `defaults` to refuse it |
 
 ```svelte
 <TypedField {node} field="timeout" label="Timeout" valueType="num" hint="In ms"
