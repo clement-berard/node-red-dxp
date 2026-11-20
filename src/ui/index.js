@@ -11,6 +11,7 @@ export { default as CodeEditor } from './CodeEditor.svelte';
 export { default as Spinner } from './Spinner.svelte';
 export { default as SearchBox } from './SearchBox.svelte';
 export { default as Tabs } from './Tabs.svelte';
+export { default as Button } from './Button.svelte';
 export { default as Hint } from './Hint.svelte';
 export { default as Separator } from './Separator.svelte';
 export { default as TypedField } from './TypedField.svelte';

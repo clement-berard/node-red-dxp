@@ -64,6 +64,7 @@ markup). `controller.ts`, `docs.md(x)` and `locales/` stay separate files.
 | `CodeEditor` | `bind:value`, `mode` (`json`, `javascript`...), `height`, `options`, `expand` (full screen button) |
 | `Tabs` | `tabs` (labels), snippet `children(activeTab)`: render the content of the active tab only |
 | `Hint` | `state`, `icon`, `fullWidth`; small text under a field |
+| `Button` | `state` (`idle`, `loading`, `success`, `error`: owned by the parent), `disabled`, `primary`, `icon`, `onclick`, snippet `children` |
 | `Separator` | `label`; a titled line between groups of rows |
 | `Spinner` | `bind:value`, `min`, `max`, `step` |
 | `SearchBox` | `bind:value`, `delay` |
