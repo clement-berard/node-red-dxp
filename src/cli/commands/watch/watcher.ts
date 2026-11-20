@@ -6,14 +6,35 @@ import chokidar from 'chokidar';
 import nodemon, { type Nodemon } from 'nodemon';
 import { build } from '../../../builder';
 import { currentContext } from '../../../current-context';
-import { log } from '../../ui';
+import { resolveHomePath } from '../../cli.utils';
+import { canPrompt, confirm, log } from '../../ui';
 import { runCommand } from '../../utils/run-command';
 import { installLocalPackage } from '../install-relative-package/install-relative-package.cli';
 
 let nodemonInstance: Nodemon;
 let browserSyncInstance: BrowserSyncInstance;
 
-function runNodemonAndBrowserSync() {
+/** For an external Node-RED, offers to install the package in its userDir when it is not there yet. */
+async function offerLocalInstall(userDir: string) {
+  const resolvedUserDir = resolveHomePath(userDir);
+  const { packageName } = currentContext;
+  if (existsSync(join(resolvedUserDir, 'node_modules', packageName, 'package.json')) || !canPrompt()) {
+    return;
+  }
+
+  const answer = await confirm({ message: `${packageName} is not installed in ${resolvedUserDir}. Install it now?` });
+  if (answer !== true) {
+    return;
+  }
+
+  try {
+    await installLocalPackage({ pathToInstall: currentContext.currentDir, userDir: resolvedUserDir });
+  } catch (error) {
+    log.error(`Error while installing local package: ${error instanceof Error ? error.message : error}`);
+  }
+}
+
+async function runNodemonAndBrowserSync() {
   const executableConfig = currentContext.config.watcher.nodeRed.executable;
   const userDirConfig = currentContext.config.watcher.nodeRed.userDir;
   const isExecutableLocalPackage = executableConfig === 'package';
@@ -29,6 +50,11 @@ function runNodemonAndBrowserSync() {
 
   const executable = isExecutableLocalPackage ? localBin : executableConfig;
   const userDir = isExecutableLocalPackage ? join(currentContext.pathLibCacheDir, '.node-red-local') : userDirConfig;
+
+  // asked before Node-RED starts, so its logs do not bury the prompt
+  if (!isExecutableLocalPackage) {
+    await offerLocalInstall(userDir);
+  }
 
   // @ts-expect-error
   nodemonInstance = nodemon({
@@ -91,7 +117,7 @@ export function runWatcher(params?: RunWatcherParams) {
       await build({ minify });
       log.success('Initial Build completed');
       if (hasNodeRedWatcher) {
-        runNodemonAndBrowserSync();
+        await runNodemonAndBrowserSync();
       } else {
         log.warn('Node-Red watcher is disabled. Please enable it in the config file');
       }

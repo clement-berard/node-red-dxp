@@ -2,7 +2,7 @@ import { existsSync } from 'node:fs';
 import chokidar from 'chokidar';
 import nodemon from 'nodemon';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { log } from '../../../ui';
+import { canPrompt, confirm, log } from '../../../ui';
 import { runCommand } from '../../../utils/run-command';
 import { installLocalPackage } from '../../install-relative-package/install-relative-package.cli';
 import { runWatcher } from '../watcher';
@@ -49,6 +49,7 @@ const {
     pathSrcDir: '/project/src',
     currentDir: '/project',
     pathLibCacheDir: '/project/.node-red-dxp',
+    packageName: '@me/node-red-contrib-x',
     config: {
       watcher: {
         enabled: true,
@@ -115,6 +116,8 @@ vi.mock('../../install-relative-package/install-relative-package.cli', () => ({
 
 vi.mock('../../../ui', () => ({
   log: { info: vi.fn(), success: vi.fn(), warn: vi.fn(), error: vi.fn() },
+  canPrompt: vi.fn(),
+  confirm: vi.fn(),
 }));
 
 function resetCurrentContext() {
@@ -139,6 +142,8 @@ describe('runWatcher', () => {
     vi.mocked(runCommand).mockResolvedValue('v3.1.0');
     vi.mocked(installLocalPackage).mockResolvedValue(undefined);
     vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(canPrompt).mockReturnValue(true);
+    vi.mocked(confirm).mockResolvedValue(true);
     // process.exit must halt execution like the real thing, otherwise code after
     // the exit() call in the source (e.g. nodemon() further down) would still run.
     vi.spyOn(process, 'exit').mockImplementation(((code?: number) => {
@@ -239,6 +244,41 @@ describe('runWatcher', () => {
     expect(log.error).toHaveBeenCalledWith('Error while installing local package: npm install failed');
     expect(mockNodemonRestart).not.toHaveBeenCalled();
     expect(mockBsInit).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not ask to install when the package is already in the external userDir', async () => {
+    runWatcher();
+    await chokidarHandlers.ready();
+    await nodemonHandlers.start();
+
+    expect(confirm).not.toHaveBeenCalled();
+    expect(installLocalPackage).not.toHaveBeenCalled();
+  });
+
+  it('offers to install the package in an external userDir before starting nodemon', async () => {
+    vi.mocked(existsSync).mockImplementation((path) => !String(path).includes('node_modules'));
+
+    runWatcher();
+    await chokidarHandlers.ready();
+
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(installLocalPackage).toHaveBeenCalledWith({ pathToInstall: '/project', userDir: '/home/user/.node-red' });
+    expect(vi.mocked(installLocalPackage).mock.invocationCallOrder[0]).toBeLessThan(
+      nodemonFn.mock.invocationCallOrder[0],
+    );
+  });
+
+  it('skips the install when the user declines or prompts are unavailable', async () => {
+    vi.mocked(existsSync).mockImplementation((path) => !String(path).includes('node_modules'));
+    vi.mocked(confirm).mockResolvedValue(false);
+
+    runWatcher();
+    await chokidarHandlers.ready();
+    expect(installLocalPackage).not.toHaveBeenCalled();
+
+    vi.mocked(canPrompt).mockReturnValue(false);
+    await chokidarHandlers.ready();
+    expect(confirm).toHaveBeenCalledTimes(1);
   });
 
   it('exits the process when nodemon quits', async () => {
