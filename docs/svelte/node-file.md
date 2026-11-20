@@ -89,6 +89,8 @@ its rule. To outline the field in the form as the user types, give its property 
 <Row label="Base URL" field="baseUrl"><Input bind:value={node.baseUrl} /></Row>
 ```
 
+- The **Add / Update** button of the dialog is disabled while any property of `defaults` is invalid, with or without a
+  `Row field`. The user cannot save an invalid node.
 - The row is outlined in red while the value is invalid. If `validate` returns a **string**, it is shown under the
   field as the error message.
 - The rules are the ones of Node-RED (`required`, `validate`, and `required: false` accepting an empty value; an

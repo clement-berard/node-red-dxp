@@ -1,7 +1,7 @@
 <script lang="ts">
   import { setContext } from 'svelte';
   import { TRANSLATE_CONTEXT } from '../../ui/i18n.js';
-  import { VALIDATE_CONTEXT, validateProperty } from '../../ui/validation.js';
+  import { isNodeValid, VALIDATE_CONTEXT, validateProperty } from '../../ui/validation.js';
 
   // Holds the node properties as one reactive object and hands it to the node component
   let { component: Component, initial, translate, defaults = {} } = $props();
@@ -13,6 +13,11 @@
   let node = $state(initial);
 
   setContext(VALIDATE_CONTEXT, (key) => validateProperty(defaults[key], node[key], node));
+
+  // Node-RED only flags invalid properties: the Add/Update button of the dialog is disabled while one breaks its rule
+  $effect(() => {
+    (globalThis as any).jQuery?.('#node-dialog-ok, #node-config-dialog-ok').prop('disabled', !isNodeValid(defaults, node));
+  });
 
   export function snapshot() {
     return $state.snapshot(node);

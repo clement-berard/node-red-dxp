@@ -71,13 +71,16 @@ the classic `editor/` folder (pug + ts) is used. User docs: `docs/svelte/`.
   the `required`/`validate` rules of Node-RED, whose own `validateNodeProperty` is not public); `Row field="<key>"`
   reads it (`useValidation`) and outlines itself (`.dxp-invalid`, `tailwind.scss`). The component cannot declare the
   rule: Node-RED reads `defaults` at registration, so the node-level invalid flag needs the rule there.
+  `Root.svelte` also disables the Add/Update button (`#node-dialog-ok`, `#node-config-dialog-ok`) while `isNodeValid`
+  is false: Node-RED itself only flags the node.
 - Node-RED sizes the edit dialog on the natural width of the form **when it opens**, before the injected `<style>` of
   the components exists: whatever widens the form (a long text) must be contained with an **inline** style or a Tailwind
   class (`Hint` uses `contain: inline-size`). `ConfigSelect` gives its input `width: 100%` because Node-RED derives
   the width of the select from that style (70% otherwise).
 - `build.sh` copies `src/ui/*.svelte` and `index.js` with `cp` (no `-r`); `i18n.ts` and `validation.ts` are compiled by
   tsdown (`dist/ui`). Do not put a `__tests__` folder in `src/ui`: tests of the ui helpers live in
-  `src/editor/svelte/__tests__`.
+  `src/editor/svelte/__tests__`. `vitest.config.ts` compiles the `.svelte` files for the tests (client runtime of svelte,
+  jsdom), so a component is tested by mounting it (`src/editor/svelte/__tests__/root.test.ts`).
 - Known issue: no prop autocompletion for the `ui` components in WebStorm.
 
 ## CLI (`src/cli`)
