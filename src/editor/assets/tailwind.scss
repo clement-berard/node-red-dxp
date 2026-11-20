@@ -1,28 +1,37 @@
 @import "tailwindcss";
 
+/* The alerts use only theme variables of Node-RED: the text keeps its contrast in the light and the dark themes */
 @layer components {
   .alert {
-    @apply p-4 mb-4 text-sm rounded-lg;
+    --dxp-alert-color: #3b82f6;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--dxp-alert-color) 40%, transparent);
+    border-left: 4px solid var(--dxp-alert-color);
+    background: color-mix(in srgb, var(--dxp-alert-color) 12%, transparent);
+    color: var(--red-ui-primary-text-color);
   }
 
   .alert-info {
-    @apply text-blue-800 bg-blue-50;
+    --dxp-alert-color: #3b82f6;
   }
 
   .alert-danger {
-    @apply text-red-800 bg-red-50;
+    --dxp-alert-color: var(--red-ui-text-color-error);
   }
 
   .alert-success {
-    @apply text-green-800 bg-green-50;
+    --dxp-alert-color: var(--red-ui-text-color-success);
   }
 
   .alert-warning {
-    @apply text-yellow-800 bg-yellow-50;
+    --dxp-alert-color: var(--red-ui-text-color-warning);
   }
 
   .alert-dark {
-    @apply text-gray-800 bg-gray-50;
+    --dxp-alert-color: var(--red-ui-secondary-text-color);
   }
 
   div.form-row {

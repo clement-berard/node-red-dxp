@@ -81,6 +81,8 @@ the classic `editor/` folder (pug + ts) is used. User docs: `docs/svelte/`.
   tsdown (`dist/ui`). Do not put a `__tests__` folder in `src/ui`: tests of the ui helpers live in
   `src/editor/svelte/__tests__`. `vitest.config.ts` compiles the `.svelte` files for the tests (client runtime of svelte,
   jsdom), so a component is tested by mounting it (`src/editor/svelte/__tests__/root.test.ts`).
+- `src/editor/assets/tailwind.scss` goes through Tailwind, not Sass: `//` comments are not stripped and silently drop
+  the rule that follows them (use `/* */`).
 - Known issue: no prop autocompletion for the `ui` components in WebStorm.
 
 ## CLI (`src/cli`)
