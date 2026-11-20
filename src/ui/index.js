@@ -6,6 +6,7 @@ export { default as TypedInput } from './TypedInput.svelte';
 export { default as List } from './List.svelte';
 export { useT } from './i18n.js';
 export { useValidation } from './validation.js';
+export { notifyError } from './notify.js';
 export { default as ConfigSelect } from './ConfigSelect.svelte';
 export { default as CodeEditor } from './CodeEditor.svelte';
 export { default as Spinner } from './Spinner.svelte';

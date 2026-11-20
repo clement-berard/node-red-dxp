@@ -25,6 +25,7 @@ export default defineConfig([
       'editor/svelte/index': 'src/editor/svelte/define.ts',
       'ui/i18n': 'src/ui/i18n.ts',
       'ui/validation': 'src/ui/validation.ts',
+      'ui/notify': 'src/ui/notify.ts',
     },
     dts: true,
     minify: minifyFlag,

@@ -16,12 +16,13 @@
 | a help text under a field | [`Hint`](#hint) |
 | rows the user can add, remove and sort | [`List`](#list) |
 | translated labels | [`useT`](#uset) |
+| an error shown to the user | [`notifyError`](#notifyerror) |
 
 All the components come from `@keload/node-red-dxp/ui` and work on the `node` prop (see [The node file](./node-file)).
 
 ```svelte
 <script lang="ts">
-  import { Button, Checkbox, CodeEditor, ConfigSelect, Hint, Input, List, Row, SearchBox, Select, Separator, Spinner, Tabs, TypedField, TypedInput, useT } from '@keload/node-red-dxp/ui';
+  import { Button, Checkbox, CodeEditor, ConfigSelect, Hint, Input, List, notifyError, Row, SearchBox, Select, Separator, Spinner, Tabs, TypedField, TypedInput, useT } from '@keload/node-red-dxp/ui';
 </script>
 ```
 
@@ -235,11 +236,13 @@ Small text under a field, inside a `Row`. Props: `state` (`info`, `warning`, `da
 
 A Node-RED button with a state, for an action started from the form. `state` is owned by the parent: `idle`,
 `loading` (spinner, click blocked), `success` (green) or `error` (red), colored with the Node-RED theme (light and dark). Other props: `disabled`, `primary`, `icon`,
-`onclick`.
+`onclick`. The type of `state` is exported: `import type { ButtonState } from '@keload/node-red-dxp/ui/Button.svelte'`.
 
 ```svelte
 <script lang="ts">
-  let state = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
+  import type { ButtonState } from '@keload/node-red-dxp/ui/Button.svelte';
+
+  let state = $state<ButtonState>('idle');
 
   async function test() {
     state = 'loading';
@@ -256,6 +259,19 @@ A line with an optional `label`, to split a long form.
 
 ```svelte
 <Separator label="Advanced" />
+```
+
+## `notifyError`
+
+Shows an error with the native notification of Node-RED (`Error : <message>`). The second argument is the duration in
+ms (default `10000`). It does nothing outside of the Node-RED editor.
+
+```svelte
+<script lang="ts">
+  import { notifyError } from '@keload/node-red-dxp/ui';
+</script>
+
+<button onclick={() => notifyError('The TV does not answer')}>Pair</button>
 ```
 
 ## `useT`

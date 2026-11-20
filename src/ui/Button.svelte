@@ -1,3 +1,7 @@
+<script module lang="ts">
+  export type ButtonState = 'idle' | 'loading' | 'success' | 'error';
+</script>
+
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
@@ -11,7 +15,7 @@
     onclick,
     children,
   }: {
-    state?: 'idle' | 'loading' | 'success' | 'error';
+    state?: ButtonState;
     disabled?: boolean;
     primary?: boolean;
     icon?: string;
