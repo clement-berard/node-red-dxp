@@ -12,6 +12,7 @@
 | the select of a config node | [`ConfigSelect`](#configselect) |
 | a script or a JSON text | [`CodeEditor`](#codeeditor) |
 | sections of a long form | [`Tabs`](#tabs), [`Separator`](#separator) |
+| an action (pair, test a connection...) | [`Button`](#button) |
 | a help text under a field | [`Hint`](#hint) |
 | rows the user can add, remove and sort | [`List`](#list) |
 | translated labels | [`useT`](#uset) |
@@ -20,7 +21,7 @@ All the components come from `@keload/node-red-dxp/ui` and work on the `node` pr
 
 ```svelte
 <script lang="ts">
-  import { Checkbox, CodeEditor, ConfigSelect, Hint, Input, List, Row, SearchBox, Select, Separator, Spinner, Tabs, TypedField, TypedInput, useT } from '@keload/node-red-dxp/ui';
+  import { Button, Checkbox, CodeEditor, ConfigSelect, Hint, Input, List, Row, SearchBox, Select, Separator, Spinner, Tabs, TypedField, TypedInput, useT } from '@keload/node-red-dxp/ui';
 </script>
 ```
 
@@ -228,6 +229,25 @@ Small text under a field, inside a `Row`. Props: `state` (`info`, `warning`, `da
 
 ```svelte
 <Row label="Timeout"><Input bind:value={node.timeout} /><Hint>Must be a number in ms</Hint></Row>
+```
+
+## `Button`
+
+A Node-RED button with a state, for an action started from the form. `state` is owned by the parent: `idle`,
+`loading` (spinner, click blocked), `success` (green) or `error` (red), colored with the Node-RED theme (light and dark). Other props: `disabled`, `primary`, `icon`,
+`onclick`.
+
+```svelte
+<script lang="ts">
+  let state = $state<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  async function test() {
+    state = 'loading';
+    state = (await ping()) ? 'success' : 'error';
+  }
+</script>
+
+<Button icon="plug" {state} onclick={test}>Test connection</Button>
 ```
 
 ## `Separator`
