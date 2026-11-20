@@ -160,3 +160,7 @@ You have access to the following classes to style the alert:
 - `.alert-warning`
 - `.alert-danger`
 - `.alert-success`
+- `.alert-dark`
+
+The text uses the text color of the Node-RED theme and only the border and the tint use the color of the alert: the
+contrast holds in the light and the dark themes.
