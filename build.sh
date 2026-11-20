@@ -10,6 +10,6 @@ cp -r ./src/editor/assets dist/editor
 
 # svelte sources are compiled by the node package at build time: ship them as is
 mkdir -p dist/ui dist/editor/svelte
-cp ./src/ui/* dist/ui/
+cp ./src/ui/*.svelte ./src/ui/index.js dist/ui/
 node scripts/emitUiDts.mjs
 cp ./src/editor/svelte/Root.svelte dist/editor/svelte/

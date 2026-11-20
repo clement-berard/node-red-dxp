@@ -23,6 +23,8 @@ export default defineConfig([
       'utils/index': 'src/utils/index.ts',
       'editor/dom-helper/index': 'src/editor/dom.ts',
       'editor/svelte/index': 'src/editor/svelte/define.ts',
+      'ui/i18n': 'src/ui/i18n.ts',
+      'ui/validation': 'src/ui/validation.ts',
     },
     dts: true,
     minify: minifyFlag,
