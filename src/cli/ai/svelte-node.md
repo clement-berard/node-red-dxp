@@ -65,6 +65,7 @@ markup). `controller.ts`, `docs.md(x)` and `locales/` stay separate files.
 | `Tabs` | `tabs` (labels), snippet `children(activeTab)`: render the content of the active tab only |
 | `Hint` | `state`, `icon`, `fullWidth`; small text under a field |
 | `Button` | `state` (`idle`, `loading`, `success`, `error`: owned by the parent), `disabled`, `primary`, `icon`, `onclick`, snippet `children` |
+| `notifyError` | function `notifyError(message, timeout = 10000)`: native Node-RED error notification |
 | `Separator` | `label`; a titled line between groups of rows |
 | `Spinner` | `bind:value`, `min`, `max`, `step` |
 | `SearchBox` | `bind:value`, `delay` |
