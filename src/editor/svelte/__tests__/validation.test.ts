@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateProperty } from '../../../ui/validation.js';
+import { isNodeValid, validateProperty } from '../../../ui/validation.js';
 
 describe('validateProperty', () => {
   const node = {};
@@ -56,5 +56,18 @@ describe('validateProperty', () => {
   it('should accept an environment variable', () => {
     expect(validateProperty({ validate: () => false }, ['$', '{MY_URL}'].join(''), node)).toBe(true);
     expect(validateProperty({ validate: () => false }, '$(MY_URL)', node)).toBe(true);
+  });
+});
+
+describe('isNodeValid', () => {
+  const ip = { required: true, validate: (v: string) => /^\d+(\.\d+){3}$/.test(v) };
+
+  it('should refuse a node with an empty required or an invalid property', () => {
+    expect(isNodeValid({ ip }, { ip: '' })).toBe(false);
+    expect(isNodeValid({ ip }, { ip: 'fdsafds' })).toBe(false);
+  });
+
+  it('should accept a node whose properties follow their rules', () => {
+    expect(isNodeValid({ ip, name: { value: '' } }, { ip: '10.0.0.1', name: '' })).toBe(true);
   });
 });

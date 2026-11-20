@@ -10,7 +10,7 @@ export function useValidation(): (key: string) => true | false | string | unknow
 
 // Same rules as Node-RED applies to a saved property (`required`, `validate` of its `defaults` entry): `true`, `false`,
 // or the message returned by the validator
-type Rule = { required?: boolean; validate?: (this: any, value: any, opt?: object) => unknown };
+type Rule = { value?: unknown; required?: boolean; validate?: (this: any, value: any, opt?: object) => unknown };
 
 export function validateProperty(rule: Rule | undefined, value: unknown, node: object): boolean | string | unknown[] {
   // an environment variable is always valid
@@ -23,4 +23,9 @@ export function validateProperty(rule: Rule | undefined, value: unknown, node: o
   } catch {
     return false;
   }
+}
+
+// Tells whether every property of `defaults` follows its rules on `node`
+export function isNodeValid(defaults: Record<string, Rule>, node: Record<string, unknown>): boolean {
+  return Object.keys(defaults).every((key) => validateProperty(defaults[key], node[key], node) === true);
 }
