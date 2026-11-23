@@ -87,7 +87,7 @@
     "tsx": "4.23.15",
     "typedoc": "0.28.20",
     "typedoc-plugin-markdown": "4.14.1",
-    "typescript": "6.0.2",
+    "typescript": "7.0.2",
     "vitepress": "1.6.4",
     "vitepress-plugin-npm-commands": "^0.10.0",
     "vitepress-plugin-tabs": "^0.9.1",
