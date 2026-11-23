@@ -91,7 +91,7 @@
     "vitepress": "1.6.4",
     "vitepress-plugin-npm-commands": "^0.10.0",
     "vitepress-plugin-tabs": "^0.9.1",
-    "vitest": "5.1.0",
+    "vitest": "5.1.1",
     "zod2md": "^0.4.0"
   },
   "dependencies": {
